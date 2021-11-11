@@ -5,6 +5,7 @@
     #Write-Verbose "Configuring New Domain with on this server" -Verbose
     Install-ADDSForest -ForestMode WinThreshold -DomainMode WinThreshold -DomainName "karol.se" `
     -InstallDns -NoDNSonNetwork -SafeModeAdministratorPassword $DSRMPWord -Force -NoRebootOnCompletion
+    Restart-Computer -Force
 
 
   #  Install-ADDSForest -ForestMode WinThreshold -DomainMode WinThreshold -DomainName "karol.se" `
