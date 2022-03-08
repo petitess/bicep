@@ -45,27 +45,7 @@ module Vnet 'Vnet01.bicep' = {
   }
   
 }
-/*
-module VNGW 'VNgateway01.bicep' = {
-  scope: RG4
-  name: 'VNGW01'
-  params: {
-    subnetid: Vnet.outputs.GatewaySubnet
-    location: location
-  }
-}
-*/
-/*
-module Vnet2 'Vnet02.bicep' = {
-  name: 'Vnetdeploy02'
-  scope: RG3
-  params:{
-    VnetName: 'vnet-dev-${Number2}'
-    locationRG: location
-  }
-  
-}
-*/
+
 module keyvault01 'keyvault01.bicep' = {
   scope: RG5  
   name: 'keyvaultdeploy'
@@ -94,16 +74,6 @@ module AD 'VM_AD01.bicep' = {
     AdminPassword: keyvault.getSecret('vmad01pass')
   }
 }
-/*
-module Web 'VM_WinWeb.bicep' = {
-  name: 'WEBdeploy'
-  scope: RG2
-  params: {
-    prefix:'WEB${Number}'
-    SubnetPath: Vnet.outputs.SubnetAPP
-    location: location
-  }
-}
-*/
+
 
 
