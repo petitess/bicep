@@ -113,7 +113,7 @@ param keyName string = 'prodKey'
 
 //Generate a random key
 @secure()
-param secretValue01 string = uniqueString(newGuid())
+param secretValue01 string = 'PO5${uniqueString(newGuid())}'
 
 param secretValue02 string = uniqueString(newGuid())
 
