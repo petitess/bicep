@@ -2,11 +2,11 @@
 param vaultName string = 'keyVault-20220308' // must be globally unique
 param location string = resourceGroup().location
 param sku string = 'Standard'
-param tenant string = '7d5e28a9-aa48-43c6-a39a-3fc5167644de' // replace with your tenantId
+param tenant string = '7d5e28a9-aa48-43c6-a39a-3fc5167644' // replace with your tenantId
 param accessPolicies array = [
   {
     tenantId: tenant
-    objectId: '804fadca-ed24-43b4-8048-173a6fb152c3' // replace with your objectId
+    objectId: '804fadca-ed24-43b4-8048-173a6fb152' // replace with your objectId
     permissions: {
       keys: [
         'Get'
@@ -53,7 +53,7 @@ param accessPolicies array = [
 
   {
     tenantId: tenant
-    objectId: '7ac4f416-9125-4e27-808d-215cc8c16b6f' // replace with your objectId
+    objectId: '7ac4f416-9125-4e27-808d-215cc8c16b' // replace with your objectId
     permissions: {
       keys: [
         'Get'
