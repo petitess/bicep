@@ -113,7 +113,9 @@ param keyName string = 'prodKey'
 
 //Generate a random key
 @secure()
-param secretValue string = newGuid()
+param secretValue01 string = uniqueString(newGuid())
+
+param secretValue02 string = uniqueString(newGuid())
 
 param networkAcls object = {
   ipRules: []
@@ -154,14 +156,14 @@ resource key 'Microsoft.KeyVault/vaults/keys@2021-10-01' = {
 resource secret 'Microsoft.KeyVault/vaults/secrets@2021-10-01' = {
   name: '${keyvault.name}/vmad01pass'
   properties: {
-    value: secretValue
+    value: secretValue01
   }
 }
 
 resource secret02 'Microsoft.KeyVault/vaults/secrets@2021-10-01' = {
   name: '${keyvault.name}/srvpass'
   properties: {
-    value: secretValue
+    value: secretValue02
   }
 }
 
