@@ -2,7 +2,7 @@
 param vaultName string = 'keyVault-20220308' // must be globally unique
 param location string = resourceGroup().location
 param sku string = 'Standard'
-param tenant string = '7d5e28a9-aa48-43c6-a39a-3fc5167644' // replace with your tenantId
+param tenant string = subscription().tenantId // replace with your tenantId
 param accessPolicies array = [
   {
     tenantId: tenant
