@@ -1,5 +1,6 @@
 /*
 This is a simple deployment, using a parameter file.
+If you want to connect to a VM, add RDP to NSG and remove Route Table from Subnet
 - One VNET with Subnets connected to NSGs.
 - Route tables
 - 3 VMs
