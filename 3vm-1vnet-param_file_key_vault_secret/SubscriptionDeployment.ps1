@@ -9,5 +9,3 @@ Get-AzContext
 Set-Location C:\3vm-1vnet-param_file
 
 New-AzSubscriptionDeployment -TemplateFile main.bicep -Location "swedencentral" -Name MyDeployment -TemplateParameterFile prod.parameters.json
-
-clear
