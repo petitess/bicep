@@ -1,6 +1,6 @@
 targetScope = 'managementGroup'
 
-var subid = 'subscriptions/2d9f44ea-e3df-4ea1-b956-xxxxxxx'
+var subid = '/subscriptions/2d9f44ea-e3df-4ea1-b956-xxxxxxx'
 var excluderg = 'Automation01'
 
 resource policy01 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
@@ -12,7 +12,7 @@ resource policy01 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/a08ec900-254a-4555-9bf5-e42af04b5c5c'
    enforcementMode: 'Default'
    notScopes: [
-    '/${subid}/resourceGroups/${excluderg}'  
+    '${subid}/resourceGroups/${excluderg}'  
     ]
    metadata: {
      version: '0.1'
