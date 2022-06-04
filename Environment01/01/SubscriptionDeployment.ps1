@@ -5,7 +5,7 @@ Set-AzContext -Subscription
 Get-AzContext
 Get-AzSubscription
 
-Set-Location 'C:\Users\Karol\OneDrive - B3 Consulting Group AB\bicep'
+Set-Location 'C:\Users\Karol'
 
 $Timestamp = Get-Date -Format 'yyyy-MM-dd_HHmmss'
 
