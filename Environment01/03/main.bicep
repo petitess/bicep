@@ -63,7 +63,14 @@ resource role01 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = {
   name: guid('role-${subid}-${envloc}-01')
   properties: {
     principalId: id.outputs.id
-    roleDefinitionId: '/subscriptions/0dcc13b7-1a10-483e-95aa-fe7e71802e2e/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c'
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')
     description: 'Contributor'
+  }
+resource role02 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = {
+  name: guid('role-${subid}-${envloc}-03')
+  properties: {
+    principalId: id.outputs.id
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '00482a5a-887f-4fb3-b363-3b7fe8e74483')
+    description: 'Key Vault Admin'
   }
 }
