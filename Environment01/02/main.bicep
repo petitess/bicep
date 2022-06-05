@@ -17,7 +17,6 @@ resource RG1 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   tags: union(tags, {
     Application: 'Infrastructure'
   })
-  
 }
 
 module vnet 'vnet.bicep' = {
