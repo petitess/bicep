@@ -61,6 +61,9 @@ module id 'id.bicep' = {
 
 resource role01 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = {
   name: guid('role-${subid}-${envloc}-01')
+  dependsOn: [
+    id
+  ]
   properties: {
     principalId: id.outputs.id
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')
@@ -68,6 +71,9 @@ resource role01 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = {
   }
 resource role02 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = {
   name: guid('role-${subid}-${envloc}-03')
+  dependsOn: [
+    id
+  ]
   properties: {
     principalId: id.outputs.id
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '00482a5a-887f-4fb3-b363-3b7fe8e74483')
