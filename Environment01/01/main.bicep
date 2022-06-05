@@ -27,8 +27,6 @@ module vnet 'vnet.bicep' = {
     addressPrefixes: virtualnetwork.addressPrefixes
     dnsServers: virtualnetwork.dnsServers
     subnets: virtualnetwork.subnets
-    
-
   }
 }
 
