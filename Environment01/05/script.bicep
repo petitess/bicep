@@ -30,6 +30,7 @@ resource script 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
     azPowerShellVersion: '5.0'
     retentionInterval:  'PT1H'
     scriptContent: '''
+    #!/usr/bin/env pwsh
     Connect-AzAccount -Identity
     
     $VirtualMachines = $env:VirtualMachines | ConvertFrom-Json -AsHashtable
