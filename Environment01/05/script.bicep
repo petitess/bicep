@@ -32,7 +32,7 @@ resource script 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
     scriptContent: '''
     #!/usr/bin/env pwsh
     Connect-AzAccount -Identity
-    
+     
     $VirtualMachines = $env:VirtualMachines | ConvertFrom-Json -AsHashtable
     foreach ($Vm in $VirtualMachines) {
     $GetSecretPass = Get-AzKeyVaultSecret -VaultName $env:KeyVault -Name $Vm.name
