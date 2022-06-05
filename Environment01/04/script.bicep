@@ -26,6 +26,7 @@ resource script 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
     azPowerShellVersion: '5.0'
     retentionInterval:  'PT1H'
     scriptContent: '''
+    #!/usr/bin/env pwsh
     $SecretUser = "adminUsernamexxx"
 
     Connect-AzAccount -Identity
