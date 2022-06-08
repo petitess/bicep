@@ -538,6 +538,7 @@
                 "diskSizeGB": 127,
                 "networkinterfaces": [{
                     "primary": true,
+                    "privateIPAllocationMethod": "Static",
                     "privateIPAddress": "10.15.0.5",
                     "subnet": "snet-core-test-01"
                     
