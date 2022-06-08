@@ -59,6 +59,7 @@ resource nic 'Microsoft.Network/networkInterfaces@2021-08-01' = [for (networkint
          name: 'ipconfig${i + 1}'
          properties:{
            primary: networkinterface.primary
+           privateIPAllocationMethod: networkinterface.privateIPAllocationMethod
            privateIPAddress: networkinterface.privateIPAddress
            subnet: {
               id: '${vnetid}/subnets/${networkinterface.subnet}'
