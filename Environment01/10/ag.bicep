@@ -13,7 +13,7 @@ resource actiongrp 'Microsoft.Insights/actionGroups@2022-04-01' = {
     emailReceivers: [
       {
         name: 'Karol'
-        emailAddress: 'karol.sek@b3.se'
+        emailAddress: 'your@mail.se'
       }
     ]
   }
