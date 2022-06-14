@@ -1,0 +1,727 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+    "config": {
+            "value": {
+                "company": {
+                    "name": "CompanyA",
+                    "affix": "comp"
+                },
+                "environment": {
+                    "name": "Test",
+                    "affix": "test"
+                },
+                "location": {
+                    "name": "swedencentral",
+                    "affix": "sc",
+                    "alt": {
+                        "name": "westeurope",
+                        "affix": "we"
+                    }
+                }
+            }
+        },
+    "virtualnetwork":{
+        "value": {
+            "addressPrefixes": [
+                "10.15.0.0/16"
+            ],
+            "dnsServers": [
+                "8.8.8.8",
+                "10.15.0.5"
+            ],
+            "subnets": [
+                {
+                   "name": "snet-core-test-01" ,
+                   "addressPrefix": "10.15.0.0/24",
+                   "networkSecurityGroup": true,
+                   "securityRules": [
+                    {
+                        "name": "Allow_Inbound_RDP",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "3389",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 3300,
+                            "direction": "Inbound"
+                        }
+                    },
+                    {
+                        "name": "Allow_Inbound_ActiveDirectory",
+                        "properties": {
+                            "access":  "Allow",
+                            "direction": "Inbound",
+                            "protocol": "*", 
+                            "priority":  3500,
+                            "destinationAddressPrefix":"*",  
+                            "destinationPortRanges": [
+                                "53",
+                                "88",
+                                "123",
+                                "135",
+                                "137-139",
+                                "389",
+                                "445",
+                                "464",
+                                "636",
+                                "3268-3269",
+                                "5722",
+                                "9389",
+                                "49152-65535"
+                            ], 
+                            "sourceAddressPrefixes": [
+                                "10.15.1.0/24",
+                                "10.15.2.0/24",
+                                "10.15.3.0/24"
+                                
+                            ], 
+                            "sourcePortRange": "*"
+                        }
+                    },
+                    {
+                        "name": "Deny_Inbound_All",
+                        "properties": {
+                            "access":  "Deny",
+                            "direction": "Inbound",
+                            "protocol": "*", 
+                            "priority":  4096,
+                            "destinationAddressPrefix":"*",  
+                            "destinationPortRange": "*", 
+                            "sourceAddressPrefix": "*", 
+                            "sourcePortRange": "*"
+                        }
+                    },
+                    {
+                        "name": "Allow_Outbound_ActiveDirectory",
+                        "properties": {
+                            "access":  "Allow",
+                            "direction": "Outbound",
+                            "protocol": "*", 
+                            "priority":  3500,
+                            "destinationAddressPrefixes": [
+                                "10.15.1.0/24",
+                                "10.15.2.0/24",
+                                "10.15.3.0/24"
+                            ],  
+                            "destinationPortRanges": [
+                                "53",
+                                "88",
+                                "123",
+                                "135",
+                                "137-139",
+                                "389",
+                                "445",
+                                "464",
+                                "636",
+                                "3268-3269",
+                                "3389",
+                                "5722",
+                                "49152-65535"
+                            ], 
+                            "sourceAddressPrefix": "*", 
+                            "sourcePortRange": "*"
+                        }
+                    },
+                    {
+                        "name": "Allow_Outbound_Internet",
+                        "properties": {
+                            "access":  "Allow",
+                            "direction": "Outbound",
+                            "protocol": "*", 
+                            "priority":  4000,
+                            "destinationAddressPrefix":"Internet",  
+                            "destinationPortRange": "*", 
+                            "sourceAddressPrefix": "*", 
+                            "sourcePortRange": "*"
+                        }
+                    },
+                    {
+                        "name": "Deny_Outbound_All",
+                        "properties": {
+                            "access":  "Deny",
+                            "direction": "Outbound",
+                            "protocol": "*", 
+                            "priority":  4096,
+                            "destinationAddressPrefix":"*",  
+                            "destinationPortRange": "*", 
+                            "sourceAddressPrefix": "*", 
+                            "sourcePortRange": "*"
+                        }
+                    }
+               ]
+                   
+                },
+                {
+                    "name": "snet-mgmt-test-01" ,
+                    "addressPrefix": "10.15.1.0/24",
+                    "networkSecurityGroup": true,
+                    "securityRules": [
+                        {
+                            "name": "Allow_Inbound_Management",
+                            "properties": {
+                                "access":  "Allow",
+                                "direction": "Inbound",
+                                "protocol": "*", 
+                                "priority":  3400,
+                                "destinationAddressPrefix":"*",  
+                                "destinationPortRanges": [
+                                        "22",
+                                        "80",
+                                        "135",
+                                        "139",
+                                        "443",
+                                        "445",
+                                        "1433",
+                                        "3389",
+                                        "5986"
+                                ], 
+                                "sourceAddressPrefixes": [
+                                    "10.15.0.0/24"
+                                    
+                                ], 
+                                "sourcePortRange": "*"
+                            }
+                        },
+                     {
+                         "name": "Allow_Inbound_ActiveDirectory",
+                         "properties": {
+                             "access":  "Allow",
+                             "direction": "Inbound",
+                             "protocol": "*", 
+                             "priority":  3500,
+                             "destinationAddressPrefix":"*",  
+                             "destinationPortRanges": [
+                                 "53",
+                                 "88",
+                                 "123",
+                                 "135",
+                                 "137-139",
+                                 "389",
+                                 "445",
+                                 "464",
+                                 "636",
+                                 "3268-3269",
+                                 "5722",
+                                 "9389",
+                                 "49152-65535"
+                             ], 
+                             "sourceAddressPrefixes": [
+                                 "10.15.0.0/24"
+                                 
+                             ], 
+                             "sourcePortRange": "*"
+                         }
+                     },
+                     {
+                         "name": "Deny_Inbound_All",
+                         "properties": {
+                             "access":  "Deny",
+                             "direction": "Inbound",
+                             "protocol": "*", 
+                             "priority":  4096,
+                             "destinationAddressPrefix":"*",  
+                             "destinationPortRange": "*", 
+                             "sourceAddressPrefix": "*", 
+                             "sourcePortRange": "*"
+                         }
+                     },
+                     {
+                        "name": "Allow_Outbound_Management",
+                        "properties": {
+                            "access":  "Allow",
+                            "direction": "Outbound",
+                            "protocol": "*", 
+                            "priority":  3400,
+                            "destinationAddressPrefixes": [
+                                "10.15.0.0/24"
+                            ],  
+                            "destinationPortRanges": [
+                                "22",
+                                "80",
+                                "139",
+                                "443",
+                                "445",
+                                "1433",
+                                "3389",
+                                "5986"
+                            ], 
+                            "sourceAddressPrefix": "*", 
+                            "sourcePortRange": "*"
+                        }
+                    },
+                     {
+                         "name": "Allow_Outbound_ActiveDirectory",
+                         "properties": {
+                             "access":  "Allow",
+                             "direction": "Outbound",
+                             "protocol": "*", 
+                             "priority":  3500,
+                             "destinationAddressPrefixes": [
+                                 "10.15.0.0/24"
+                             ],  
+                             "destinationPortRanges": [
+                                 "53",
+                                 "88",
+                                 "123",
+                                 "135",
+                                 "137-139",
+                                 "389",
+                                 "445",
+                                 "464",
+                                 "636",
+                                 "3268-3269",
+                                 "3389",
+                                 "5722",
+                                 "49152-65535"
+                             ], 
+                             "sourceAddressPrefix": "*", 
+                             "sourcePortRange": "*"
+                         }
+                     },
+                     {
+                         "name": "Allow_Outbound_Internet",
+                         "properties": {
+                             "access":  "Allow",
+                             "direction": "Outbound",
+                             "protocol": "*", 
+                             "priority":  4000,
+                             "destinationAddressPrefix":"Internet",  
+                             "destinationPortRange": "*", 
+                             "sourceAddressPrefix": "*", 
+                             "sourcePortRange": "*"
+                         }
+                     },
+                     {
+                         "name": "Deny_Outbound_All",
+                         "properties": {
+                             "access":  "Deny",
+                             "direction": "Outbound",
+                             "protocol": "*", 
+                             "priority":  4096,
+                             "destinationAddressPrefix":"*",  
+                             "destinationPortRange": "*", 
+                             "sourceAddressPrefix": "*", 
+                             "sourcePortRange": "*"
+                         }
+                     }
+                ]
+                    
+                },
+                {
+                    "name": "snet-app-test-01" ,
+                    "addressPrefix": "10.15.2.0/24",
+                    "networkSecurityGroup": true,
+                    "securityRules": [
+                     {
+                         "name": "Allow_Inbound_ActiveDirectory",
+                         "properties": {
+                             "access":  "Allow",
+                             "direction": "Inbound",
+                             "protocol": "*", 
+                             "priority":  3500,
+                             "destinationAddressPrefix":"*",  
+                             "destinationPortRanges": [
+                                 "53",
+                                 "88",
+                                 "123",
+                                 "135",
+                                 "137-139",
+                                 "389",
+                                 "445",
+                                 "464",
+                                 "636",
+                                 "3268-3269",
+                                 "5722",
+                                 "9389",
+                                 "49152-65535"
+                             ], 
+                             "sourceAddressPrefixes": [
+                                 "10.15.0.0/24"
+                                 
+                             ], 
+                             "sourcePortRange": "*"
+                         }
+                     },
+                     {
+                         "name": "Deny_Inbound_All",
+                         "properties": {
+                             "access":  "Deny",
+                             "direction": "Inbound",
+                             "protocol": "*", 
+                             "priority":  4096,
+                             "destinationAddressPrefix":"*",  
+                             "destinationPortRange": "*", 
+                             "sourceAddressPrefix": "*", 
+                             "sourcePortRange": "*"
+                         }
+                     },
+                     {
+                         "name": "Allow_Outbound_ActiveDirectory",
+                         "properties": {
+                             "access":  "Allow",
+                             "direction": "Outbound",
+                             "protocol": "*", 
+                             "priority":  3500,
+                             "destinationAddressPrefixes": [
+                                 "10.15.0.0/24"
+                             ],  
+                             "destinationPortRanges": [
+                                 "53",
+                                 "88",
+                                 "123",
+                                 "135",
+                                 "137-139",
+                                 "389",
+                                 "445",
+                                 "464",
+                                 "636",
+                                 "3268-3269",
+                                 "3389",
+                                 "5722",
+                                 "49152-65535"
+                             ], 
+                             "sourceAddressPrefix": "*", 
+                             "sourcePortRange": "*"
+                         }
+                     },
+                     {
+                         "name": "Allow_Outbound_SQL",
+                         "properties": {
+                             "access":  "Allow",
+                             "direction": "Outbound",
+                             "protocol": "*", 
+                             "priority":  4000,
+                             "destinationAddressPrefixes": [
+                                "10.15.3.0/24"
+                            ],  
+                             "destinationPortRange": "*", 
+                             "sourceAddressPrefix": "*", 
+                             "sourcePortRange": "*"
+                         }
+                     },
+                     {
+                         "name": "Deny_Outbound_All",
+                         "properties": {
+                             "access":  "Deny",
+                             "direction": "Outbound",
+                             "protocol": "*", 
+                             "priority":  4096,
+                             "destinationAddressPrefix":"*",  
+                             "destinationPortRange": "*", 
+                             "sourceAddressPrefix": "*", 
+                             "sourcePortRange": "*"
+                         }
+                     }
+                ]
+                    
+                },
+                {
+                    "name": "snet-sql-test-01" ,
+                    "addressPrefix": "10.15.3.0/24",
+                    "networkSecurityGroup": true,
+                    "securityRules": [
+                     {
+                         "name": "Allow_Inbound_ActiveDirectory",
+                         "properties": {
+                             "access":  "Allow",
+                             "direction": "Inbound",
+                             "protocol": "*", 
+                             "priority":  3500,
+                             "destinationAddressPrefix":"*",  
+                             "destinationPortRanges": [
+                                 "53",
+                                 "88",
+                                 "123",
+                                 "135",
+                                 "137-139",
+                                 "389",
+                                 "445",
+                                 "464",
+                                 "636",
+                                 "3268-3269",
+                                 "5722",
+                                 "9389",
+                                 "49152-65535"
+                             ], 
+                             "sourceAddressPrefixes": [
+                                 "10.15.0.0/24"
+                                 
+                             ], 
+                             "sourcePortRange": "*"
+                         }
+                     },
+                     {
+                        "name": "Allow_Inbound_SQL",
+                        "properties": {
+                            "access":  "Allow",
+                            "direction": "Inbound",
+                            "protocol": "*", 
+                            "priority":  3800,
+                            "destinationAddressPrefix": "*",
+                            "destinationPortRange": "1433", 
+                            "sourceAddressPrefixes": [
+                                "10.15.2.0/24"
+                            ], 
+                            "sourcePortRange": "*"
+                        }
+                    },
+                     {
+                         "name": "Deny_Inbound_All",
+                         "properties": {
+                             "access":  "Deny",
+                             "direction": "Inbound",
+                             "protocol": "*", 
+                             "priority":  4096,
+                             "destinationAddressPrefix":"*",  
+                             "destinationPortRange": "*", 
+                             "sourceAddressPrefix": "*", 
+                             "sourcePortRange": "*"
+                         }
+                     },
+                     {
+                         "name": "Allow_Outbound_ActiveDirectory",
+                         "properties": {
+                             "access":  "Allow",
+                             "direction": "Outbound",
+                             "protocol": "*", 
+                             "priority":  3500,
+                             "destinationAddressPrefixes": [
+                                 "10.15.0.0/24"
+                             ],  
+                             "destinationPortRanges": [
+                                 "53",
+                                 "88",
+                                 "123",
+                                 "135",
+                                 "137-139",
+                                 "389",
+                                 "445",
+                                 "464",
+                                 "636",
+                                 "3268-3269",
+                                 "3389",
+                                 "5722",
+                                 "49152-65535"
+                             ], 
+                             "sourceAddressPrefix": "*", 
+                             "sourcePortRange": "*"
+                         }
+                     },
+                     {
+                         "name": "Deny_Outbound_All",
+                         "properties": {
+                             "access":  "Deny",
+                             "direction": "Outbound",
+                             "protocol": "*", 
+                             "priority":  4096,
+                             "destinationAddressPrefix":"*",  
+                             "destinationPortRange": "*", 
+                             "sourceAddressPrefix": "*", 
+                             "sourcePortRange": "*"
+                         }
+                     }
+                ]
+                },
+                {
+                    "name": "AzureBastionSubnet",
+                    "addressPrefix": "10.15.250.0/24",
+                    "networkSecurityGroup": true,
+                    "securityRules": [
+                        {
+                            "name": "Deny_Inbound_All",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "*",
+                                "destinationAddressPrefix": "*",
+                                "access": "Deny",
+                                "priority": 4096,
+                                "direction": "Inbound"
+                            }
+                        },
+                        {
+                            "name": "Allow_Inbound_Https",
+                            "properties": {
+                                "protocol": "TCP",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "443",
+                                "sourceAddressPrefix": "Internet",
+                                "destinationAddressPrefix": "*",
+                                "access": "Allow",
+                                "priority": 1000,
+                                "direction": "Inbound"
+                            }
+                        },
+                        {
+                            "name": "Allow_Inbound_GatewayManager",
+                            "properties": {
+                                "protocol": "TCP",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "443",
+                                "sourceAddressPrefix": "GatewayManager",
+                                "destinationAddressPrefix": "*",
+                                "access": "Allow",
+                                "priority": 1100,
+                                "direction": "Inbound"
+                            }
+                        },
+                        {
+                            "name": "Allow_Inbound_AzureLoadBalancer",
+                            "properties": {
+                                "protocol": "TCP",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "443",
+                                "sourceAddressPrefix": "AzureLoadBalancer",
+                                "destinationAddressPrefix": "*",
+                                "access": "Allow",
+                                "priority": 1200,
+                                "direction": "Inbound"
+                            }
+                        },
+                        {
+                            "name": "Allow_Inbound_BastionHost",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRanges": [
+                                    "8080",
+                                    "5701"
+                                ],
+                                "sourceAddressPrefix": "VirtualNetwork",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 1300,
+                                "direction": "Inbound"
+                            }
+                        },
+                        {
+                            "name": "Deny_Outbound_All",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "*",
+                                "destinationAddressPrefix": "*",
+                                "access": "Deny",
+                                "priority": 4096,
+                                "direction": "Outbound"
+                            }
+                        },
+                        {
+                            "name": "Allow_Outbound_RdpSsh",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRanges": [
+                                    "22",
+                                    "3389"
+                                ],
+                                "sourceAddressPrefix": "*",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 1000,
+                                "direction": "Outbound"
+                            }
+                        },
+                        {
+                            "name": "Allow_Outbound_AzureCloud",
+                            "properties": {
+                                "protocol": "TCP",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "443",
+                                "sourceAddressPrefix": "*",
+                                "destinationAddressPrefix": "AzureCloud",
+                                "access": "Allow",
+                                "priority": 1100,
+                                "direction": "Outbound"
+                            }
+                        },
+                        {
+                            "name": "Allow_Outbound_BastionHost",
+                            "properties": {
+                                "protocol": "TCP",
+                                "sourcePortRange": "*",
+                                "destinationPortRanges": [
+                                    "8080",
+                                    "5701"
+                                ],
+                                "sourceAddressPrefix": "VirtualNetwork",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 1200,
+                                "direction": "Outbound"
+                            }
+                        },
+                        {
+                            "name": "Allow_Outbound_SessionInformation",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "80",
+                                "sourceAddressPrefix": "*",
+                                "destinationAddressPrefix": "Internet",
+                                "access": "Allow",
+                                "priority": 1300,
+                                "direction": "Outbound"
+                            }
+                        }
+                    ]
+                }
+                
+            ]
+            
+        }
+    },
+    "virtualMachines":{
+        "value": [
+            {
+                "name": "vmdctest01",
+                "tags": {
+                    "Application": "Core",
+                    "Service": "ActiveDirectory",
+                    "GDPR": "True",
+                    "Business Criticality": "Mission-Critical",
+                    "UpdateManagement": "Critical_Monthly_GroupA"
+                },
+                "imageReference": {
+                    "publisher": "microsoftwindowsserver",
+                    "offer": "windowsserver",
+                    "sku": "2022-datacenter",
+                    "version": "latest"
+                },
+                "vmSize": "Standard_B2s",
+                "osdiskSizeGB": 127,
+                "osWindows": true,
+                "VMalerts": true,
+                "backupEnabled": true,
+                "networkinterfaces": [{
+                    "primary": true,
+                    "privateIPAllocationMethod": "Static",
+                    "privateIPAddress": "10.15.0.5",
+                    "subnet": "snet-core-test-01",
+                    "publicIPAddress": true
+                }],
+                "datadisks":[
+                    {
+                        "name": "DataDisk01",
+                        "sku": "Premium_LRS",
+                        "createOption": "Empty",
+                        "diskSizeGB": 10,
+                        "lun": 1
+                    }
+                ]
+            }
+        ]
+    },
+    "bastion":{
+        "value": {
+            "deploy": true
+        }
+    }
+    }
+}
