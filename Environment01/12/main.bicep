@@ -224,7 +224,7 @@ resource rgbastion 'Microsoft.Resources/resourceGroups@2021-04-01' = if(bastion.
   })
 }
 
-module bastion01 'bastion.bicep' = {
+module bastion01 'bastion.bicep' = if(bastion.deploy) {
   scope: rgbastion
   name: 'module-${envloc}-bastion01'
   params: {
