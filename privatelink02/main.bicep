@@ -133,6 +133,9 @@ module st01 'st.bicep' = [for storage in param.st: {
 module pevnet01 'pe.bicep' = [for storage in param.st: if (storage.pe.enabled) {
   scope: rginfra
   name: 'module-${storage.name}-pe1'
+  dependsOn: [
+    st01
+  ]
   params: {
     groupIds: storage.pe.groupIds
     location: param.location
@@ -146,6 +149,9 @@ module pevnet01 'pe.bicep' = [for storage in param.st: if (storage.pe.enabled) {
 module pevnet02 'pe.bicep' = [for storage in param.st: if (storage.pe.enabled) {
   scope: rginfra2
   name: 'module-${storage.name}-pe2'
+  dependsOn: [
+    st01
+  ]
   params: {
     groupIds: storage.pe.groupIds
     location: param.location
@@ -159,6 +165,9 @@ module pevnet02 'pe.bicep' = [for storage in param.st: if (storage.pe.enabled) {
 module pevnet03 'pe.bicep' = [for storage in param.st: if (storage.pe.enabled) {
   scope: rginfra3
   name: 'module-${storage.name}-pe3'
+  dependsOn: [
+    st01
+  ]
   params: {
     groupIds: storage.pe.groupIds
     location: param.locationAlt
