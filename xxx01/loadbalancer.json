@@ -1,0 +1,116 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "loadBalancers_lbi_infra_dev_01_name": {
+            "defaultValue": "lbi-infra-dev-01",
+            "type": "String"
+        },
+        "virtualNetworks_vnet_infra_dev_01_externalid": {
+            "defaultValue": "/subscriptions/0dcc13b7-1a10-483e-95aa-fe7e71802e2e/resourceGroups/rg-infra-infra-dev-01/providers/Microsoft.Network/virtualNetworks/vnet-infra-dev-01",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/loadBalancers",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('loadBalancers_lbi_infra_dev_01_name')]",
+            "location": "swedencentral",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_lbi_infra_dev_01_name'), 'Pool01')]"
+            ],
+            "tags": {
+                "Application": "Infra",
+                "Environment": "Dev"
+            },
+            "sku": {
+                "name": "Standard",
+                "tier": "Regional"
+            },
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "[concat(parameters('loadBalancers_lbi_infra_dev_01_name'), '-privip')]",
+                        "properties": {
+                            "privateIPAddress": "10.10.4.250",
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[concat(parameters('virtualNetworks_vnet_infra_dev_01_externalid'), '/subnets/snet-core-test-01')]"
+                            },
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "backendAddressPools": [
+                    {
+                        "name": "Pool01",
+                        "properties": {
+                            "loadBalancerBackendAddresses": [
+                                {
+                                    "name": "rg-vmdctest01_vmdctest01-nic-1ipconfig1",
+                                    "properties": {}
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "loadBalancingRules": [
+                    {
+                        "name": "lbrule01",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_lbi_infra_dev_01_name')), concat('/frontendIPConfigurations/', parameters('loadBalancers_lbi_infra_dev_01_name'), '-privip'))]"
+                            },
+                            "frontendPort": 80,
+                            "backendPort": 80,
+                            "enableFloatingIP": false,
+                            "idleTimeoutInMinutes": 4,
+                            "protocol": "Tcp",
+                            "enableTcpReset": false,
+                            "loadDistribution": "Default",
+                            "disableOutboundSnat": true,
+                            "backendAddressPool": {
+                                "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_lbi_infra_dev_01_name'), 'Pool01')]"
+                            },
+                            "probe": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_lbi_infra_dev_01_name')), '/probes/Probe01')]"
+                            }
+                        }
+                    }
+                ],
+                "probes": [
+                    {
+                        "name": "Probe01",
+                        "properties": {
+                            "protocol": "Tcp",
+                            "port": 80,
+                            "intervalInSeconds": 5,
+                            "numberOfProbes": 2
+                        }
+                    }
+                ],
+                "inboundNatRules": [],
+                "outboundRules": [],
+                "inboundNatPools": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/loadBalancers/backendAddressPools",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('loadBalancers_lbi_infra_dev_01_name'), '/Pool01')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_lbi_infra_dev_01_name'))]"
+            ],
+            "properties": {
+                "loadBalancerBackendAddresses": [
+                    {
+                        "name": "rg-vmdctest01_vmdctest01-nic-1ipconfig1",
+                        "properties": {}
+                    }
+                ]
+            }
+        }
+    ]
+}
