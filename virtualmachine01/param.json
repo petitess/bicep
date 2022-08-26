@@ -15,7 +15,9 @@
                     "addressPrefixes": [
                         "10.10.0.0/16"
                     ],
-                    "dnsServers": [],
+                    "dnsServers": [
+		    	"10.10.4.11"
+		    ],
                     "peerings": [],
                     "natGateway": false,
                     "subnets": [
