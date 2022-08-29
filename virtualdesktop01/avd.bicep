@@ -22,6 +22,7 @@ resource avdpool 'Microsoft.DesktopVirtualization/hostPools@2022-04-01-preview' 
     agentUpdate: {
       type: 'Scheduled'
       maintenanceWindowTimeZone: 'W. Europe Standard Time'
+      useSessionHostLocalTime: true
       maintenanceWindows: [
         {
           dayOfWeek: 'Wednesday'
