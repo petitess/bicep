@@ -1,6 +1,6 @@
 Azure Virtual Desktop - Host Pool, App Groups, Workspace.
 
-You have to install manually on client virtual machine:
+To add vmpc01 to the host pool you have to install manually on client virtual machine:
 - Azure Virtual Desktop Agent - Microsoft.RDInfra.RDAgent.Installer.msi
 - Azure Virtual Desktop Agent Bootloader - Microsoft.RDInfra.RDAgentBootLoader.Installer-x64.msi
 
