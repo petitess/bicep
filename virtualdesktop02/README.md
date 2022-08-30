@@ -16,7 +16,7 @@ If you want to try the setup, do these steps manually:
 
 - Add the user to Application group assignments
 
-- Log in to AVD with with link: https://client.wvd.microsoft.com/arm/webclient/index.html
+- Log in to AVD with the link: https://client.wvd.microsoft.com/arm/webclient/index.html
 
 - Or install AVD application from [here](https://docs.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/remote-desktop-clients).
 
