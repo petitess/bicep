@@ -1,8 +1,8 @@
-## Azure Virtual Desktop with Azure AD Domain Services
+# Azure Virtual Desktop with Azure AD Domain Services
 
-# Azure Virtual Desktop - Host Pool, App Groups, Workspace.
+## Azure Virtual Desktop - Host Pool, App Groups, Workspace.
 
-If you want to try the setup, do these manually:
+If you want to try the setup, do these steps manually:
 
 - Add Azure AD admin user to ADD DC Administrators group 
 
