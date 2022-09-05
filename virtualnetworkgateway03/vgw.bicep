@@ -61,7 +61,7 @@ resource vgw 'Microsoft.Network/virtualNetworkGateways@2021-08-01' = {
     vpnGatewayGeneration: 'Generation1'
     customRoutes: {
       addressPrefixes: [
-        '8.8.8.8'
+        '8.8.8.8/32'
       ]
     }
   }
