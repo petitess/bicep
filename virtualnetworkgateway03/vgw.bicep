@@ -59,5 +59,10 @@ resource vgw 'Microsoft.Network/virtualNetworkGateways@2021-08-01' = {
     }
     bgpSettings: param.vgw.bgpSettings
     vpnGatewayGeneration: 'Generation1'
+    customRoutes: {
+      addressPrefixes: [
+        '8.8.8.8'
+      ]
+    }
   }
 }
