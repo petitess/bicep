@@ -24,3 +24,5 @@ resource vmWeb0xName_CustomScript 'Microsoft.Compute/virtualMachines/extensions@
 //https://florinloghiade.ro/arm-template-creating-nginx-webfarm-with-custom-script-extension/
 
 //https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/custom-script-linux
+
+//https://raw.githubusercontent.com/Azure-Samples/compute-automation-configurations/master/automate_nginx.sh
