@@ -72,7 +72,7 @@ module sqldb 'sqldb.bicep' = {
   name: 'module-${affix}-sql'
   params: {
     location: param.location
-    name: 'sqldb-${affix}-01'
+    name: toLower('sqldb-${param.tags.Environment}-01')
   }
 }
 
