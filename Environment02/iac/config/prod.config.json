@@ -1,0 +1,5 @@
+{
+    "subscription": "xxxxxxxx-xxx-xxxx-xxxx-xxxxx",
+    "location": "SwedenCentral",
+    "templateFile": "main.bicep"
+}
