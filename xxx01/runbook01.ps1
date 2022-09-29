@@ -4,20 +4,18 @@ Connect-AzAccount -Identity
 #Runbook content:
 New-Item -ItemType "directory" -Name script -Path ..\ 
 New-Item -ItemType File -Name script.ps1 -Path ..\script -Value @'
-$VirtualMachines = Get-AzVM | Where-Object {$_.name -like "vmctxprod*"}
-
+$vault = Get-AzRecoveryServicesVault -Name rsv-infra-prod-01 -ResourceGroupName rg-infra-prod-sc-01
+Set-AzRecoveryServicesVaultContext -Vault $vault
+$VirtualMachines = Get-AzVM | Where-Object {$_.name -like "vmdcprod*"}
 foreach ($Vm in $VirtualMachines) {
-
 $backupcontainer = Get-AzRecoveryServicesBackupContainer `
     -ContainerType "AzureVM" `
-    -FriendlyName "$vm.name"
+    -FriendlyName $Vm.name
     
 $item = Get-AzRecoveryServicesBackupItem `
     -Container $backupcontainer `
     -WorkloadType "AzureVM"
-
-Backup-AzRecoveryServicesBackupItem -Item $item
-
+Backup-AzRecoveryServicesBackupItem -Item $item -ExpiryDateTimeUTC (Get-Date).AddDays(30)
 }
 '@
 
