@@ -1,5 +1,7 @@
 @description('Date dd/mm/yyyy')
 param basedate string = utcNow('d')
+@description('Date MM/dd/yyyy HH:mm:ss')
+param basedate2 string = utcNow('MM/dd/yyyy HH:mm:ss')
 @description('W. Europe Standard Time')
 param basetime string = dateTimeAdd(utcNow(), 'PT2H', 't') 
 
