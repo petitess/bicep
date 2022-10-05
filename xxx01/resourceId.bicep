@@ -8,3 +8,5 @@ resourceId(sharedImageGalleryResourceGroup, 'Microsoft.Compute/galleries/images/
 resourceId('Microsoft.Network/networkInterfaces', '${vmPrefix}-${i + currentInstances}${networkAdapterPostfix}')
 
 resourceId('Microsoft.Compute/availabilitySets', '${vmPrefix}-AV')
+
+reference(extensionResourceId('/subscriptions/${subscription().subscriptionId}/resourceGroups/${AVDResourceGroup}', 'Microsoft.Resources/deployments', 'backPlane'), '2019-10-01').outputs.appGroupName.value
