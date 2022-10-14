@@ -1,0 +1,49 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "maintenanceConfigName": {
+            "type": "string",
+            "metadata": {
+                "description": "This is name of the maintenance config being created."
+            }
+        },
+        "maintenanceConfigLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "This is location of the maintenance config being created."
+            }
+        },
+        "maintenanceSchedule": {
+            "type": "object",
+            "metadata": {
+                "description": "This is schedule information associated with the Maintenance configuration."
+            }
+        },
+        "maintenanceScope": {
+            "type": "string",
+            "metadata": {
+                "description": "Gets or sets maintenanceScope of the configuration."
+            }
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2021-09-01-preview",
+            "type": "Microsoft.Maintenance/maintenanceConfigurations",
+            "name": "[parameters('maintenanceConfigName')]",
+            "location": "[parameters('maintenanceConfigLocation')]",
+            "tags": {},
+            "properties": {
+                "maintenanceScope": "Host",
+                "maintenanceWindow": {
+                    "startDateTime": "2022-10-16 18:00",
+                    "duration": "02:00",
+                    "timeZone": "W. Europe Standard Time",
+                    "expirationDateTime": null,
+                    "recurEvery": "1Month Last Sunday"
+                }
+            }
+        }
+    ]
+}
