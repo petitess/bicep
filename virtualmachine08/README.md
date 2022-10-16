@@ -1,6 +1,6 @@
 ## A template to deploy Azure Monitor Agent
 
-[Manage the Azure Monitor agent](learn.microsoft.com/en-us/azure/azure-monitor/agents/azure-monitor-agent-manage)
+[Manage the Azure Monitor agent](https://learn.microsoft.com/en-us/azure/azure-monitor/agents/azure-monitor-agent-manage)
 
 Prerequisites:
 
