@@ -22,4 +22,6 @@ If you want to try the setup, do these steps manually:
 
 - Or install AVD application from [here](https://docs.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/remote-desktop-clients).
 
+- [Azure Virtual Desktop Experience Estimator](https://azure.microsoft.com/en-us/products/virtual-desktop/assessment/#estimation-tool)
+
 <img src="./AVDAAD.png" alt="PE"/>
