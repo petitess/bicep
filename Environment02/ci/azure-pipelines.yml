@@ -11,7 +11,7 @@ pool:
   vmImage: ubuntu-20.04
 
 variables:
-  azureSubscription-prod: sub-b3care-prod-01  
+  azureSubscription-prod: sub-xxx-prod-01  
 
 stages:
   - template: templates/build.yml
