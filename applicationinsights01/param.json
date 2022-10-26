@@ -1,0 +1,33 @@
+{ 
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "param":{
+            "value": {
+                "location": "SwedenCentral",
+				"locationAlt": "WestEurope",
+				"tags": {
+					"Application": "Infra",
+					"Environment": "test"
+                    },
+                "log": {
+                    "sku": "perGB2018",
+                    "retention": 30,
+                    "solutions": [
+                        "VMInsights",
+                        "Updates",
+                        "Security",
+                        "ServiceMap",
+                        "ChangeTracking"
+                    ],
+                    "events": [
+                        "System",
+                        "Application"
+                    ]
+                },
+                "webtests":[
+                    "https://google.com",
+                    "https://yahoo.com",
+                    "https://primapraktiken-webtidbook.test.com"
+                ]
+}}}}
