@@ -16,4 +16,6 @@ If you want to try the setup, use Azure AD Domain Services instead:
 
 - [Azure Virtual Desktop Experience Estimator](https://azure.microsoft.com/en-us/products/virtual-desktop/assessment/#estimation-tool)
 
+- [Required URLs for Azure Virtual Desktop](https://learn.microsoft.com/en-us/azure/virtual-desktop/safe-url-list?tabs=azure)
+
 <img src="./AVD.png" alt="PE"/>
