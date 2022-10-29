@@ -8,6 +8,8 @@ param basetime string = dateTimeAdd(utcNow(), 'PT2H', 't')
 param basetime string = dateTimeAdd(utcNow(), 'PT1M', 'yyyy-MM-ddTHH:mm:ss') 
 //Add a month to base time
 param basetime string = dateTimeAdd(utcNow(), 'P1M', 'yyyy-MM-ddTHH:mm:ss') 
+//Add a day to base time
+param basetime string = dateTimeAdd(utcNow(), 'P1D', 'yyyy-MM-ddTHH:mm:ss') 
 
 output a string = basedate
 output b string = basetime
