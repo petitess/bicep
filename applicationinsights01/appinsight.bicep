@@ -82,8 +82,8 @@ resource alerts 'Microsoft.Insights/metricAlerts@2018-03-01' =[for (alert, i) in
     enabled: true
     evaluationFrequency: 'PT1M'
     scopes: [
-      appinsight.id
       webtest[i].id
+      appinsight.id
     ]
     severity: 1
     windowSize: 'PT5M'
