@@ -1,0 +1,38 @@
+{ 
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "param":{
+            "value": {
+                "location": "SwedenCentral",
+				"locationAlt": "WestEurope",
+				"tags": {
+					"Application": "Infra",
+					"Environment": "Test"
+                    },
+                "log": {
+                    "sku": "perGB2018",
+                    "retention": 30,
+                    "solutions": [
+                        "VMInsights",
+                        "Updates",
+                        "Security",
+                        "ServiceMap",
+                        "ChangeTracking"
+                    ],
+                    "events": [
+                        "System",
+                        "Application"
+                    ]
+                },
+                "webtests": [
+                    {
+                        "name":"app-gtm-test-01.azurewebsites.net",
+                        "url": "https://app-gtm-test-01.azurewebsites.net/healthz"
+                    },
+                    {
+                        "name":"app-gtm-test-02.azurewebsites.net",
+                        "url": "https://app-gtm-test-02.azurewebsites.net/healthz"
+                    }
+				]
+}}}}
