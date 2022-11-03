@@ -1,0 +1,42 @@
+{ 
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "param":{
+            "value": {
+                "location": "SwedenCentral",
+				"locationAlt": "WestEurope",
+				"tags": {
+					"Application": "Infra",
+					"Environment": "Test"
+                    },
+                "log": {
+                    "sku": "perGB2018",
+                    "retention": 30,
+                    "solutions": [
+                        "VMInsights",
+                        "Updates",
+                        "Security",
+                        "ServiceMap",
+                        "ChangeTracking"
+                    ],
+                    "events": [
+                        "System",
+                        "Application"
+                    ]
+                },
+                "webtests":[
+                    {
+                        "name":"google.com",
+                        "url": "https://google.com"
+                    },
+                    {
+                        "name":"app-gtm-dev-02.azurewebsites.net",
+                        "url": "https://app-gtm-dev-02.azurewebsites.net/healthz"
+                    },
+                    {
+                        "name":"primapraktiken-webtidbook.test.com",
+                        "url": "https://primapraktiken-webtidbook.test.com"
+                    }
+                ]
+}}}}
