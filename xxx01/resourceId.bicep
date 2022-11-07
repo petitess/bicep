@@ -10,3 +10,7 @@ resourceId('Microsoft.Network/networkInterfaces', '${vmPrefix}-${i + currentInst
 resourceId('Microsoft.Compute/availabilitySets', '${vmPrefix}-AV')
 
 reference(extensionResourceId('/subscriptions/${subscription().subscriptionId}/resourceGroups/${AVDResourceGroup}', 'Microsoft.Resources/deployments', 'backPlane'), '2019-10-01').outputs.appGroupName.value
+
+resourceId(subscription().subscriptionId, rgAvail.name, 'Microsoft.Compute/availabilitySets', vmadc.availabilitySet)
+
+x
