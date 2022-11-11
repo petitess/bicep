@@ -13,6 +13,7 @@
 | automationaccount01 | Schedule On-Demand Azure File Share Snapshots
 | automationaccount02 | Scheduled Runbooks 
 | availabilityset01 | Availability set
+| availabilityset02 | Multiple availability sets 
 | azurefirewall01 | Azure Firewall Policy - DNAT, Network, Application rule 
 | dns01 | Microsoft.Network/dnsZones 
 | dns02 | Microsoft.Network/dnsZones-array 
