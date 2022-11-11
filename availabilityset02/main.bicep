@@ -13,7 +13,7 @@ var rgavail = [
 resource rginfra 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   location: param.location
   tags: param.tags
-  name: 'rg-${affix}-02'
+  name: 'rg-${affix}-01'
 }
 
 module vnet 'vnet.bicep' = {
