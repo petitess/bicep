@@ -33,6 +33,7 @@
 | storageaccount01 | Fileshare with backup
 | template01 | 2 VNETs
 | template02 | 3 VNETs
+| template03 | A virtual machine with bastion
 | virtualdesktop01 | Azure Virtual Desktop - Host Pool, App Groups, Workspace
 | virtualdesktop02 | Azure Virtual Desktop with Azure AD Domain Services
 | virtualdesktop03 | Azure Virtual Desktop 100%
