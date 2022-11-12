@@ -22,6 +22,7 @@
 | functionapp01 | Function App
 | functionapp02 | Schedule On-Demand Azure File Share Snapshots
 | keyvault01 | Create Secrets for VMs 
+| keyvault02 | Create Secrets for VMs - multiple modules
 | loadbalancer01 | Internal Azure Load Balancer with Rules
 | maintenance01 | Update management center
 | peering01 | Virtual network peering 
