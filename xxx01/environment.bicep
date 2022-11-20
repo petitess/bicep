@@ -27,5 +27,8 @@
   }
 }
 
-output DB string = environment().sqlManagement
+output DB string = environment().suffixes.sqlServerHostname
 //=.database.windows.net
+
+output KV string = environment().suffixes.keyvaultDns
+//=.vault.azure.net
