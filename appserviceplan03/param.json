@@ -8,7 +8,7 @@
 				"locationAlt": "WestEurope",
 				"tags": {
 					"Application": "Infra",
-					"Environment": "devv"
+					"Environment": "Test"
                     },
                 "log": {
                     "sku": "perGB2018",
