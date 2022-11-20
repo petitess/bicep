@@ -102,7 +102,7 @@ resource secret6 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   tags: tags
   parent: kv
   properties: {
-    value: param.itglueint.ItGlueOAuthUrl
+    value: '/${subscription().subscriptionId}/oauth2/token'
   }
 }
 
