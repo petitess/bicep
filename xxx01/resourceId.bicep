@@ -16,5 +16,7 @@ resourceId(subscription().subscriptionId, rgAvail.name, 'Microsoft.Compute/avail
 output appprincipalId1 string = appitglueint.outputs.principalId
 output appprincipalId2 object = reference(resourceId(subscription().subscriptionId, rgitglue.name, 'Microsoft.Web/sites', 'app-itglueint-${env}-01'),'2022-03-01').identity.principalId
 
+output vaultUri1 string = kvintexisting.properties.vaultUri
+output vaultUri2 string = reference(resourceId(subscription().subscriptionId, rgitglue.name, 'Microsoft.KeyVault/vaults', 'kv-int-${env}-01'),'2022-07-01').vaultUri
 
 x
