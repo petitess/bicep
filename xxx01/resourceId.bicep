@@ -19,4 +19,5 @@ output appprincipalId2 object = reference(resourceId(subscription().subscription
 output vaultUri1 string = kvintexisting.properties.vaultUri
 output vaultUri2 string = reference(resourceId(subscription().subscriptionId, rgitglue.name, 'Microsoft.KeyVault/vaults', 'kv-int-${env}-01'),'2022-07-01').vaultUri
 
+param a object = resourceGroup(reference(resourceId('Microsoft.Resources/resourceGroups', 'rgname')).name)
 x
