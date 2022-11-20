@@ -13,4 +13,8 @@ reference(extensionResourceId('/subscriptions/${subscription().subscriptionId}/r
 
 resourceId(subscription().subscriptionId, rgAvail.name, 'Microsoft.Compute/availabilitySets', vmadc.availabilitySet)
 
+output appprincipalId1 string = appitglueint.outputs.principalId
+output appprincipalId2 object = reference(resourceId(subscription().subscriptionId, rgitglue.name, 'Microsoft.Web/sites', 'app-itglueint-${env}-01'),'2022-03-01').identity.principalId
+
+
 x
