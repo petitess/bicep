@@ -2,6 +2,9 @@ resourceId(vnetrg, 'Microsoft.Network/virtualNetworks/subnets', vnetname, interf
 
 resourceId('Microsoft.Compute/disks', '${name}-${dataDisk.name}')
 
+output a string = 'subscriptions/${subscription().subscriptionId}/providers/Microsoft.Web/locations/${location}/managedApis/azureblob'
+output b string = extensionResourceId(subscription().id, 'Microsoft.Web/locations/managedApis', location, 'azureblob')
+
 resourceId(sharedImageGalleryResourceGroup, 'Microsoft.Compute/galleries/images/versions', sharedImageGalleryName, sharedImageGalleryDefinitionname, sharedImageGalleryVersionName)
 '/subscriptions/${sharedImageGallerySubscription}/resourceGroups/${sharedImageGalleryResourceGroup}/providers/Microsoft.Compute/galleries/${sharedImageGalleryName}/images/${sharedImageGalleryDefinitionname}/versions/${sharedImageGalleryVersionName}'
 
