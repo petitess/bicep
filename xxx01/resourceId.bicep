@@ -23,4 +23,6 @@ output kvu1 string = kv.properties.vaultUri
 output kvu2 string = reference(resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.KeyVault/vaults', keyvaultname),'2022-07-01').vaultUri
 
 param a object = resourceGroup(reference(resourceId('Microsoft.Resources/resourceGroups', 'rgname')).name)
+
+subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleDefinitionId)
 x
