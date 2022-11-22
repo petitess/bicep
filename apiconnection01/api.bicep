@@ -19,6 +19,39 @@ resource azureblob01 'Microsoft.Web/connections@2016-06-01' = {
     }
 }
 
+
+resource azurequeues01 'Microsoft.Web/connections@2016-06-01' = {
+  name: 'api-azurequeues01'
+  location: location
+  properties: {
+    displayName: 'azurequeues01'
+    api: {
+      displayName: 'azurequeues01'
+      id:subscriptionResourceId('Microsoft.Web/locations/managedApis', location, 'azurequeues')
+    }
+    parameterValues: {
+      //storageaccount: staccountName
+      //sharedkey: staccountKey //listKeys(storage_account.id, storage_account.apiVersion).keys[0].value
+    }
+  }
+}
+
+resource azuretables01 'Microsoft.Web/connections@2016-06-01' = {
+  name: 'api-azuretables01'
+  location: location
+  properties: {
+    displayName: 'azuretables01'
+    api: {
+      id: extensionResourceId(subscription().id, 'Microsoft.Web/locations/managedApis', location, 'azuretables')
+    }
+    
+    parameterValues: {
+      storageaccount: staccountName
+      sharedkey: staccountKey
+    }
+    }
+}
+
 resource azureautomation01 'Microsoft.Web/connections@2016-06-01' = {
   name: 'api-azureautomation01'
   location: location
