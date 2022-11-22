@@ -1,0 +1,127 @@
+targetScope = 'resourceGroup'
+
+param location string = resourceGroup().location
+
+resource azureblob01 'Microsoft.Web/connections@2016-06-01' = {
+  name: 'api-azureblob01'
+  location: location
+  properties: {
+    displayName: 'defaultName'
+    api: {
+      id: extensionResourceId(subscription().id, 'Microsoft.Web/locations/managedApis', location, 'azureblob')
+    }
+    parameterValues: {
+      accountName: 'sttest01'//st.name
+      accessKey: 'YU/o6FLTqpeDHrRz60jrITiAv7N4iNSJIuiwvlU6TAS0xU80uP29hmpV87PdMbi2QLMgJ5gTXTHd+AStPwo6gQ=='//storageAccount.listKeys().keys[0].value
+      // name: 'managedIdentityAuth'
+      // values: {}
+    }
+    }
+}
+
+resource azureautomation01 'Microsoft.Web/connections@2016-06-01' = {
+  name: 'api-azureautomation01'
+  location: location
+  properties: {
+    displayName: 'api-azureautomation01'
+    api: {
+      id: extensionResourceId(subscription().id, 'Microsoft.Web/locations/managedApis', location, 'azureautomation')
+    }
+    parameterValues: {
+      ////App registration client ID
+      'token:clientId': 'xxxxxxx-a830-4d9e-a9a8-xxxxxxx'
+      'token:TenantId': empty(tenant().tenantId) ? tenant().tenantId : tenant().tenantId
+      'token:grantType': 'client_credentials'
+    }
+  }
+}
+
+resource office36501 'Microsoft.Web/connections@2016-06-01' = {
+  name: 'api-office36501'
+  location: location
+  properties: {
+    displayName: 'passwordreminder@company.net'
+    api: {
+      id: extensionResourceId(subscription().id, 'Microsoft.Web/locations/managedApis', location, 'office365')
+    }
+    customParameterValues: {}
+    nonSecretParameterValues: {}
+  }
+}
+
+// create the related connection api
+resource documentdb01 'Microsoft.Web/connections@2016-06-01' = {
+  name: 'api-documentdb01'
+  location: location
+  properties: {
+    displayName: 'api-documentdb01'
+    parameterValues: {
+      //databaseAccount: cosmosDbAccount.name
+      //accessKey: listKeys(cosmosDbAccount.id, cosmosDbAccount.apiVersion).primaryMasterKey
+    }
+    api: {
+      id: extensionResourceId(subscription().id, 'Microsoft.Web/locations/managedApis', location, 'documentdb')
+    }
+  }
+}
+
+resource sql01 'Microsoft.Web/connections@2016-06-01' = {
+  name: 'api-sql01'
+  location: location
+  properties: {
+    displayName: 'api-sql01'
+    parameterValues: {
+      server: 'servername'
+      database: 'databasename'
+      authType: 'basic'//
+      username: 'user'
+      password: 'password'
+    }
+    api: {
+      id: extensionResourceId(subscription().id, 'Microsoft.Web/locations/managedApis', location, 'sql')
+    }
+  }
+}
+
+resource servicebus01 'Microsoft.Web/connections@2016-06-01' = {
+  name: 'api-servicebus01'
+  location: location
+  properties: {
+    displayName: 'servicebus01'     
+    api: {
+      description: 'Connect to Azure Serice Bus to send and receive messages'
+      id:  extensionResourceId(subscription().id, 'Microsoft.Web/locations/managedApis', location, 'servicebus')
+      }
+      parameterValues: {
+        //connectionString: listKeys(resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', 'ServiceBusNamespace', 'RootManageSharedAccessKey'), '2017-04-01').primaryConnectionString
+      }
+    }
+}
+
+resource keyvault01 'Microsoft.Web/connections@2016-06-01' = {
+  name: 'api-keyvault01'
+  location: location
+  properties: {
+    displayName: 'keyvault'    
+    api:{
+      id: extensionResourceId(subscription().id, 'Microsoft.Web/locations/managedApis', location, 'keyvault')
+        } 
+    }
+}
+
+resource azureeventgrid01 'Microsoft.Web/connections@2016-06-01' = {
+  name: 'api-azureeventgrid01'
+  location: location
+  properties: {
+    displayName: 'azureeventgrid01'   
+    parameterValues: {
+      'token:clientId': 'xxxxxxx-a830-4d9e-a9a8-xxxxxxx'
+      'token:clientSecret': 'dfbdfbbwr3443'
+      'token:TenantId': empty(tenant().tenantId) ? tenant().tenantId : tenant().tenantId
+      'token:grantType': 'client_credentials'
+    } 
+    api:{
+      id: extensionResourceId(subscription().id, 'Microsoft.Web/locations/managedApis', location, 'azureeventgrid')
+        } 
+    }
+}
