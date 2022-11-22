@@ -30,4 +30,6 @@ param a object = resourceGroup(reference(resourceId('Microsoft.Resources/resourc
 subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleDefinitionId)
 
 reference(logicApp.id, logicApp.apiVersion, 'Full').identity.principalId
+
+reference(cosmosDbConnector.id, cosmosDbConnector.apiVersion, 'full').properties.connectionRuntimeUrl
 x
