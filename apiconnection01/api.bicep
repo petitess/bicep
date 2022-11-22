@@ -158,3 +158,17 @@ resource azureeventgrid01 'Microsoft.Web/connections@2016-06-01' = {
         } 
     }
 }
+
+resource sendGridConnection 'Microsoft.Web/connections@2016-06-01' = {
+  name: '${prefix}sndgrdconn'
+  location: location
+  properties: {
+    displayName: '${prefix}sndgrdconn'
+    api: {
+      id: '${subscription().id}/providers/Microsoft.Web/locations/${location}/managedApis/sendgrid'
+    }
+    parameterValues: {
+      apiKey: sendGridApiKey
+    }
+  }
+}
