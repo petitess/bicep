@@ -28,4 +28,6 @@ output kvu2 string = reference(resourceId(subscription().subscriptionId, resourc
 param a object = resourceGroup(reference(resourceId('Microsoft.Resources/resourceGroups', 'rgname')).name)
 
 subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleDefinitionId)
+
+reference(logicApp.id, logicApp.apiVersion, 'Full').identity.principalId
 x
