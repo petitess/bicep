@@ -1,7 +1,5 @@
 ## $\textcolor{pink}{\text{Content}}$
 
-## Content
-
 | Name | Description | 
 |--|--|
 | aadds01 | Azure AD Domain Services 
