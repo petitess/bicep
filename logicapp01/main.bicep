@@ -8,7 +8,7 @@ var env = toLower(param.tags.Environment)
 resource rginfra 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   location: param.location
   tags: param.tags
-  name: 'rgx-${affix}-sc-01'
+  name: 'rg-${affix}-sc-01'
 }
 
 resource rglogic 'Microsoft.Resources/resourceGroups@2021-04-01' = {
@@ -16,7 +16,7 @@ resource rglogic 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   tags: union(param.tags, {
       Application: 'AD Password Expiration'
     })
-  name: 'rgx-logic-${env}-01'
+  name: 'rg-logic-${env}-01'
 }
 
 module aa 'aa.bicep' = {
