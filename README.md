@@ -1,4 +1,4 @@
-# Content
+<details><summary>Setup</summary><p>
 
 Install [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-windows?tabs=azure-cli)
 
@@ -11,6 +11,9 @@ Install [Bicep VS Code extension](https://marketplace.visualstudio.com/items?ite
 ```
 New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile param.json -Location "swedencentral" -Name Deploy$(Get-Date -Format 'yyyy-MM-dd')
 ```
+</p></details> 
+
+## Content
 
 | Name | Description | 
 |--|--|
