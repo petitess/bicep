@@ -4,7 +4,7 @@ Install [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cl
 
 Install [Bicep CLI](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/install)
 
-Install the [Azure Az PowerShell module](https://learn.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-9.1.0)
+Install [Azure Az PowerShell module](https://learn.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-9.1.0)
 
 Install [Bicep VS Code extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-bicep)
 
