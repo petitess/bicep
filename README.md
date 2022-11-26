@@ -18,6 +18,8 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | alert01 | Service Health Alerts  
 | alert02 | Log Analytics query alerts 
 | alert03 | Log Analytics query alerts with suppression rule 
+| alert04 | VM resource health alerts
+| apiconnection01 | API connection
 | applicationgateway01 | Azure Application Gateway Public IIS 
 | applicationinsights01 | Application Insights with Availability Test
 | appserviceplan01 | Azure App Service Plan integrated with vnet 
