@@ -1,3 +1,5 @@
+# Logic app - Consumption
+
 ## AD user password expiration notification
 
 ### This logic app checks if AD user passoword expires and sends an email to users.
