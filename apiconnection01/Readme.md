@@ -1,5 +1,5 @@
 | Connector | Connector API name |
-|--|--|
+|-|-|
 Azure Container Instance | aci 
 Azure Resource Manager | arm 
 Azure Automation | azureautomation 
