@@ -26,6 +26,7 @@ Import-AzAutomationRunbook `
     -Name $env:runbookname01 `
     -ResourceGroupName $env:infrargname `
     -AutomationAccountName $env:aaname `
+    -Tags @{Application = 'AD Password Expiration'} `
     -Type PowerShell `
     -Description "A script to execute a powershell script on vmmgmtprod01 - AdPasswordExpiration.ps1, to check the expiration password date for user accounts. Triggered by Logic App." `
     -Published `
