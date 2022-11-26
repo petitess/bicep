@@ -1,4 +1,16 @@
-## $\textcolor{pink}{\text{Content}}$
+# Content
+
+Install [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-windows?tabs=azure-cli)
+
+Install [Bicep CLI](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/install)
+
+Install the [Azure Az PowerShell module](https://learn.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-9.1.0)
+
+Install [Bicep VS Code extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-bicep)
+
+```
+New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile param.json -Location "swedencentral" -Name Deploy$(Get-Date -Format 'yyyy-MM-dd')
+```
 
 | Name | Description | 
 |--|--|
@@ -24,6 +36,7 @@
 | keyvault01 | Create Secrets for VMs 
 | keyvault02 | Create Secrets for VMs - multiple modules
 | loadbalancer01 | Internal Azure Load Balancer with Rules
+| logicapp01 | AD password expiration notification(Consumption) 
 | maintenance01 | Update management center
 | peering01 | Virtual network peering 
 | privatelink01 | Load Balancer with Private Link connected to another vnet
