@@ -32,4 +32,15 @@ subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleDefinition
 reference(logicApp.id, logicApp.apiVersion, 'Full').identity.principalId
 
 reference(cosmosDbConnector.id, cosmosDbConnector.apiVersion, 'full').properties.connectionRuntimeUrl
+
+output poolid1 string = '${subscription().id}/resourceGroups/${resourceGroup().name}/providers/Microsoft.Network/loadBalancers/${name}/backendAddressPools/${backendAddressPools[0].name}'
+output poolid2 string = resourceId('Microsoft.Network/loadBalancers/backendAddressPools', name, backendAddressPools[0].name)
+
+output ipconfig1 string = '${subscription().id}/resourceGroups/${resourceGroup().name}/providers/Microsoft.Network/loadBalancers/${name}/frontendIPConfigurations/${name}-privip'
+output ipconfig2 string = resourceId('Microsoft.Network/loadBalancers/frontendIPConfigurations', name, '${name}-privip')
+
+output probe1 string = '${subscription().id}/resourceGroups/${resourceGroup().name}/providers/Microsoft.Network/loadBalancers/${name}/probes/${probes[0].name}'
+output probe2 string = resourceId('Microsoft.Network/loadBalancers/probes', name, probes[0].name)
+
+
 x
