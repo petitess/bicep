@@ -71,7 +71,7 @@ module lb 'lb.bicep' = {
   params: {
     backendAddressPools: param.lb.backendAddressPools
     location: param.location
-    name: 'lbi-${affix}-01'
+    name: 'lb-${affix}-01'
     probes: param.lb.probes
   }
 }
