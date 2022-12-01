@@ -1,3 +1,4 @@
+////////////RESOURCE GROUP
 resourceId(vnetrg, 'Microsoft.Network/virtualNetworks/subnets', vnetname, interface.subnet)
 
 resourceId('Microsoft.Compute/disks', '${name}-${dataDisk.name}')
@@ -13,8 +14,6 @@ resourceId('Microsoft.Network/networkInterfaces', '${vmPrefix}-${i + currentInst
 resourceId('Microsoft.Compute/availabilitySets', '${vmPrefix}-AV')
 
 reference(extensionResourceId('/subscriptions/${subscription().subscriptionId}/resourceGroups/${AVDResourceGroup}', 'Microsoft.Resources/deployments', 'backPlane'), '2019-10-01').outputs.appGroupName.value
-
-resourceId(subscription().subscriptionId, rgAvail.name, 'Microsoft.Compute/availabilitySets', vmadc.availabilitySet)
 
 output appprincipalId1 string = appitglueint.outputs.principalId
 output appprincipalId2 object = reference(resourceId(subscription().subscriptionId, rgitglue.name, 'Microsoft.Web/sites', 'app-itglueint-${env}-01'),'2022-03-01').identity.principalId
@@ -41,6 +40,11 @@ output ipconfig2 string = resourceId('Microsoft.Network/loadBalancers/frontendIP
 
 output probe1 string = '${subscription().id}/resourceGroups/${resourceGroup().name}/providers/Microsoft.Network/loadBalancers/${name}/probes/${probes[0].name}'
 output probe2 string = resourceId('Microsoft.Network/loadBalancers/probes', name, probes[0].name)
+///////SUBSCRIPTION
+
+resourceId(subscription().subscriptionId, rginfra1.name, 'Microsoft.Network/virtualNetworks/subnets', vnet01.outputs.name , param.lb.subnetname)
+
+resourceId(subscription().subscriptionId, rgAvail.name, 'Microsoft.Compute/availabilitySets', vmadc.availabilitySet)
 
 
 x
