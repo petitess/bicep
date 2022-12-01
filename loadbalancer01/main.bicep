@@ -73,7 +73,7 @@ module lb 'lb.bicep' = {
     location: param.location
     name: 'lbi-${affix}-01'
     privateIPAddress: param.lb.privateIPAddress
-    subnetid: '${subscription().id}/resourceGroups/${rginfra1.name}/providers/Microsoft.Network/virtualNetworks/${vnet01.outputs.name}/subnets/${param.lb.subnetname}'
+    subnetid: resourceId(subscription().subscriptionId, rginfra1.name, 'Microsoft.Network/virtualNetworks/subnets', vnet01.outputs.name , param.lb.subnetname)
     probes: param.lb.probes
   }
 }
