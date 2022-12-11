@@ -20,6 +20,23 @@ resource azureblob01 'Microsoft.Web/connections@2016-06-01' = {
 }
 
 
+resource blobConnection 'Microsoft.Web/connections@2016-06-01' = {
+  name: 'blobConnectionName'
+  location: location
+  properties: {
+    api: {
+      id: subscriptionResourceId('Microsoft.Web/locations/managedApis', location, 'azureblob')
+    }
+    customParameterValues: {}
+    displayName: 'blobConnectionName'
+    parameterValueSet: {
+      name: 'managedIdentityAuth'
+      values: {}
+    }
+  }
+}
+
+
 resource azurequeues01 'Microsoft.Web/connections@2016-06-01' = {
   name: 'api-azurequeues01'
   location: location
