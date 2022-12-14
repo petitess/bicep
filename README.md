@@ -33,6 +33,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | availabilityset01 | Availability set
 | availabilityset02 | Multiple availability sets 
 | azurefirewall01 | Azure Firewall Policy - DNAT, Network, Application rule 
+| citrix01 | Citrix NetScaler(ADC) with high-availability(HA) 
 | dns01 | Microsoft.Network/dnsZones 
 | dns02 | Microsoft.Network/dnsZones-array 
 | frontdoor01 | Virtual Machines (pip loop) as Backend pool
