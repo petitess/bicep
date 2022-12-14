@@ -43,6 +43,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | keyvault01 | Create Secrets for VMs 
 | keyvault02 | Create Secrets for VMs - multiple modules
 | loadbalancer01 | Internal Azure Load Balancer with Rules
+| loadbalancer02 | External Load Balancer
 | logicapp01 | AD password expiration notification(Consumption) 
 | maintenance01 | Update management center
 | peering01 | Virtual network peering 
