@@ -13,6 +13,14 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 ```
 </p></details> 
 
+<details><summary>Info</summary><p>
+
+[Abbreviation examples for Azure resources](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-abbreviations)
+
+[Naming rules and restrictions for Azure resources](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules)
+
+</p></details> 
+
 ## Content
 
 | Name | Description | 
