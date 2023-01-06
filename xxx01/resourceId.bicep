@@ -1,6 +1,6 @@
 ////////////RESOURCE GROUP
 resourceId(vnetrg, 'Microsoft.Network/virtualNetworks/subnets', vnetname, interface.subnet)
-
+subscriptionResourceId('Microsoft.insights/eventTypes', 'management')
 resourceId('Microsoft.Compute/disks', '${name}-${dataDisk.name}')
 
 output a string = 'subscriptions/${subscription().subscriptionId}/providers/Microsoft.Web/locations/${location}/managedApis/azureblob'
