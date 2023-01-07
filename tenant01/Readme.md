@@ -22,3 +22,4 @@ New-AzTenantDeployment -TemplateFile .\main.bicep -Location "swedencentral" -Nam
 | Name | Description | 
 |--|--|
 | alz01 | Cloud Adoption Framework policy 
+| policy01 | Allowed Resource Types and Allowed VM Size SKUs
