@@ -16,3 +16,9 @@ New-AzRoleAssignment -Scope '/' -RoleDefinitionName 'Owner' -ObjectId $user.Id
 ```powershell
 New-AzTenantDeployment -TemplateFile .\main.bicep -Location "swedencentral" -Name DeployTenant$(Get-Date -Format 'yyyy-MM-dd')
 ```
+
+## Content
+
+| Name | Description | 
+|--|--|
+| alz01 | Cloud Adoption Framework policy 
