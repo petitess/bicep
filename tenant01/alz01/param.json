@@ -1,0 +1,44 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "param": {
+            "value": {
+                "company": {
+                    "name": "Company AB",
+                    "affix": "comp"
+                },
+                "environment": {
+                    "name": "Production",
+                    "affix": "prod"
+                },
+                "location": {
+                    "name": "swedencentral",
+                    "affix": "sc"
+                },
+                "locationAlt": {
+                    "name": "westeurope",
+                    "affix": "we"
+                },
+                "subscription": {
+                    "id": "xxxxxxxxx-e3df-4ea1-b956-xxxxxxx"
+                },
+                "policyExclusions": [
+                        "/subscriptions/xxxxxxxxxxx-c673-4c07-bc35-xxxxxxxxxxxx/resourceGroups/rg-mig-xx-prod-01"
+                    ],
+                "roles": {
+                        "Contributor": "b24988ac-6180-42a0-ab88-20f7382dd24c",
+                        "Owner": "8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
+                        "Reader": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
+                        "User Access Administrator": "18d7d88d-d35e-4fb5-a5c3-7773c20a72d9"
+                    },
+                "roleAssignments": [
+                        {
+                            "principalId": "xxxxxxxx-65d1-4fb3-bcb9-xxxxxxx",
+                            "roleDefinitionId": "acdd72a7-3385-48ef-bd42-f606fba81ae7"
+                        }
+                    ]
+            }
+        }
+    }
+}
