@@ -1,0 +1,4595 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"param": {
+			"value": {
+				"location": "SwedenCentral",
+				"locationAlt": "WestEurope",
+				"tags": {
+					"Application": "Infra",
+					"Environment": "Prod"
+				},
+				"log": {
+					"sku": "perGB2018",
+					"retention": 30,
+					"solutions": [
+						"VMInsights",
+						"Updates",
+						"Security",
+						"ServiceMap",
+						"ChangeTracking"
+					],
+					"events": [
+						"System",
+						"Application"
+					]
+				},
+				"st": [
+					{
+						"name": "stinfracompprod01",
+						"sku": "Standard_LRS",
+						"kind": "StorageV2",
+						"networkAcls": {
+							"resourceAccessRules": [],
+							"bypass": "AzureServices",
+							"ipRules": [],
+							"defaultAction": "deny"
+						},
+						"pe": {
+							"enabled": true,
+							"type": "file",
+							"subnet": "snet-pe-prod-01"
+						},
+						"fileShares": [
+							{
+								"name": "fileshare01",
+								"backup": true,
+								"properties": {
+									"accessTier": "Hot",
+									"shareQuota": 1024,
+									"enabledProtocols": "SMB"
+								}
+							}
+						],
+						"containers": []
+					},
+					{
+						"name": "stbackupcompprod01",
+						"sku": "Standard_LRS",
+						"kind": "StorageV2",
+						"networkAcls": {
+							"resourceAccessRules": [],
+							"bypass": "AzureServices",
+							"ipRules": [],
+							"defaultAction": "deny"
+						},
+						"pe": {
+							"enabled": true,
+							"type": "blob",
+							"subnet": "snet-pe-prod-01"
+						},
+						"fileShares": [],
+						"containers": [
+							{
+								"name": "container01"
+							}
+						]
+					}
+				],
+				"kv": {
+					"sku": "standard",
+					"enabledForDeployment": false,
+					"enabledForTemplateDeployment": true,
+					"enabledForDiskEncryption": true,
+					"enableRbacAuthorization": true
+				},
+				"pe": {
+					"filednsname": "privatelink.file.core.windows.net",
+					"blobdnsname": "privatelink.blob.core.windows.net"
+				},
+				"rsv": {
+					"sku": {
+						"name": "RS0",
+						"tier": "Standard"
+					},
+					"scheduleRunTimes": [
+						"22:30:00"
+					],
+					"retentionTimes": [
+						"22:30:00"
+					],
+					"retentionDays": 30,
+					"timeZone": "UTC",
+					"daysOfTheWeek": [
+						"Saturday"
+					],
+					"retentionWeeks": 4
+				},
+				"runbooks": {
+					"sqlbackup": {
+						"runbookname": "run-BackupSqlVm01",
+						"description": "Additional backup for SQL servers. Kept for 14 days",
+						"frequency": "Day",
+						"interval": 1,
+						"startTime01": "08:00:00",
+						"startTime02": "11:00:00",
+						"startTime03": "14:00:00"
+					},
+					"stopstartvm": {
+						"runbookname01": "run-StopVm01",
+						"runbookname02": "run-StartVm01",
+						"runbookname03": "run-StopVm02",
+						"runbookname04": "run-StartVm02",
+						"stopvmtime": "18:00",
+						"startvmtime": "04:00"
+					}
+				},
+				"id": {
+					"keyvaultadmin": "00482a5a-887f-4fb3-b363-3b7fe8e74483",
+					"contributor": "b24988ac-6180-42a0-ab88-20f7382dd24c",
+					"reader": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
+					"group": {
+						"name": "grp-comp-operations",
+						"sid": "xxxxx-7e5d-4c75-96f4-xxxxxxx"
+					}
+				},
+				"itglueint": {
+					"kvname": "kv-itglue-prod-01",
+					"appclientid": "xxxxxxxxx-197f-4919-8e4f-xxxxxxxx",
+					"appclientsecret": "xxxxxxxxxHsCmjJwIujEBj49e6MNxxxxxxxx",
+					"ItGlueApiKey": "ITG.xxxxxxxe73dda66c94bf2e2xxx.xxxx3banmIa0lSCd60W6plhQSTRNHXC4Rqxxxxxxx",
+					"ItGlueOrgId": "xxxxx113612xxxxx"
+				},
+				"vgw": {
+					"update": false,
+					"vpnClientAddressPool": {
+						"addressPrefixes": [
+							"10.15.0.0/24"
+						]
+					},
+					"aadAudience": "xxxxxxxxx-6c1e-4545-b367-xxxxxxx",
+					"bgpSettings": {
+						"asn": 65515,
+						"bgpPeeringAddress": "10.112.255.254",
+						"peerWeight": 0
+					},
+					"customRoutes": {
+						"addressPrefixes": []
+					}
+				},
+				"lgw": {
+					"localNetworkAddressSpace": {
+						"addressPrefixes": [
+							"10.112.0.0/16",
+							"10.114.0.0/24",
+							"10.113.0.0/24",
+							"10.212.0.0/16",
+							"81.89.144.0/20",
+							"82.136.128.0/18",
+							"213.189.96.0/19"
+						]
+					},
+					"gatewayIpAddress": "81.11.11.11"
+				},
+				"con": {
+					"name": "con-onprem-sc"
+				},
+				"updateSchedules": [
+					{
+						"name": "Critical_Monthly_GroupA",
+						"startTime": "21:00:00",
+						"day": "Monday",
+						"includedUpdateClassifications": "Critical, Security, Definition",
+						"occurrence": 3
+					},
+					{
+						"name": "Critical_Monthly_GroupB",
+						"startTime": "23:00:00",
+						"day": "Monday",
+						"includedUpdateClassifications": "Critical, Security, Definition",
+						"occurrence": 3
+					}
+				],
+				"webtests": [
+					{
+						"name": "primapraktiken-webtidbok.comp.se",
+						"url": "https://primapraktiken-webtidbok.comp.se"
+					},
+					{
+						"name": "kusten.comp.se",
+						"url": "https://kusten.comp.se/login"
+					},
+					{
+						"name": "kusten-webtidbok.comp.se",
+						"url": "https://kusten-webtidbok.comp.se/jsp/booking/rebook.jsp"
+					},
+					{
+						"name": "medrave.comp.se",
+						"url": "https://medrave.comp.se/WebRave4/Pages/Common/SmartcardLogon.aspx"
+					},
+					{
+						"name": "certificate.comp.se",
+						"url": "https://certificate.comp.se"
+					}
+				],
+				"availabilitysets": [
+					"vmadcprod01",
+					"vmctxprod01",
+					"vmdcprod01",
+					"vmpvsprod01",
+					"vmsfprod01",
+					"vmcpmprod01"
+				],
+				"vnet": {
+					"addressPrefixes": [
+						"10.10.0.0/16"
+					],
+					"dnsServers": [
+						"10.10.4.11"
+					],
+					"peerings": [],
+					"natGateway": true,
+					"subnets": [
+						{
+							"name": "GatewaySubnet",
+							"properties": {
+								"addressPrefix": "10.10.0.0/24",
+								"networkSecurityGroup": false,
+								"routeTable": false,
+								"natGateway": false,
+								"privateEndpointNetworkPolicies": "Enabled"
+							},
+							"routeTable": {
+								"properties": {}
+							},
+							"securityRules": []
+						},
+						{
+							"name": "AzureFirewallSubnet",
+							"properties": {
+								"addressPrefix": "10.10.1.0/24",
+								"networkSecurityGroup": false,
+								"routeTable": false,
+								"natGateway": false,
+								"privateEndpointNetworkPolicies": "Enabled"
+							},
+							"routeTable": {
+								"properties": {}
+							},
+							"securityRules": []
+						},
+						{
+							"name": "AzureBastionSubnet",
+							"properties": {
+								"addressPrefix": "10.10.2.0/24",
+								"networkSecurityGroup": true,
+								"routeTable": false,
+								"natGateway": false,
+								"privateEndpointNetworkPolicies": "Enabled"
+							},
+							"routeTable": {
+								"properties": {}
+							},
+							"securityRules": [
+								{
+									"name": "Allow_Inbound_Monitor",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "10050",
+										"sourceAddressPrefix": "10.10.7.11/32",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 500,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Deny_Inbound_All",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "*",
+										"access": "Deny",
+										"priority": 4096,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Https",
+									"properties": {
+										"protocol": "TCP",
+										"sourcePortRange": "*",
+										"destinationPortRange": "443",
+										"sourceAddressPrefix": "Internet",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 1000,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_GatewayManager",
+									"properties": {
+										"protocol": "TCP",
+										"sourcePortRange": "*",
+										"destinationPortRange": "443",
+										"sourceAddressPrefix": "GatewayManager",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 1100,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_AzureLoadBalancer",
+									"properties": {
+										"protocol": "TCP",
+										"sourcePortRange": "*",
+										"destinationPortRange": "443",
+										"sourceAddressPrefix": "AzureLoadBalancer",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 1200,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_BastionHost",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"8080",
+											"5701"
+										],
+										"sourceAddressPrefix": "VirtualNetwork",
+										"destinationAddressPrefix": "VirtualNetwork",
+										"access": "Allow",
+										"priority": 1300,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Deny_Outbound_All",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "*",
+										"access": "Deny",
+										"priority": 4096,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_RdpSsh",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"22",
+											"3389"
+										],
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "VirtualNetwork",
+										"access": "Allow",
+										"priority": 1000,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_AzureCloud",
+									"properties": {
+										"protocol": "TCP",
+										"sourcePortRange": "*",
+										"destinationPortRange": "443",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "AzureCloud",
+										"access": "Allow",
+										"priority": 1100,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_BastionHost",
+									"properties": {
+										"protocol": "TCP",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"8080",
+											"5701"
+										],
+										"sourceAddressPrefix": "VirtualNetwork",
+										"destinationAddressPrefix": "VirtualNetwork",
+										"access": "Allow",
+										"priority": 1200,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_SessionInformation",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "80",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "Internet",
+										"access": "Allow",
+										"priority": 1300,
+										"direction": "Outbound"
+									}
+								}
+							]
+						},
+						{
+							"name": "snet-pe-prod-01",
+							"properties": {
+								"addressPrefix": "10.10.3.0/24",
+								"networkSecurityGroup": true,
+								"routeTable": false,
+								"natGateway": false,
+								"privateEndpointNetworkPolicies": "Disabled"
+							},
+							"routeTable": {
+								"properties": {}
+							},
+							"securityRules": [
+								{
+									"name": "Allow_Inbound_Monitor",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "10050",
+										"sourceAddressPrefix": "10.10.7.11/32",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 500,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Deny_Inbound_All",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "*",
+										"access": "Deny",
+										"priority": 4096,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Deny_Outbound_All",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "*",
+										"access": "Deny",
+										"priority": 4096,
+										"direction": "Outbound"
+									}
+								}
+							]
+						},
+						{
+							"name": "snet-core-prod-01",
+							"properties": {
+								"addressPrefix": "10.10.4.0/24",
+								"networkSecurityGroup": true,
+								"routeTable": false,
+								"natGateway": false,
+								"privateEndpointNetworkPolicies": "Enabled"
+							},
+							"routeTable": {
+								"properties": {}
+							},
+							"securityRules": [
+								{
+									"name": "Allow_Inbound_Bastion",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"22",
+											"3389"
+										],
+										"sourceAddressPrefix": "10.10.2.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 100,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_ICMP",
+									"properties": {
+										"protocol": "ICMP",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "10.10.5.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 200,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_ICMP_OLD",
+									"properties": {
+										"protocol": "ICMP",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefixes": [
+											"10.112.0.0/17",
+											"10.114.0.0/24",
+											"10.113.0.0/24"
+										],
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 250,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Mgmt",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"22",
+											"80",
+											"135",
+											"139",
+											"443",
+											"445",
+											"1433",
+											"3389",
+											"5986"
+										],
+										"sourceAddressPrefix": "10.10.5.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 300,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_ActiveDirectory",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"67",
+											"80",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"443",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"5722",
+											"5985",
+											"9389",
+											"49152-65535"
+										],
+										"sourceAddressPrefixes": [
+											"10.10.4.0/24",
+											"10.10.5.0/24",
+											"10.10.6.0/24",
+											"10.10.7.0/24",
+											"10.10.8.0/24",
+											"10.10.9.0/24",
+											"10.10.10.0/24",
+											"10.15.0.0/24"
+										],
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 400,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_ActiveDirectory_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"80",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"5722",
+											"9389",
+											"49152-65535"
+										],
+										"sourceAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 450,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Monitor",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "10050",
+										"sourceAddressPrefix": "10.10.7.11/32",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 500,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_RDP_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "3389",
+										"sourceAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 600,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_RDP_P2S",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "3389",
+										"sourceAddressPrefix": "10.15.0.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 700,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_LB",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "AzureLoadBalancer",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 800,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Deny_Inbound_All",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "*",
+										"access": "Deny",
+										"priority": 4096,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ActiveDirectory",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"3389",
+											"5722",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefixes": [
+											"10.10.4.0/24",
+											"10.10.5.0/24",
+											"10.10.6.0/24",
+											"10.10.7.0/24",
+											"10.10.8.0/24",
+											"10.10.9.0/24",
+											"10.10.10.0/24"
+										],
+										"access": "Allow",
+										"priority": 400,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ActiveDirectory_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"3389",
+											"5722",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"access": "Allow",
+										"priority": 450,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Monitor",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "10051",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.7.11/32",
+										"access": "Allow",
+										"priority": 500,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Sjunet",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefixes": [
+											"213.189.127.54/32",
+											"213.189.126.58/32",
+											"82.136.176.196/32"
+										],
+										"access": "Allow",
+										"priority": 600,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Internet",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "Internet",
+										"access": "Allow",
+										"priority": 4000,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Deny_Outbound_All",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "*",
+										"access": "Deny",
+										"priority": 4096,
+										"direction": "Outbound"
+									}
+								}
+							]
+						},
+						{
+							"name": "snet-mgmt-prod-01",
+							"properties": {
+								"addressPrefix": "10.10.5.0/24",
+								"networkSecurityGroup": true,
+								"routeTable": false,
+								"natGateway": false,
+								"privateEndpointNetworkPolicies": "Enabled"
+							},
+							"routeTable": {
+								"properties": {}
+							},
+							"securityRules": [
+								{
+									"name": "Allow_Inbound_Bastion",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"22",
+											"3389"
+										],
+										"sourceAddressPrefix": "10.10.2.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 100,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_ICMP",
+									"properties": {
+										"protocol": "ICMP",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "10.10.5.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 200,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Mgmt",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"22",
+											"80",
+											"135",
+											"139",
+											"443",
+											"445",
+											"1433",
+											"3389",
+											"5986"
+										],
+										"sourceAddressPrefix": "10.10.5.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 300,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_ActiveDirectory",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"3389",
+											"5722",
+											"9389",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "10.10.4.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 400,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_ActiveDirectory_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"3389",
+											"5722",
+											"9389",
+											"49152-65535"
+										],
+										"sourceAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 450,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Monitor",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "10050",
+										"sourceAddressPrefix": "10.10.7.11/32",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 500,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Files",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "445",
+										"sourceAddressPrefix": "10.10.0.0/16",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 600,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_RDP_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "3389",
+										"sourceAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 700,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_PrivateEndpoint",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "443",
+										"sourceAddressPrefix": "10.10.5.0/24",
+										"destinationAddressPrefix": "10.10.3.0/24",
+										"access": "Allow",
+										"priority": 800,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_RDP_P2S",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "3389",
+										"sourceAddressPrefix": "10.15.0.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 900,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Ctx_Services_VDA",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"80",
+											"135",
+											"443",
+											"445",
+											"6910-6969",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "10.10.9.0/24",
+										"destinationAddressPrefix": "10.10.5.0/24",
+										"access": "Allow",
+										"priority": 1000,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_LB",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "AzureLoadBalancer",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 1100,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_ADC",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"443",
+											"3003",
+											"3008",
+											"3009"
+										],
+										"sourceAddressPrefix": "10.10.0.0/16",
+										"destinationAddressPrefixes": [
+											"10.10.5.200",
+											"10.10.5.201"
+										],
+										"access": "Allow",
+										"priority": 1200,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Deny_Inbound_All",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "*",
+										"access": "Deny",
+										"priority": 4096,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ICMP",
+									"properties": {
+										"protocol": "ICMP",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.0.0/16",
+										"access": "Allow",
+										"priority": 200,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Mgmt",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"22",
+											"80",
+											"135",
+											"139",
+											"443",
+											"445",
+											"1433",
+											"3389",
+											"5986"
+										],
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.0.0/16",
+										"access": "Allow",
+										"priority": 300,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ActiveDirectory",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"80",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"5722",
+											"9389",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.4.0/24",
+										"access": "Allow",
+										"priority": 400,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ActiveDirectory_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"80",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"5722",
+											"9389",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"access": "Allow",
+										"priority": 450,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Monitor",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "10051",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.7.11/32",
+										"access": "Allow",
+										"priority": 500,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Rdp_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "3389",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"access": "Allow",
+										"priority": 600,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_PrivateEndpoint",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "443",
+										"sourceAddressPrefix": "10.10.5.0/24",
+										"destinationAddressPrefix": "10.10.3.0/24",
+										"access": "Allow",
+										"priority": 700,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Ctx_Services",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"80",
+											"135",
+											"443",
+											"445",
+											"6910-6969",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "10.10.5.0/24",
+										"destinationAddressPrefix": "10.10.9.0/24",
+										"access": "Allow",
+										"priority": 800,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ADC",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"443",
+											"3003",
+											"3008",
+											"3009"
+										],
+										"sourceAddressPrefixes": [
+											"10.10.5.200",
+											"10.10.5.201"
+										],
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 900,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Internet",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "Internet",
+										"access": "Allow",
+										"priority": 4000,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Deny_Outbound_All",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "*",
+										"access": "Deny",
+										"priority": 4096,
+										"direction": "Outbound"
+									}
+								}
+							]
+						},
+						{
+							"name": "snet-sql-prod-01",
+							"properties": {
+								"addressPrefix": "10.10.6.0/24",
+								"networkSecurityGroup": true,
+								"routeTable": false,
+								"natGateway": false,
+								"privateEndpointNetworkPolicies": "Enabled"
+							},
+							"routeTable": {
+								"properties": {}
+							},
+							"securityRules": [
+								{
+									"name": "Allow_Inbound_Bastion",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"22",
+											"3389"
+										],
+										"sourceAddressPrefix": "10.10.2.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 100,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_ICMP_OLD",
+									"properties": {
+										"protocol": "ICMP",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 200,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Mgmt",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"22",
+											"80",
+											"135",
+											"139",
+											"443",
+											"445",
+											"1433",
+											"3389",
+											"5986"
+										],
+										"sourceAddressPrefix": "10.10.5.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 300,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_ActiveDirectory",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"3389",
+											"5722",
+											"9389",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "10.10.4.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 400,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Monitor",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "10050",
+										"sourceAddressPrefix": "10.10.7.11/32",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 500,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_RDP_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "3389",
+										"sourceAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 600,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_SQL_CTX",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"1433",
+											"1434"
+										],
+										"sourceAddressPrefixes": [
+											"10.10.9.0/24",
+											"10.10.10.0/24"
+										],
+										"destinationAddressPrefix": "10.10.6.11/32",
+										"access": "Allow",
+										"priority": 700,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_RDP_P2S",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "3389",
+										"sourceAddressPrefix": "10.15.0.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 800,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_SQL",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "1433",
+										"sourceAddressPrefixes": [
+											"10.10.7.0/24",
+											"10.10.8.0/24",
+											"10.212.0.0/16",
+											"10.112.0.0/17",
+											"10.114.0.0/24"
+										],
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 1000,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_SQL_SSRS",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "80",
+										"sourceAddressPrefix": "10.10.8.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 1100,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Deny_Inbound_All",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "*",
+										"access": "Deny",
+										"priority": 4096,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ActiveDirectory",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"80",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"5722",
+											"9389",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.4.0/24",
+										"access": "Allow",
+										"priority": 400,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Monitor",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "10051",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.7.11/32",
+										"access": "Allow",
+										"priority": 500,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_File",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "445",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.5.0/24",
+										"access": "Allow",
+										"priority": 600,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ActiveDirectory_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"3389",
+											"5722",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"access": "Allow",
+										"priority": 700,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Internet",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "Internet",
+										"access": "Allow",
+										"priority": 4000,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Deny_Outbound_All",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "*",
+										"access": "Deny",
+										"priority": 4096,
+										"direction": "Outbound"
+									}
+								}
+							]
+						},
+						{
+							"name": "snet-app-prod-01",
+							"properties": {
+								"addressPrefix": "10.10.7.0/24",
+								"networkSecurityGroup": true,
+								"routeTable": false,
+								"natGateway": false,
+								"privateEndpointNetworkPolicies": "Enabled"
+							},
+							"routeTable": {
+								"properties": {}
+							},
+							"securityRules": [
+								{
+									"name": "Allow_Inbound_Bastion",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"22",
+											"3389"
+										],
+										"sourceAddressPrefix": "10.10.2.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 100,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_ICMP",
+									"properties": {
+										"protocol": "ICMP",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "10.10.5.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 200,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Mgmt",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"22",
+											"80",
+											"135",
+											"139",
+											"443",
+											"445",
+											"1433",
+											"3389",
+											"5986"
+										],
+										"sourceAddressPrefix": "10.10.5.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 300,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_ActiveDirectory",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"3389",
+											"5722",
+											"9389",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "10.10.4.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 400,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Monitor",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "10050",
+										"sourceAddressPrefix": "10.10.7.11/32",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 500,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Zabbix",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "10051",
+										"sourceAddressPrefix": "10.10.0.0/16",
+										"destinationAddressPrefix": "10.10.7.11/32",
+										"access": "Allow",
+										"priority": 600,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_LB",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "AzureLoadBalancer",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 700,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Deny_Inbound_All",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "*",
+										"access": "Deny",
+										"priority": 4096,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ActiveDirectory",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"80",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"5722",
+											"9389",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.4.0/24",
+										"access": "Allow",
+										"priority": 400,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ActiveDirectory_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"3389",
+											"5722",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"access": "Allow",
+										"priority": 450,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Monitor",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "10051",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.7.11/32",
+										"access": "Allow",
+										"priority": 500,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Zabbix",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "10050",
+										"sourceAddressPrefix": "10.10.7.11/32",
+										"destinationAddressPrefix": "10.10.0.0/16",
+										"access": "Allow",
+										"priority": 600,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_SQL",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "1433",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.6.0/24",
+										"access": "Allow",
+										"priority": 1000,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Internet",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "Internet",
+										"access": "Allow",
+										"priority": 4000,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Deny_Outbound_All",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "*",
+										"access": "Deny",
+										"priority": 4096,
+										"direction": "Outbound"
+									}
+								}
+							]
+						},
+						{
+							"name": "snet-web-prod-01",
+							"properties": {
+								"addressPrefix": "10.10.8.0/24",
+								"networkSecurityGroup": true,
+								"routeTable": false,
+								"natGateway": true,
+								"privateEndpointNetworkPolicies": "Enabled"
+							},
+							"routeTable": {
+								"properties": {
+									"disableBgpRoutePropagation": false,
+									"routes": []
+								}
+							},
+							"securityRules": [
+								{
+									"name": "Allow_Inbound_Bastion",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"22",
+											"3389"
+										],
+										"sourceAddressPrefix": "10.10.2.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 100,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_ICMP",
+									"properties": {
+										"protocol": "ICMP",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "10.10.5.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 200,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Mgmt",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"22",
+											"80",
+											"135",
+											"139",
+											"443",
+											"445",
+											"1433",
+											"3389",
+											"5986"
+										],
+										"sourceAddressPrefix": "10.10.5.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 300,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_ActiveDirectory",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"3389",
+											"5722",
+											"9389",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "10.10.4.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 400,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Monitor",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "10050",
+										"sourceAddressPrefix": "10.10.7.11/32",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 500,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_LoginCtx_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"18080",
+											"443"
+										],
+										"sourceAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 600,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_RDP_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "3389",
+										"sourceAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 700,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_8080_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "8080",
+										"sourceAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 710,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_RDP_P2S",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "3389",
+										"sourceAddressPrefix": "10.15.0.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 800,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Web_WTB",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"443",
+											"8080",
+											"8082"
+										],
+										"sourceAddressPrefix": "Internet",
+										"destinationAddressPrefix": "10.10.8.16/32",
+										"access": "Allow",
+										"priority": 900,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Web",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"443",
+											"9082",
+											"9086"
+										],
+										"sourceAddressPrefix": "Internet",
+										"destinationAddressPrefix": "10.10.8.0/24",
+										"access": "Allow",
+										"priority": 1000,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_WTB",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"8080",
+											"8082"
+										],
+										"sourceAddressPrefix": "10.10.8.0/24",
+										"destinationAddressPrefix": "10.10.8.0/24",
+										"access": "Allow",
+										"priority": 1100,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_LB",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "AzureLoadBalancer",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 1200,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Web_ADC_CSR",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"80",
+											"443"
+										],
+										"sourceAddressPrefix": "Internet",
+										"destinationAddressPrefix": "Internet",
+										"access": "Allow",
+										"priority": 1300,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Deny_Inbound_All",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "*",
+										"access": "Deny",
+										"priority": 4096,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ICMP",
+									"properties": {
+										"protocol": "ICMP",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 200,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ActiveDirectory",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"80",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"5722",
+											"9389",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.4.0/24",
+										"access": "Allow",
+										"priority": 400,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ActiveDirectory_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"3389",
+											"5722",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"access": "Allow",
+										"priority": 450,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Monitor",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "10051",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.7.11/32",
+										"access": "Allow",
+										"priority": 500,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_LB",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "AzureLoadBalancer",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 600,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_SQL",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "1433",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.6.0/24",
+										"access": "Allow",
+										"priority": 1000,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_SQL_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "1433",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"access": "Allow",
+										"priority": 1050,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ICMP_OLD",
+									"properties": {
+										"protocol": "ICMP",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"access": "Allow",
+										"priority": 1060,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_8080_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "8080",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"access": "Allow",
+										"priority": 1070,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_SMTP_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "25",
+										"sourceAddressPrefix": "10.10.8.16",
+										"destinationAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"access": "Allow",
+										"priority": 1080,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_File",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "445",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.5.0/24",
+										"access": "Allow",
+										"priority": 1100,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_SQL_SSRS",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "80",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.6.0/24",
+										"access": "Allow",
+										"priority": 1200,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_WTB",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"443",
+											"8080",
+											"8082"
+										],
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.8.0/24",
+										"access": "Allow",
+										"priority": 1300,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ADC",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"443",
+											"3003",
+											"3008",
+											"3009"
+										],
+										"sourceAddressPrefixes": [
+											"10.10.8.8",
+											"10.10.8.9"
+										],
+										"destinationAddressPrefix": "*",
+										"access": "Deny",
+										"priority": 1400,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Internet",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "Internet",
+										"access": "Allow",
+										"priority": 4000,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Deny_Outbound_All",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "*",
+										"access": "Deny",
+										"priority": 4096,
+										"direction": "Outbound"
+									}
+								}
+							]
+						},
+						{
+							"name": "snet-ctx-prod-01",
+							"properties": {
+								"addressPrefix": "10.10.9.0/24",
+								"networkSecurityGroup": true,
+								"routeTable": false,
+								"natGateway": false,
+								"privateEndpointNetworkPolicies": "Enabled"
+							},
+							"routeTable": {
+								"properties": {}
+							},
+							"securityRules": [
+								{
+									"name": "Allow_Inbound_Bastion",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"22",
+											"3389"
+										],
+										"sourceAddressPrefix": "10.10.2.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 100,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_ICMP",
+									"properties": {
+										"protocol": "ICMP",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefixes": [
+											"10.10.5.0/24",
+											"10.10.9.0/24"
+										],
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 200,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Mgmt",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"22",
+											"80",
+											"135",
+											"139",
+											"443",
+											"445",
+											"1433",
+											"3389",
+											"5986"
+										],
+										"sourceAddressPrefix": "10.10.5.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 300,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_ActiveDirectory",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"3389",
+											"5722",
+											"9389",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "10.10.4.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 400,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Monitor",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "10050",
+										"sourceAddressPrefix": "10.10.7.11/32",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 500,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Ctx_Services",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"67",
+											"69",
+											"80",
+											"443",
+											"445",
+											"808",
+											"1494",
+											"2071",
+											"2598",
+											"4011",
+											"7279",
+											"8082-8083",
+											"27000",
+											"54321",
+											"54322",
+											"54323",
+											"6890-6969"
+										],
+										"sourceAddressPrefix": "10.10.9.0/24",
+										"destinationAddressPrefix": "10.10.9.0/24",
+										"access": "Allow",
+										"priority": 600,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_RDP",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "3389",
+										"sourceAddressPrefix": "10.15.0.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 700,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Ctx_Services_VDA",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"80",
+											"135",
+											"443",
+											"445",
+											"6910-6969",
+											"49152-65535"
+										],
+										"sourceAddressPrefixes": [
+											"10.10.10.0/24",
+											"10.10.5.0/24"
+										],
+										"destinationAddressPrefix": "10.10.9.0/24",
+										"access": "Allow",
+										"priority": 800,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_StoreFront",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "443",
+										"sourceAddressPrefixes": [
+											"10.10.8.8/32",
+											"10.10.8.9/32"
+										],
+										"destinationAddressPrefixes": [
+											"10.10.9.13/32",
+											"10.10.9.14/32"
+										],
+										"access": "Allow",
+										"priority": 900,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_LB",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "AzureLoadBalancer",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 1000,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_CPM",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"80",
+											"135",
+											"139",
+											"443",
+											"445",
+											"7750",
+											"7751"
+										],
+										"sourceAddressPrefix": "10.10.10.0/24",
+										"destinationAddressPrefixes": [
+											"10.10.9.17/32",
+											"10.10.9.18/32"
+										],
+										"access": "Allow",
+										"priority": 1100,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Deny_Inbound_All",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "*",
+										"access": "Deny",
+										"priority": 4096,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ActiveDirectory",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"67",
+											"80",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"443",
+											"464",
+											"636",
+											"3268-3269",
+											"5722",
+											"5985",
+											"9389",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.4.0/24",
+										"access": "Allow",
+										"priority": 400,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ActiveDirectory_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"3389",
+											"5722",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"access": "Allow",
+										"priority": 450,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Monitor",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "10051",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.7.11/32",
+										"access": "Allow",
+										"priority": 500,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_File",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "445",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.5.0/24",
+										"access": "Allow",
+										"priority": 600,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Ctx_Services",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"67",
+											"69",
+											"80",
+											"443",
+											"445",
+											"808",
+											"1494",
+											"2071",
+											"2598",
+											"4011",
+											"7279",
+											"8082-8083",
+											"27000",
+											"54321",
+											"54322",
+											"54323",
+											"6890-6969"
+										],
+										"sourceAddressPrefix": "10.10.9.0/24",
+										"destinationAddressPrefix": "10.10.9.0/24",
+										"access": "Allow",
+										"priority": 700,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_SQL_PVS",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"1433",
+											"1434"
+										],
+										"sourceAddressPrefix": "10.10.9.0/24",
+										"destinationAddressPrefix": "10.10.6.11/32",
+										"access": "Allow",
+										"priority": 800,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_PVS_LIC_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"27000",
+											"7279",
+											"8082",
+											"8083",
+											"80"
+										],
+										"sourceAddressPrefix": "10.10.9.0/24",
+										"destinationAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"access": "Allow",
+										"priority": 900,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_CTX_SQL_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "1433",
+										"sourceAddressPrefix": "10.10.9.0/24",
+										"destinationAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"access": "Allow",
+										"priority": 1000,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Ctx_Services_VDA",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"80",
+											"443",
+											"1494",
+											"2598",
+											"6901",
+											"6902",
+											"6905",
+											"16500-16509",
+											"54321-54323"
+										],
+										"sourceAddressPrefix": "10.10.9.0/24",
+										"destinationAddressPrefixes": [
+											"10.10.10.0/24",
+											"10.10.5.0/24"
+										],
+										"access": "Allow",
+										"priority": 1100,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_CPM_SQL",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "1433",
+										"sourceAddressPrefixes": [
+											"10.10.9.17/32",
+											"10.10.9.18/32"
+										],
+										"destinationAddressPrefix": "10.10.6.11/32",
+										"access": "Allow",
+										"priority": 1200,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_CPM_MGMT",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"135",
+											"139",
+											"445"
+										],
+										"sourceAddressPrefixes": [
+											"10.10.9.17/32",
+											"10.10.9.18/32"
+										],
+										"destinationAddressPrefix": "10.10.10.0/24",
+										"access": "Allow",
+										"priority": 1300,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ICMP",
+									"properties": {
+										"protocol": "ICMP",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.9.0/24",
+										"access": "Allow",
+										"priority": 3000,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Internet",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "Internet",
+										"access": "Allow",
+										"priority": 4000,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Deny_Outbound_All",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "*",
+										"access": "Deny",
+										"priority": 4096,
+										"direction": "Outbound"
+									}
+								}
+							]
+						},
+						{
+							"name": "snet-vda-prod-01",
+							"properties": {
+								"addressPrefix": "10.10.10.0/24",
+								"networkSecurityGroup": true,
+								"routeTable": false,
+								"natGateway": false,
+								"privateEndpointNetworkPolicies": "Enabled"
+							},
+							"routeTable": {
+								"properties": {}
+							},
+							"securityRules": [
+								{
+									"name": "Allow_Inbound_Bastion",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"22",
+											"3389"
+										],
+										"sourceAddressPrefix": "10.10.2.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 100,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_ICMP",
+									"properties": {
+										"protocol": "ICMP",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefixes": [
+											"10.10.5.0/24",
+											"10.10.10.0/24"
+										],
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 200,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Mgmt",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"22",
+											"80",
+											"135",
+											"139",
+											"443",
+											"445",
+											"1433",
+											"3389",
+											"5986"
+										],
+										"sourceAddressPrefix": "10.10.5.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 300,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_ActiveDirectory",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"3389",
+											"5722",
+											"9389",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "10.10.4.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 400,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Monitor",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "10050",
+										"sourceAddressPrefix": "10.10.7.11/32",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 500,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Ctx_Services_VDA",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"80",
+											"443",
+											"1494",
+											"2598",
+											"6901",
+											"6902",
+											"6905",
+											"54321-54323",
+											"16500-16509"
+										],
+										"sourceAddressPrefix": "10.10.9.0/24",
+										"destinationAddressPrefix": "10.10.10.0/24",
+										"access": "Allow",
+										"priority": 600,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_RDP_P2S",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "3389",
+										"sourceAddressPrefix": "10.15.0.0/24",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 700,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_LB",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "AzureLoadBalancer",
+										"destinationAddressPrefix": "*",
+										"access": "Allow",
+										"priority": 800,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_Web_ADC",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "443",
+										"sourceAddressPrefix": "10.10.0.0/16",
+										"destinationAddressPrefixes": [
+											"10.10.10.200",
+											"10.10.10.201"
+										],
+										"access": "Allow",
+										"priority": 900,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Inbound_CPM_MGMT",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"135",
+											"139",
+											"445"
+										],
+										"sourceAddressPrefix": "10.10.9.0/24",
+										"destinationAddressPrefix": "10.10.10.0/24",
+										"access": "Allow",
+										"priority": 1000,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Deny_Inbound_All",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "*",
+										"access": "Deny",
+										"priority": 4096,
+										"direction": "Inbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ActiveDirectory",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"67",
+											"80",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"443",
+											"464",
+											"636",
+											"3268-3269",
+											"5722",
+											"5985",
+											"9389",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.4.0/24",
+										"access": "Allow",
+										"priority": 400,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ActiveDirectory_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"53",
+											"88",
+											"123",
+											"135",
+											"137-139",
+											"389",
+											"445",
+											"464",
+											"636",
+											"3268-3269",
+											"3389",
+											"5722",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"access": "Allow",
+										"priority": 450,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Monitor",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "10051",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.7.11/32",
+										"access": "Allow",
+										"priority": 500,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_File",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "445",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.5.0/24",
+										"access": "Allow",
+										"priority": 600,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Ctx_Services",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"80",
+											"135",
+											"443",
+											"445",
+											"6910-6969",
+											"49152-65535"
+										],
+										"sourceAddressPrefix": "10.10.10.0/24",
+										"destinationAddressPrefix": "10.10.9.0/24",
+										"access": "Allow",
+										"priority": 700,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_CTX_SQL",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"1433",
+											"1434"
+										],
+										"sourceAddressPrefix": "10.10.10.0/24",
+										"destinationAddressPrefix": "10.10.6.11/32",
+										"access": "Allow",
+										"priority": 800,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_CTX_SQL_OLD",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "1433",
+										"sourceAddressPrefix": "10.10.10.0/24",
+										"destinationAddressPrefixes": [
+											"10.112.0.0/16",
+											"10.114.0.0/24"
+										],
+										"access": "Allow",
+										"priority": 900,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ICMP",
+									"properties": {
+										"protocol": "ICMP",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "10.10.10.0/24",
+										"access": "Allow",
+										"priority": 1000,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_ADC",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"443",
+											"3003",
+											"3008",
+											"3009"
+										],
+										"sourceAddressPrefixes": [
+											"10.10.10.200",
+											"10.10.10.201"
+										],
+										"destinationAddressPrefix": "*",
+										"access": "Deny",
+										"priority": 1100,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_CPM",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRanges": [
+											"80",
+											"135",
+											"139",
+											"443",
+											"445",
+											"7750",
+											"7751"
+										],
+										"sourceAddressPrefix": "10.10.10.0/24",
+										"destinationAddressPrefixes": [
+											"10.10.9.17/32",
+											"10.10.9.18/32"
+										],
+										"access": "Allow",
+										"priority": 1200,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Allow_Outbound_Internet",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "Internet",
+										"access": "Allow",
+										"priority": 4000,
+										"direction": "Outbound"
+									}
+								},
+								{
+									"name": "Deny_Outbound_All",
+									"properties": {
+										"protocol": "*",
+										"sourcePortRange": "*",
+										"destinationPortRange": "*",
+										"sourceAddressPrefix": "*",
+										"destinationAddressPrefix": "*",
+										"access": "Deny",
+										"priority": 4096,
+										"direction": "Outbound"
+									}
+								}
+							]
+						}
+					]
+				},
+				"vm": [
+					{
+						"name": "vmmgmtprod01",
+						"availname": "",
+						"tags": {
+							"Application": "Management",
+							"Service": "Management",
+							"UpdateManagement": "Critical_Monthly_GroupB",
+							"Autoshutdown": "Yes"
+						},
+						"vmSize": "Standard_B2ms",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [
+							{
+								"name": "dataDisk-0",
+								"storageAccountType": "Premium_LRS",
+								"createOption": "Empty",
+								"lun": 0,
+								"diskSizeGB": 64
+							}
+						],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.5.11",
+								"primary": true,
+								"subnet": "snet-mgmt-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": true
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmmtdprod01",
+						"availname": "",
+						"tags": {
+							"Application": "Management",
+							"Service": "Management",
+							"UpdateManagement": "Critical_Monthly_GroupB",
+							"Autoshutdown": "Yes"
+						},
+						"vmSize": "Standard_B2ms",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsdesktop",
+							"offer": "windows-11",
+							"sku": "win11-22h2-avd",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Dynamic",
+								"privateIPAddress": "",
+								"primary": true,
+								"subnet": "snet-vda-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows11",
+						"backup": {
+							"enabled": false,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": false,
+							"enabled": false
+						},
+						"extensions": false
+					},
+					{
+						"name": "vmsqlprod01",
+						"availname": "",
+						"tags": {
+							"Application": "SQL",
+							"Service": "CGM J4 Demo, PVS",
+							"UpdateManagement": "Critical_Monthly_GroupA"
+						},
+						"vmSize": "Standard_B2ms",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftsqlserver",
+							"offer": "sql2019-ws2022",
+							"sku": "standard",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [
+							{
+								"name": "dataDisk-0",
+								"storageAccountType": "Premium_LRS",
+								"createOption": "Empty",
+								"lun": 0,
+								"diskSizeGB": 300
+							},
+							{
+								"name": "dataDisk-1",
+								"storageAccountType": "Premium_LRS",
+								"createOption": "Empty",
+								"lun": 1,
+								"diskSizeGB": 300
+							}
+						],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.6.11",
+								"primary": true,
+								"subnet": "snet-sql-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "WindowsSQL",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": true
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmsqlprod02",
+						"availname": "",
+						"tags": {
+							"Application": "SQL",
+							"Service": "CGM J4",
+							"UpdateManagement": "Critical_Monthly_GroupA"
+						},
+						"vmSize": "Standard_D8ds_v5",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftsqlserver",
+							"offer": "sql2019-ws2022",
+							"sku": "standard",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [
+							{
+								"name": "dataDisk-0",
+								"storageAccountType": "Premium_LRS",
+								"createOption": "Empty",
+								"lun": 0,
+								"diskSizeGB": 400
+							},
+							{
+								"name": "dataDisk-1",
+								"storageAccountType": "Premium_LRS",
+								"createOption": "Empty",
+								"lun": 1,
+								"diskSizeGB": 400
+							},
+							{
+								"name": "dataDisk-2",
+								"storageAccountType": "Premium_LRS",
+								"createOption": "Empty",
+								"lun": 2,
+								"diskSizeGB": 1500
+							}
+						],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.6.12",
+								"primary": true,
+								"subnet": "snet-sql-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": true
+							}
+						],
+						"OS": "WindowsSQL",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": true
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmwebprod01",
+						"availname": "",
+						"tags": {
+							"Application": "CGM J4",
+							"Service": "CGM J4",
+							"UpdateManagement": "Critical_Monthly_GroupB",
+							"Autoshutdown": "No"
+						},
+						"vmSize": "Standard_B2s",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.8.11",
+								"primary": true,
+								"subnet": "snet-web-prod-01",
+								"publicIPAddress": true,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": true
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmwebprod02",
+						"availname": "",
+						"tags": {
+							"Application": "CGM J4",
+							"Service": "CGM J4",
+							"Customer": "Kusten",
+							"UpdateManagement": "Critical_Monthly_GroupB",
+							"Autoshutdown": "No"
+						},
+						"vmSize": "Standard_B4ms",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.8.14",
+								"primary": true,
+								"subnet": "snet-web-prod-01",
+								"publicIPAddress": true,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": true
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmwebprod06",
+						"availname": "",
+						"tags": {
+							"Application": "CGM J4",
+							"Service": "CGM J4",
+							"Customer": "Improve Rehab",
+							"UpdateManagement": "Critical_Monthly_GroupB",
+							"Autoshutdown": "No"
+						},
+						"vmSize": "Standard_B2s",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.8.18",
+								"primary": true,
+								"subnet": "snet-web-prod-01",
+								"publicIPAddress": true,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": true
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmwtbprod01",
+						"availname": "",
+						"tags": {
+							"Application": "CGM J4",
+							"Service": "Webbtidbok",
+							"Customer": "Kusten",
+							"UpdateManagement": "Critical_Monthly_GroupB",
+							"Autoshutdown": "No"
+						},
+						"vmSize": "Standard_B2s",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.8.16",
+								"primary": true,
+								"subnet": "snet-web-prod-01",
+								"publicIPAddress": true,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": false
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmmonprod01",
+						"availname": "",
+						"tags": {
+							"Application": "Monitor",
+							"Service": "Zabbix",
+							"UpdateManagement": "Critical_Monthly_GroupB"
+						},
+						"vmSize": "Standard_B2s",
+						"plan": {},
+						"imageReference": {
+							"publisher": "canonical",
+							"offer": "0001-com-ubuntu-server-focal",
+							"sku": "20_04-lts",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.7.11",
+								"primary": true,
+								"subnet": "snet-app-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Linux",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": true
+						},
+						"extensions": false
+					},
+					{
+						"name": "vmfileprod01",
+						"availname": "",
+						"tags": {
+							"Application": "File",
+							"Service": "Profile Management",
+							"UpdateManagement": "Critical_Monthly_GroupB",
+							"Autoshutdown": "No"
+						},
+						"vmSize": "Standard_B2s",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [
+							{
+								"name": "dataDisk-0",
+								"storageAccountType": "Premium_LRS",
+								"createOption": "Empty",
+								"lun": 0,
+								"diskSizeGB": 128
+							}
+						],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.7.12",
+								"primary": true,
+								"subnet": "snet-app-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": false
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmcaprod01",
+						"availname": "",
+						"tags": {
+							"Application": "Core",
+							"Service": "Certificate Services",
+							"UpdateManagement": "Critical_Monthly_GroupA"
+						},
+						"vmSize": "Standard_B2s",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.4.12",
+								"primary": true,
+								"subnet": "snet-core-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": true
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmnipprod01",
+						"availname": "",
+						"tags": {
+							"Application": "NetiD",
+							"Service": "Portal server",
+							"UpdateManagement": "Critical_Monthly_GroupB"
+						},
+						"vmSize": "Standard_B2s",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.8.12",
+								"primary": true,
+								"subnet": "snet-web-prod-01",
+								"publicIPAddress": true,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": true
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmniaprod01",
+						"availname": "",
+						"tags": {
+							"Application": "NetiD",
+							"Service": "Access server",
+							"UpdateManagement": "Critical_Monthly_GroupB"
+						},
+						"vmSize": "Standard_B2s",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.8.13",
+								"primary": true,
+								"subnet": "snet-web-prod-01",
+								"publicIPAddress": true,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": false
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmlicprod01",
+						"availname": "",
+						"tags": {
+							"Application": "Citrix",
+							"Service": "License",
+							"UpdateManagement": "Critical_Monthly_GroupB"
+						},
+						"vmSize": "Standard_B2s",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.9.20",
+								"primary": true,
+								"subnet": "snet-ctx-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": true
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmfasprod01",
+						"availname": "",
+						"tags": {
+							"Application": "Citrix",
+							"Service": "Federated Authentication Service",
+							"UpdateManagement": "Critical_Monthly_GroupB"
+						},
+						"vmSize": "Standard_B2s",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.9.21",
+								"primary": true,
+								"subnet": "snet-ctx-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": false
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmraveprod01",
+						"availname": "",
+						"tags": {
+							"Application": "Medrave",
+							"Service": "Statistikprogram",
+							"UpdateManagement": "Critical_Monthly_GroupB"
+						},
+						"vmSize": "Standard_B2s",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [
+							{
+								"name": "dataDisk-0",
+								"storageAccountType": "Premium_LRS",
+								"createOption": "Empty",
+								"lun": 0,
+								"diskSizeGB": 50
+							}
+						],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.8.15",
+								"primary": true,
+								"subnet": "snet-web-prod-01",
+								"publicIPAddress": true,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": true
+						},
+						"extensions": true
+					}
+				],
+				"vmadc": [
+					{
+						"name": "vmadcprod01",
+						"tags": {
+							"Application": "Citrix",
+							"Service": "Application Delivery Controller",
+							"UpdateManagement": "Critical_Monthly_GroupA"
+						},
+						"vmSize": "Standard_DS3_v2",
+						"availabilitySet": "avail-adc-prod-01",
+						"plan": {
+							"publisher": "citrix",
+							"product": "netscalervpx-131",
+							"name": "netscalerbyol"
+						},
+						"imageReference": {
+							"publisher": "citrix",
+							"offer": "netscalervpx-131",
+							"sku": "netscalerbyol",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 64,
+						"dataDisks": [],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.5.200",
+								"primary": true,
+								"subnet": "snet-mgmt-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false,
+								"externalLoadBalancer": false,
+								"internalLoadBalancer": false
+							},
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.10.200",
+								"primary": false,
+								"subnet": "snet-vda-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": true,
+								"externalLoadBalancer": false,
+								"internalLoadBalancer": true
+							},
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.8.8",
+								"primary": false,
+								"subnet": "snet-web-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": true,
+								"externalLoadBalancer": true,
+								"internalLoadBalancer": false
+							}
+						],
+						"monitor": {
+							"alert": false,
+							"enabled": false
+						}
+					},
+					{
+						"name": "vmadcprod02",
+						"tags": {
+							"Application": "Citrix",
+							"Service": "Application Delivery Controller",
+							"UpdateManagement": "Critical_Monthly_GroupA"
+						},
+						"vmSize": "Standard_DS3_v2",
+						"availabilitySet": "avail-adc-prod-01",
+						"plan": {
+							"publisher": "citrix",
+							"product": "netscalervpx-131",
+							"name": "netscalerbyol"
+						},
+						"imageReference": {
+							"publisher": "citrix",
+							"offer": "netscalervpx-131",
+							"sku": "netscalerbyol",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 64,
+						"dataDisks": [],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.5.201",
+								"primary": true,
+								"subnet": "snet-mgmt-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false,
+								"externalLoadBalancer": false,
+								"internalLoadBalancer": false
+							},
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.10.201",
+								"primary": false,
+								"subnet": "snet-vda-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": true,
+								"externalLoadBalancer": false,
+								"internalLoadBalancer": true
+							},
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.8.9",
+								"primary": false,
+								"subnet": "snet-web-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": true,
+								"externalLoadBalancer": true,
+								"internalLoadBalancer": false
+							}
+						],
+						"monitor": {
+							"alert": false,
+							"enabled": false
+						}
+					}
+				],
+				"vmavail": [
+					{
+						"name": "vmctxprod01",
+						"rgname": "rg-vmctxprod01",
+						"availname": "avail-vmctxprod01",
+						"tags": {
+							"Application": "Citrix",
+							"Service": "Citrix Cloud Connector",
+							"UpdateManagement": "Critical_Monthly_GroupB"
+						},
+						"vmSize": "Standard_B2ms",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.9.11",
+								"primary": true,
+								"subnet": "snet-ctx-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": true
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmctxprod02",
+						"rgname": "rg-vmctxprod01",
+						"availname": "avail-vmctxprod01",
+						"tags": {
+							"Application": "Citrix",
+							"Service": "Citrix Cloud Connector",
+							"UpdateManagement": "Critical_Monthly_GroupA"
+						},
+						"vmSize": "Standard_B2ms",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.9.12",
+								"primary": true,
+								"subnet": "snet-ctx-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": true
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmdcprod01",
+						"rgname": "rg-vmdcprod01",
+						"availname": "avail-vmdcprod01",
+						"tags": {
+							"Application": "Core",
+							"Service": "ActiveDirectory",
+							"UpdateManagement": "Critical_Monthly_GroupX"
+						},
+						"vmSize": "Standard_B2ms",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [
+							{
+								"name": "dataDisk-0",
+								"storageAccountType": "Premium_LRS",
+								"createOption": "Empty",
+								"lun": 0,
+								"diskSizeGB": 16
+							}
+						],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.4.11",
+								"primary": true,
+								"subnet": "snet-core-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": true
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmpvsprod01",
+						"rgname": "rg-vmpvsprod01",
+						"availname": "avail-vmpvsprod01",
+						"tags": {
+							"Application": "Citrix",
+							"Service": "Citrix Provisioning Services",
+							"UpdateManagement": "Critical_Monthly_GroupA"
+						},
+						"vmSize": "Standard_B2s",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [
+							{
+								"name": "dataDisk-0",
+								"storageAccountType": "Premium_LRS",
+								"createOption": "Empty",
+								"lun": 0,
+								"diskSizeGB": 200
+							}
+						],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.9.16",
+								"primary": true,
+								"subnet": "snet-ctx-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": false
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmpvsprod02",
+						"rgname": "rg-vmpvsprod01",
+						"availname": "avail-vmpvsprod01",
+						"tags": {
+							"Application": "Citrix",
+							"Service": "Citrix Provisioning Services",
+							"UpdateManagement": "Critical_Monthly_GroupA"
+						},
+						"vmSize": "Standard_B2s",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [
+							{
+								"name": "dataDisk-0",
+								"storageAccountType": "Premium_LRS",
+								"createOption": "Empty",
+								"lun": 0,
+								"diskSizeGB": 200
+							}
+						],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.9.15",
+								"primary": true,
+								"subnet": "snet-ctx-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": false
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmsfprod01",
+						"rgname": "rg-vmsfprod01",
+						"availname": "avail-vmsfprod01",
+						"tags": {
+							"Application": "Citrix",
+							"Service": "StoreFront",
+							"UpdateManagement": "Critical_Monthly_GroupA"
+						},
+						"vmSize": "Standard_B2ms",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.9.13",
+								"primary": true,
+								"subnet": "snet-ctx-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": false
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmsfprod02",
+						"rgname": "rg-vmsfprod01",
+						"availname": "avail-vmsfprod01",
+						"tags": {
+							"Application": "Citrix",
+							"Service": "StoreFront",
+							"UpdateManagement": "Critical_Monthly_GroupB"
+						},
+						"vmSize": "Standard_B2ms",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.9.14",
+								"primary": true,
+								"subnet": "snet-ctx-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": false
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmcpmprod01",
+						"rgname": "rg-vmcpmprod01",
+						"availname": "avail-vmcpmprod01",
+						"tags": {
+							"Application": "Citrix",
+							"Service": "Citrix Profile Management",
+							"UpdateManagement": "Critical_Monthly_GroupA"
+						},
+						"vmSize": "Standard_B2ms",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.9.17",
+								"primary": true,
+								"subnet": "snet-ctx-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": false
+						},
+						"extensions": true
+					},
+					{
+						"name": "vmcpmprod02",
+						"rgname": "rg-vmcpmprod01",
+						"availname": "avail-vmcpmprod01",
+						"tags": {
+							"Application": "Citrix",
+							"Service": "Citrix Profile Management",
+							"UpdateManagement": "Critical_Monthly_GroupB"
+						},
+						"vmSize": "Standard_B2ms",
+						"plan": {},
+						"imageReference": {
+							"publisher": "microsoftwindowsserver",
+							"offer": "windowsserver",
+							"sku": "2022-datacenter",
+							"version": "latest"
+						},
+						"osDiskSizeGB": 128,
+						"dataDisks": [],
+						"networkInterfaces": [
+							{
+								"privateIPAllocationMethod": "Static",
+								"privateIPAddress": "10.10.9.18",
+								"primary": true,
+								"subnet": "snet-ctx-prod-01",
+								"publicIPAddress": false,
+								"enableIPForwarding": false,
+								"enableAcceleratedNetworking": false
+							}
+						],
+						"OS": "Windows",
+						"backup": {
+							"enabled": true,
+							"weekly": false
+						},
+						"monitor": {
+							"alert": true,
+							"enabled": false
+						},
+						"extensions": true
+					}
+				]
+			}
+		}
+	}
+}
