@@ -1,4 +1,6 @@
-////////////RESOURCE GROUP
+////////////////////////////////
+////////////RESOURCE GROUP//////
+///////////////////////////////
 resourceId(vnetrg, 'Microsoft.Network/virtualNetworks/subnets', vnetname, interface.subnet)
 subscriptionResourceId('Microsoft.insights/eventTypes', 'management')
 resourceId('Microsoft.Compute/disks', '${name}-${dataDisk.name}')
@@ -40,11 +42,13 @@ output ipconfig2 string = resourceId('Microsoft.Network/loadBalancers/frontendIP
 
 output probe1 string = '${subscription().id}/resourceGroups/${resourceGroup().name}/providers/Microsoft.Network/loadBalancers/${name}/probes/${probes[0].name}'
 output probe2 string = resourceId('Microsoft.Network/loadBalancers/probes', name, probes[0].name)
-///////SUBSCRIPTION
-
+//////////////////////////
+///////SUBSCRIPTION///////
+//////////////////////////
 resourceId(subscription().subscriptionId, rginfra1.name, 'Microsoft.Network/virtualNetworks/subnets', vnet01.outputs.name , param.lb.subnetname)
-
 resourceId(subscription().subscriptionId, rgAvail.name, 'Microsoft.Compute/availabilitySets', vmadc.availabilitySet)
+resourceId(subscription().subscriptionId, rginfra.name, 'Microsoft.Storage/storageAccounts', param.st[0].name)
+subscriptionResourceId('Microsoft.Resources/resourceGroups', rginfra.name)
 
 
 x
