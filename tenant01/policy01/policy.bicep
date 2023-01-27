@@ -74,6 +74,7 @@ var policyAssignments = [
         'Microsoft.ManagedIdentity/identities'
         'Microsoft.ManagedIdentity/userAssignedIdentities'
         'Microsoft.ContainerInstance/containerGroups'
+        'Microsoft.Compute/restorePointCollections'
         ]
       }
      }
