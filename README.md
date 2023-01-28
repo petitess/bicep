@@ -55,6 +55,8 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | logicapp01 | AD password expiration notification(Consumption) 
 | maintenance01 | Update management center
 | peering01 | Virtual network peering 
+| policy01 | Not Allowed Resource Types - Rescource Group 
+| policy02 | Cloud Adoption Framework
 | privatelink01 | Load Balancer with Private Link connected to another vnet
 | privatelink02 | Private Endpoint - Fileshare - Peering - Vnet-to-Vnet
 | privatelink03 | Private Endpoint for both File and Blob
