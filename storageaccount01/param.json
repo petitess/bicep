@@ -1,0 +1,54 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "param": {
+            "value": {
+                "location": "SwedenCentral",
+                "locationAlt": "WestEurope",
+                "tags": {
+                    "Application": "Infra",
+                    "Environment": "Dev"
+                },
+                "st": [
+                    {
+                        "name": "stinfratestsc01",
+                        "sku": "Standard_LRS",
+                        "kind": "StorageV2",
+                        "networkAcls": {
+                            "defaultAction": "Allow",
+                            "bypass": "AzureServices",
+                            "resourceAccessRules": [],
+                            "ipRules": []
+                        },
+                        "fileShares": [
+                            {
+                                "name": "fileshare01",
+                                "backup": true,
+                                "properties": {
+                                    "accessTier": "Hot",
+                                    "shareQuota": 5120,
+                                    "enabledProtocols": "SMB"
+                                }
+                            },
+                            {
+                                "name": "fileshare02",
+                                "backup": false,
+                                "properties": {
+                                    "accessTier": "Hot",
+                                    "shareQuota": 5120,
+                                    "enabledProtocols": "SMB"
+                                }
+                            }
+                        ],
+                        "containers": [
+                            {
+                                "name": "container01"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}
