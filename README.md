@@ -82,5 +82,6 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | virtualnetworkgateway03 | Virtual network gateway: Azure AD authentication
 | vmgallery01 | VM gallery, VM image definition and VM image version
 | vmgallery02 | VM gallery with VM deployment
+| vmss01 | Virtual machine scale set with load balancer 
 | wan01 | Azure Virtual WAN with P2S configuration
 | wan02 | Virtual network connections and VPN sites
