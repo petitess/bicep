@@ -75,7 +75,7 @@ resource lb 'Microsoft.Network/loadBalancers@2022-05-01' = {
  }
 
  resource pip 'Microsoft.Network/publicIPAddresses@2022-05-01' = {
-  name: 'pip-${name}'
+  name: '${name}-pip'
   location: location
   tags: tags
   sku: {
