@@ -1,0 +1,20 @@
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - landingzones/lz-xxx
+      - ci/templates/lz.yml
+      - iac
+
+pool:
+  vmImage: ubuntu-20.04
+
+extends:
+  template: /ci/templates/lz.yml
+  parameters:
+    environments:
+      - utv
+      - staging
+      - prod

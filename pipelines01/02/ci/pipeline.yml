@@ -1,0 +1,26 @@
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - ci
+      - landingzones
+      - scripts
+
+pool:
+  vmImage: ubuntu-20.04
+
+
+steps:
+  - task: AzurePowerShell@5
+    displayName: Run script
+    inputs:
+      azureSubscription: SSGLab
+      azurePowerShellVersion: latestVersion
+      pwsh: true
+
+      # azureSubscription: SSGLab
+      # scriptType: pscore
+      # scriptPath: scripts/pipeline.ps1
+
