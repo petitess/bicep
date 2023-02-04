@@ -80,6 +80,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | virtualnetworkgateway01 | Multiple connections using Key Vault
 | virtualnetworkgateway02 | Virtual network gateway: VNet-to-VNet connection
 | virtualnetworkgateway03 | Virtual network gateway: Azure AD authentication
+| virtualnetworkgateway04 | S2S VPN between subscriptions 
 | vmgallery01 | VM gallery, VM image definition and VM image version
 | vmgallery02 | VM gallery with VM deployment
 | vmss01 | Virtual machine scale set with load balancer 
