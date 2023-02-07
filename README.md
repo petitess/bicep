@@ -61,6 +61,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | privatelink02 | Private Endpoint - Fileshare - Peering - Vnet-to-Vnet
 | privatelink03 | Private Endpoint for both File and Blob
 | privatelink04 | Private Endpoint for Azure SQL
+| privatelink05 | Log Analytics Network Isolation 
 | storageaccount01 | Fileshare with backup
 | template01 | 2 VNETs
 | template02 | 3 VNETs
