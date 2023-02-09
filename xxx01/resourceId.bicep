@@ -16,6 +16,7 @@ resourceId('Microsoft.Network/networkInterfaces', '${vmPrefix}-${i + currentInst
 resourceId('Microsoft.Compute/availabilitySets', '${vmPrefix}-AV')
 
 reference(extensionResourceId('/subscriptions/${subscription().subscriptionId}/resourceGroups/${AVDResourceGroup}', 'Microsoft.Resources/deployments', 'backPlane'), '2019-10-01').outputs.appGroupName.value
+reference(resourceId('Microsoft.Network/virtualNetworkGateways', vgwname), '2022-07-01').ipConfigurations[0].id
 
 output appprincipalId1 string = appitglueint.outputs.principalId
 output appprincipalId2 object = reference(resourceId(subscription().subscriptionId, rgitglue.name, 'Microsoft.Web/sites', 'app-itglueint-${env}-01'),'2022-03-01').identity.principalId
