@@ -1,4 +1,4 @@
-### Application Gateway with private basic listener. Routed throught Azure Firewall.
+### Application Gateway with private basic listener. Routed through Azure Firewall.
 
 <img src="./AFW-AGW.png"/>
 
