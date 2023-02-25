@@ -41,6 +41,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | availabilityset01 | Availability set
 | availabilityset02 | Multiple availability sets 
 | azurefirewall01 | Azure Firewall Policy - DNAT, Network, Application rule 
+| azurefirewall02 | AGW routed through AFW
 | citrix01 | Citrix NetScaler(ADC) with high-availability(HA) 
 | dns01 | Microsoft.Network/dnsZones 
 | dns02 | Microsoft.Network/dnsZones-array 
