@@ -15,7 +15,7 @@ resource tags 'Microsoft.Resources/tags@2022-09-01' = {
 }
 
 resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
-  name: 'rg-${prefix}-02'
+  name: 'rg-${prefix}-01'
   location: location
   tags: union(config.tags, {
       System: 'Spoke'
