@@ -32,6 +32,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | alert04 | VM resource health alerts
 | apiconnection01 | API connection
 | applicationgateway01 | Azure Application Gateway Public IIS 
+| applicationgateway02 | Multi site listeners 
 | applicationinsights01 | Application Insights with Availability Test
 | appserviceplan01 | Azure App Service Plan integrated with vnet 
 | appserviceplan02 | Google Tag Manager with Availability test 
