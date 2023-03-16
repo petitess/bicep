@@ -274,7 +274,7 @@
 				},
 				"agw": {
 					"vnetName": "vnet-infra-spoke-dev-we-01",
-					"vnetResourceGroup": "rg-infra-spoke-dev-we-02",
+					"vnetResourceGroup": "rg-infra-spoke-dev-we-01",
 					"snetName": "snet-agw",
 					"pipSku": {
 						"name": "Standard",
