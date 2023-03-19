@@ -122,7 +122,8 @@ resource logic 'Microsoft.Logic/workflows@2019-05-01' = {
                 type: 'ManagedServiceIdentity'
               }
               body: {
-                query: 'patchassessmentresources | where type == \'microsoft.compute/virtualmachines/patchassessmentresults\' | where subscriptionId == \'${subId}\' | where properties.availablePatchCountByClassification.security > 0 or properties.availablePatchCountByClassification.critical > 0 | extend security = properties.availablePatchCountByClassification.security, critical = properties.availablePatchCountByClassification.critical | project resourceGroup, security, critical, vm =(replace(\'/subscriptions/${subId}/resourceGroups/*\', \'\', (trim_end(\'/patchAssessmentResults/latest\', id))))'
+                //query: 'patchassessmentresources | where type == \'microsoft.compute/virtualmachines/patchassessmentresults\' | where subscriptionId == \'${subId}\' | where properties.availablePatchCountByClassification.security > 0 or properties.availablePatchCountByClassification.critical > 0 | extend security = properties.availablePatchCountByClassification.security, critical = properties.availablePatchCountByClassification.critical | project resourceGroup, security, critical, vm =(replace(\'/subscriptions/${subId}/resourceGroups/*\', \'\', (trim_end(\'/patchAssessmentResults/latest\', id))))'
+                query: 'patchassessmentresources | where type == \'microsoft.compute/virtualmachines/patchassessmentresults\' | where subscriptionId == \'${subscription().subscriptionId}\' | where properties.availablePatchCountByClassification.security > 0 or properties.availablePatchCountByClassification.critical > 0 | extend security = properties.availablePatchCountByClassification.security, critical = properties.availablePatchCountByClassification.critical | project vm = replace(\'/providers/Microsoft.Compute/virtualMachines\', \'\',(trim_end(\'/patchAssessmentResults/latest\', substring(id, 67, 150)))), security, critical'
                 }
               headers: {
                 'Content-Type': 'application/json'
@@ -158,10 +159,10 @@ resource logic 'Microsoft.Logic/workflows@2019-05-01' = {
                         vm: {}
                       }
                       required: [
-                        'resourceGroup'
-                        'security'
-                        'critical'
-                        'vm'
+                        //'resourceGroup'
+                        //'security'
+                        //'critical'
+                        //'vm'
                       ]
                       type: 'object'
                     }
