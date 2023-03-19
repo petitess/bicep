@@ -27,7 +27,7 @@ subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180
 ```
 ### uniqueString()
 ```bicep
-
+```
 
 ### environment()
 ```bicep
@@ -39,5 +39,5 @@ environment().suffixes.keyvaultDns == .vault.azure.net
 ```bicep
 if(contains(param, 'vm'))
 
-if (contains(VmName, 'web'))
+if(contains(VmName, 'web'))
 ```
