@@ -39,7 +39,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | appserviceplan03 | ITglue integration
 | automationaccount01 | Schedule On-Demand Azure File Share Snapshots
 | automationaccount02 | Scheduled Runbooks 
-| availabilityset01 | Availability set
+| availabilityset01 | Availability set VMs combined with Non-availability set VMs 
 | availabilityset02 | Multiple availability sets 
 | azurefirewall01 | Azure Firewall Policy - DNAT, Network, Application rule 
 | azurefirewall02 | AGW routed through AFW
