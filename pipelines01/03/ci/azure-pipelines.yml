@@ -1,0 +1,57 @@
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - ci
+      - iac
+
+pool:
+  vmImage: ubuntu-20.04
+
+variables:
+  azureSubscription-test: 'ServicePrincipalName'
+
+parameters:
+  - name: environment
+    type: string
+    default: prod
+
+  - name: arguments
+    type: string
+    default: ""   
+
+stages:
+  - stage: build
+    displayName: Build
+    jobs:
+      - job: iac
+        displayName: Validate infrastructure
+        steps:
+          - task: AzureCLI@2
+            displayName: ${{ parameters.environment }}
+            inputs:
+              azureSubscription: $(azureSubscription-test)
+              scriptType: pscore
+              scriptPath: ./iac/deploy.ps1
+              arguments: ${{ parameters.environment }} ${{ parameters.arguments }}
+
+  - stage: ${{ parameters.environment }}
+    displayName: Release (${{ parameters.environment }})
+    jobs:
+      - deployment: iac
+        displayName: Deploy infrastructure
+        environment: ${{ parameters.environment }}
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - task: AzureCLI@2
+                  displayName: ${{ parameters.environment }}
+                  inputs:
+                    azureSubscription: $(azureSubscription-test)
+                    scriptType: pscore
+                    scriptPath: iac/deploy.ps1
+                    arguments: ${{ parameters.environment }} ${{ parameters.arguments }}
