@@ -1,0 +1,20 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "config": {
+            "value": {
+                "product": "governance",
+                "location": "sc",
+                "tags": {
+                    "Product": "Governance",
+                    "Environment": "Production"
+                },
+                "groupPrefix": [
+                    "grp-rbac-sub-infra",
+                    "grp-rbac-sub-access"
+                ]
+            }
+        }
+    }
+}
