@@ -35,4 +35,6 @@ Remove-AzRoleAssignment -Scope '/' -RoleDefinitionName 'Owner' -ObjectId $app.Id
 |--|--|
 | alz01 | Cloud Adoption Framework policy 
 | deploymentscript01 | Create Azure AD groups with managed identity
+| deploymentscript02 | Assign roles to Azure AD groups in subscription
 | policy01 | Allowed Resource Types and Allowed VM Size SKUs
+| deploymentscript02 | Assign roles to Azure AD groups in subscription
