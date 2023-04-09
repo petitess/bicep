@@ -37,4 +37,4 @@ Remove-AzRoleAssignment -Scope '/' -RoleDefinitionName 'Owner' -ObjectId $app.Id
 | deploymentscript01 | Create Azure AD groups with managed identity
 | deploymentscript02 | Assign roles to Azure AD groups in subscription
 | policy01 | Allowed Resource Types and Allowed VM Size SKUs
-| deploymentscript02 | Assign roles to Azure AD groups in subscription
+| policy02 | Assign build-in and custom policy definitions
