@@ -15,9 +15,6 @@ resourceId('Microsoft.Network/networkInterfaces', '${vmPrefix}-${i + currentInst
 
 resourceId('Microsoft.Compute/availabilitySets', '${vmPrefix}-AV')
 
-reference(extensionResourceId('/subscriptions/${subscription().subscriptionId}/resourceGroups/${AVDResourceGroup}', 'Microsoft.Resources/deployments', 'backPlane'), '2019-10-01').outputs.appGroupName.value
-reference(resourceId('Microsoft.Network/virtualNetworkGateways', vgwname), '2022-07-01').ipConfigurations[0].id
-
 output appprincipalId1 string = appitglueint.outputs.principalId
 output appprincipalId2 object = reference(resourceId(subscription().subscriptionId, rgitglue.name, 'Microsoft.Web/sites', 'app-itglueint-${env}-01'),'2022-03-01').identity.principalId
 
@@ -30,10 +27,6 @@ output kvu2 string = reference(resourceId(subscription().subscriptionId, resourc
 param a object = resourceGroup(reference(resourceId('Microsoft.Resources/resourceGroups', 'rgname')).name)
 
 subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleDefinitionId)
-
-reference(logicApp.id, logicApp.apiVersion, 'Full').identity.principalId
-
-reference(cosmosDbConnector.id, cosmosDbConnector.apiVersion, 'full').properties.connectionRuntimeUrl
 
 output poolid1 string = '${subscription().id}/resourceGroups/${resourceGroup().name}/providers/Microsoft.Network/loadBalancers/${name}/backendAddressPools/${backendAddressPools[0].name}'
 output poolid2 string = resourceId('Microsoft.Network/loadBalancers/backendAddressPools', name, backendAddressPools[0].name)
@@ -54,4 +47,8 @@ subscriptionResourceId('Microsoft.Resources/resourceGroups', rginfra.name)
 //REFERENCE
 replace(reference(snetId, '2022-09-01').addressPrefix, '.0/24', '.5')
 reference(resourceId('Microsoft.Network/networkInterfaces', 'nic-${name}'), '2022-09-01').ipConfigurations[0].properties.privateIPAddress 
+reference(extensionResourceId('/subscriptions/${subscription().subscriptionId}/resourceGroups/${AVDResourceGroup}', 'Microsoft.Resources/deployments', 'backPlane'), '2019-10-01').outputs.appGroupName.value
+reference(resourceId('Microsoft.Network/virtualNetworkGateways', vgwname), '2022-07-01').ipConfigurations[0].id
+reference(logicApp.id, logicApp.apiVersion, 'Full').identity.principalId
+reference(cosmosDbConnector.id, cosmosDbConnector.apiVersion, 'full').properties.connectionRuntimeUrl
 x
