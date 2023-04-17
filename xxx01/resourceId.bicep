@@ -51,5 +51,7 @@ resourceId(subscription().subscriptionId, rgAvail.name, 'Microsoft.Compute/avail
 resourceId(subscription().subscriptionId, rginfra.name, 'Microsoft.Storage/storageAccounts', param.st[0].name)
 subscriptionResourceId('Microsoft.Resources/resourceGroups', rginfra.name)
 
-
+//REFERENCE
+replace(reference(snetId, '2022-09-01').addressPrefix, '.0/24', '.5')
+reference(resourceId('Microsoft.Network/networkInterfaces', 'nic-${name}'), '2022-09-01').ipConfigurations[0].properties.privateIPAddress 
 x
