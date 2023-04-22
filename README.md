@@ -44,6 +44,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | azurefirewall01 | Azure Firewall Policy - DNAT, Network, Application rule 
 | azurefirewall02 | AGW routed through AFW
 | citrix01 | Citrix NetScaler(ADC) with high-availability(HA) 
+| deploymentscript01 | Create Azure AD groups & Assign roles
 | dns01 | Microsoft.Network/dnsZones 
 | dns02 | Microsoft.Network/dnsZones-array 
 | frontdoor01 | Virtual Machines (pip loop) as Backend pool
