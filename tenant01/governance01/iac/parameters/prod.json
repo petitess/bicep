@@ -1,0 +1,44 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "config": {
+            "value": {
+                "product": "governance",
+                "location": "we",
+                "tags": {
+                    "Product": "Governance",
+                    "Environment": "Production",
+                    "CostCenter": "54321"
+                },
+                "principals": {
+                    "sp-landingzones-01": "6e8535c5-e0d8-487d-a70e-bf782d4a50xx",
+                    "sp-access-dev-01": "3d94cec4-feb5-47ad-81bf-abfa627a8bxx",
+                    "sp-access-stg-01": "0f8ad116-bdb9-481d-95d9-1558b3eb02xx",
+                    "sp-access-prod-01": "36eda586-fd51-4c9d-bdb5-0768e838b0xx"
+                },
+                "groupPrefix": [
+                    "grp-rbac-sub-infra",
+                    "grp-rbac-sub-access"
+                ],
+                "groupRoles": [
+                    {
+                        "groupName": "grp-rbac-sub-infra-prod-01-reader",
+                        "ObjectId": "6b3fdfe3-d2da-4dad-b1e9-179a32e85733",
+                        "SubId": "xxx-1a10-483e-95aa-xxx"
+                    },
+                    {
+                        "groupName": "grp-rbac-sub-infra-prod-01-contributor",
+                        "ObjectId": "f04468c8-885d-4221-9ed0-ff3740102a4a",
+                        "SubId": "xxx-1a10-483e-95aa-xxx"
+                    },
+                    {
+                        "groupName": "grp-rbac-sub-infra-prod-01-owner",
+                        "ObjectId": "e091e8c1-dde2-45a5-98fc-34214413d74d",
+                        "SubId": "xxx-1a10-483e-95aa-xxx"
+                    }
+                ]
+            }
+        }
+    }
+}
