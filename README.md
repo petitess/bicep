@@ -67,7 +67,8 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | privatelink04 | Private Endpoint for Azure SQL
 | privatelink05 | Log Analytics & Appilcation Insight PL to Azure Monitor
 | privatelink06| Private Endpoint for File, Blob 
-| rbac01 | Multiple roles 
+| rbac01 | Multiple roles
+| runcommand01 | powershell script 
 | storageaccount01 | Fileshare with backup
 | storageaccount02 | Fileshare with backup
 | template01 | 2 VNETs
