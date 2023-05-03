@@ -37,6 +37,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | appserviceplan01 | Azure App Service Plan integrated with vnet 
 | appserviceplan02 | Google Tag Manager with Availability test 
 | appserviceplan03 | ITglue integration
+| appserviceplan04 | App service with PEP and Vnet integration
 | automationaccount01 | Schedule On-Demand Azure File Share Snapshots
 | automationaccount02 | Scheduled Runbooks 
 | availabilityset01 | Availability set VMs combined with Non-availability set VMs 
