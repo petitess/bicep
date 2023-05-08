@@ -94,5 +94,6 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | vmgallery01 | VM gallery, VM image definition and VM image version
 | vmgallery02 | VM gallery with VM deployment
 | vmss01 | Virtual machine scale set with load balancer 
+| vmss02 | VM scale set for DevOps
 | wan01 | Azure Virtual WAN with P2S configuration
 | wan02 | Virtual network connections and VPN sites
