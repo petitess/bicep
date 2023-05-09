@@ -49,7 +49,6 @@ module vmss 'vmss.bicep' = [for (vm, i) in param.vmss: {
   params: {
     adminPass: '12345678.abc'
     adminUsername: 'azadmin'
-    capacity: vm.capacity
     computerNamePrefix: vm.prefix
     dataDisks: vm.dataDisks
     imageReference: vm.imageReference
