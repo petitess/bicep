@@ -5,7 +5,6 @@ param location string
 param tags object = resourceGroup().tags
 param plan object
 param vmSize string
-param capacity int
 //@secure()
 param adminUsername string
 //@secure()
@@ -29,7 +28,6 @@ resource ss 'Microsoft.Compute/virtualMachineScaleSets@2023-03-01' = {
   sku: {
     name: vmSize
     tier: 'Standard'
-    capacity: capacity
   }
   identity: {
     type: 'SystemAssigned'
