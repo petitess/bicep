@@ -95,7 +95,6 @@
               "UpdateManagement": "Critical_Monthly_GroupA"
             },
             "vmSize": "Standard_B2ms",
-            "capacity": 0,
             "plan": {},
             "imageReference": {
 							"publisher": "canonical",
