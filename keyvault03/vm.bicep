@@ -15,7 +15,7 @@ param vnetName string
 param vnetRg string
 param kvName string
 
-var pass = 'A1.${uniqueString(resourceGroup().name, name)}2023'
+var pass = 'A1.${uniqueString(subscription().id, resourceGroup().name, name)}2023'
 
 resource vm 'Microsoft.Compute/virtualMachines@2023-03-01' =   {
   name: name
