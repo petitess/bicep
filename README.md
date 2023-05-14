@@ -54,6 +54,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | functionapp02 | Schedule On-Demand Azure File Share Snapshots
 | keyvault01 | Create Secrets for VMs 
 | keyvault02 | Create Secrets for VMs - multiple modules
+| keyvault03 | uniqueString() to generate password 
 | loadbalancer01 | Internal Azure Load Balancer with Rules
 | loadbalancer02 | External Load Balancer
 | logicapp01 | AD password expiration notification(Consumption) 
