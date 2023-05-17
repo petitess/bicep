@@ -1,0 +1,1 @@
+### Assign Groups Administrator to managed identity and create a group
