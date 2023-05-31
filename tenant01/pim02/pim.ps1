@@ -84,7 +84,7 @@ foreach ($Role in $Roles) {
         [Microsoft.Azure.PowerShell.Cmdlets.Resources.Authorization.Models.Api20201001Preview.RoleManagementPolicyEnablementRule]@{
             id          = 'Enablement_Admin_Eligibility'
             ruleType    = 'RoleManagementPolicyEnablementRule'
-            enabledRule = @('MultiFactorAuthentication')
+            enabledRule = @()
         }
         [Microsoft.Azure.PowerShell.Cmdlets.Resources.Authorization.Models.Api20201001Preview.RoleManagementPolicyEnablementRule]@{
             id          = 'Enablement_EndUser_Assignment'
