@@ -39,6 +39,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | appserviceplan03 | ITglue integration
 | appserviceplan04 | App service with PEP and Vnet integration
 | appserviceplan05 | PEP for slots 
+| appserviceplan06 | Install Azure App Service Managed Certificate 
 | automationaccount01 | Schedule On-Demand Azure File Share Snapshots
 | automationaccount02 | Scheduled Runbooks 
 | availabilityset01 | Availability set VMs combined with Non-availability set VMs 
