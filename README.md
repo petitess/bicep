@@ -57,6 +57,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | keyvault01 | Create Secrets for VMs 
 | keyvault02 | Create Secrets for VMs - multiple modules
 | keyvault03 | uniqueString() to generate password 
+| kubernetes01 | Azure Kubernetes services 
 | loadbalancer01 | Internal Azure Load Balancer with Rules
 | loadbalancer02 | External Load Balancer
 | logicapp01 | AD password expiration notification(Consumption) 
