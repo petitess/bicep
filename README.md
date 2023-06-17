@@ -46,6 +46,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | availabilityset02 | Multiple availability sets 
 | azurefirewall01 | Azure Firewall Policy - DNAT, Network, Application rule 
 | azurefirewall02 | AGW routed through AFW
+| certificates01 | Certificates + lock 
 | citrix01 | Citrix NetScaler(ADC) with high-availability(HA) 
 | deploymentscript01 | Create Azure AD groups & Assign roles
 | dns01 | Microsoft.Network/dnsZones 
