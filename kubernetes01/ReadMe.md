@@ -8,6 +8,7 @@ Get
 kubectl get nodes -o wide
 kubectl get pod
 ```
+Create a new nodepool
 ```
 az aks nodepool add --resource-group rg-aks-dev-01 --cluster-name aks-dev-01 --name marinerpool --os-sku Mariner --mode System --node-count 1
 az aks nodepool add --cluster-name aks-dev-02 --resource-group rg-aks-dev-01 --name winnpx --mode User --node-vm-size Standard_B2as_v2 --min-count 1 --max-count 20 --enable-cluster-autoscaler
