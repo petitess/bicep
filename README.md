@@ -40,6 +40,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | appserviceplan04 | App service with PEP and Vnet integration
 | appserviceplan05 | PEP for slots 
 | appserviceplan06 | Install Azure App Service Managed Certificate 
+| appserviceplan07 | Install Azure App Service Certificate + Custom Domain
 | automationaccount01 | Schedule On-Demand Azure File Share Snapshots
 | automationaccount02 | Scheduled Runbooks 
 | availabilityset01 | Availability set VMs combined with Non-availability set VMs 
@@ -59,6 +60,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | keyvault02 | Create Secrets for VMs - multiple modules
 | keyvault03 | uniqueString() to generate password 
 | kubernetes01 | Azure Kubernetes services 
+| kubernetes02 | Azure Kubernetes services - Azure CNI
 | loadbalancer01 | Internal Azure Load Balancer with Rules
 | loadbalancer02 | External Load Balancer
 | logicapp01 | AD password expiration notification(Consumption) 
