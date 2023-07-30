@@ -16,22 +16,22 @@ resource aks 'Microsoft.ContainerService/managedClusters@2023-05-02-preview' = {
     type: 'SystemAssigned'
   }
   properties: {
-    kubernetesVersion: '1.25.6'
+    kubernetesVersion: '1.26.3'
     dnsPrefix: name
     agentPoolProfiles: [
       {
-        name: 'nodepool01'
+        name: 'systemnp01'
         count: 1
         vmSize: 'Standard_B4ms'
         osDiskSizeGB: 64
         osDiskType: 'Managed'
         kubeletDiskType: 'OS'
-        maxPods: 50
+        maxPods: 30
         type: 'VirtualMachineScaleSets'
         maxCount: 30
         minCount: 1
         enableAutoScaling: true
-        orchestratorVersion: '1.25.6'
+        orchestratorVersion: '1.26.3'
         enableNodePublicIP: false
         mode: 'System'
         osType: 'Linux'
@@ -96,4 +96,52 @@ resource aks 'Microsoft.ContainerService/managedClusters@2023-05-02-preview' = {
   }
 }
 
+resource linuxNp 'Microsoft.ContainerService/managedClusters/agentPools@2023-05-02-preview' = {
+  name: 'linuxnp01'
+  parent: aks
+  properties: {
+    count: 1
+    vmSize: 'Standard_B4ms'
+    osDiskSizeGB: 64
+    kubeletDiskType: 'OS'
+    osDiskType: 'Managed'
+    vnetSubnetID: snetId
+    maxPods: 20
+    type: 'VirtualMachineScaleSets'
+    enableAutoScaling: false
+    scaleDownMode: 'Delete'
+    powerState: {
+      code: 'Running'
+    }
+    orchestratorVersion: '1.26.3'
+    enableNodePublicIP: false
+    mode: 'User'
+    osType: 'Linux'
+    osSKU: 'Ubuntu'
+  }
+}
 
+resource WinNp 'Microsoft.ContainerService/managedClusters/agentPools@2023-05-02-preview' = {
+  name: 'wnp01'
+  parent: aks
+  properties: {
+    count: 1
+    vmSize: 'Standard_B4ms'
+    osDiskSizeGB: 64
+    kubeletDiskType: 'OS'
+    osDiskType: 'Managed'
+    vnetSubnetID: snetId
+    maxPods: 20
+    type: 'VirtualMachineScaleSets'
+    enableAutoScaling: false
+    scaleDownMode: 'Delete'
+    powerState: {
+      code: 'Running'
+    }
+    orchestratorVersion: '1.26.3'
+    enableNodePublicIP: true
+    mode: 'User'
+    osType:  'Windows'
+    osSKU: 'Windows2022'
+  }
+}
