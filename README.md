@@ -65,6 +65,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | loadbalancer02 | External Load Balancer
 | logicapp01 | AD password expiration notification(Consumption) 
 | logicapp02 | Resource Graph Query - email
+| logicapp03 | Copy blobs 
 | maintenance01 | Update management center
 | peering01 | Virtual network peering 
 | policy01 | Not Allowed Resource Types - Rescource Group 
