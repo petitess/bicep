@@ -78,6 +78,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | privatelink06| Private Endpoint for File, Blob 
 | rbac01 | Multiple roles
 | runcommand01 | powershell script 
+| siterecovery01 | Azure Site Recovery 
 | storageaccount01 | Fileshare with backup
 | storageaccount02 | Fileshare with backup
 | template01 | 2 VNETs
