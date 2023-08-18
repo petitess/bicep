@@ -9,7 +9,7 @@ param subnets array
 param peerings array
 param natGateway bool
 
-resource vnet 'Microsoft.Network/virtualNetworks@2022-07-01' = {
+resource vnet 'Microsoft.Network/virtualNetworks@2023-04-01' = {
   name: name
   location: location
   tags: tags
@@ -39,7 +39,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-07-01' = {
   }
 }
 
-resource nsg 'Microsoft.Network/networkSecurityGroups@2022-07-01' = [for subnet in subnets: if (subnet.properties.networkSecurityGroup) {
+resource nsg 'Microsoft.Network/networkSecurityGroups@2023-04-01' = [for subnet in subnets: if (subnet.properties.networkSecurityGroup) {
   name: 'nsg-${subnet.name}'
   location: location
   tags: tags
@@ -48,14 +48,14 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2022-07-01' = [for subnet 
   }
 }]
 
-resource rt 'Microsoft.Network/routeTables@2022-07-01' = [for subnet in subnets: if (subnet.properties.routeTable) {
+resource rt 'Microsoft.Network/routeTables@2023-04-01' = [for subnet in subnets: if (subnet.properties.routeTable) {
   name: 'rt-${subnet.name}'
   location: location
   tags: tags
   properties: subnet.routeTable.properties
 }]
 
-resource ng 'Microsoft.Network/natGateways@2022-07-01' = if (natGateway) {
+resource ng 'Microsoft.Network/natGateways@2023-04-01' = if (natGateway) {
   name: 'ng-${name}'
   location: location
   tags: tags
@@ -72,7 +72,7 @@ resource ng 'Microsoft.Network/natGateways@2022-07-01' = if (natGateway) {
   }
 }
 
-resource pip 'Microsoft.Network/publicIPAddresses@2022-07-01' = if (natGateway) {
+resource pip 'Microsoft.Network/publicIPAddresses@2023-04-01' = if (natGateway) {
   name: 'pip-ng-${name}'
   location: location
   tags: tags
@@ -84,7 +84,7 @@ resource pip 'Microsoft.Network/publicIPAddresses@2022-07-01' = if (natGateway) 
   }
 }
 
-resource peering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2022-07-01' = [for peering in peerings: {
+resource peering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2023-04-01' = [for peering in peerings: {
   parent: vnet
   name: peering.name
   properties: peering.properties
@@ -92,11 +92,5 @@ resource peering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2022-
 
 output id string = vnet.id
 output name string = vnet.name
-output GatewaySubnetId string = resourceId('Microsoft.Network/virtualNetworks/subnets', vnet.name, subnets[0].name)
-output FirewallSubnetId string = resourceId('Microsoft.Network/virtualNetworks/subnets', vnet.name, subnets[1].name)
-output BastionSubnetId string = resourceId('Microsoft.Network/virtualNetworks/subnets', vnet.name, subnets[2].name)
-output PeSubnetId string = resourceId('Microsoft.Network/virtualNetworks/subnets', vnet.name, subnets[3].name)
-output CoreSubnetId string = resourceId('Microsoft.Network/virtualNetworks/subnets', vnet.name, subnets[4].name)
-output AgwSubId string = resourceId('Microsoft.Network/virtualNetworks/subnets', vnet.name, subnets[10].name)
-output AgwSubName string = subnets[10].name
+output snet object = toObject(vnet.properties.subnets, subnet => subnet.name)
 

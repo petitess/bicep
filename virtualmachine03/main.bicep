@@ -4,8 +4,6 @@ param param object
 var affix = toLower('${param.tags.Application}-${param.tags.Environment}')
 var env = toLower(param.tags.Environment)
 
-var deployBastion = false 
-
 resource rginfra 'Microsoft.Resources/resourceGroups@2022-09-01' ={
   location: param.location
   tags: param.tags
@@ -26,7 +24,7 @@ module vnet 'vnet.bicep' = {
   }
 }
 
-module bas 'bas.bicep' = if(deployBastion) {
+module bas 'bas.bicep' = if(false) {
   scope: rginfra
   name: 'module-${affix}-bas'
   params: {

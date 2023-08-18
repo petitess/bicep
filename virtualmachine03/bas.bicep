@@ -5,7 +5,7 @@ param location string
 param tags object = resourceGroup().tags
 param vnetname string
 
-resource bas 'Microsoft.Network/bastionHosts@2022-07-01' = {
+resource bas 'Microsoft.Network/bastionHosts@2023-04-01' = {
   name: name
   location: location
   tags: tags
@@ -30,7 +30,7 @@ resource bas 'Microsoft.Network/bastionHosts@2022-07-01' = {
   }
 }
 
-resource pip 'Microsoft.Network/publicIPAddresses@2022-07-01' = {
+resource pip 'Microsoft.Network/publicIPAddresses@2023-04-01' = {
   name: '${name}-pip'
   location: location
   tags: tags
