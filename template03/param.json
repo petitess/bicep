@@ -49,7 +49,7 @@
 							"Service": "Srv",
 							"UpdateManagement": "NotSupported"
 						},
-						"vmSize": "Standard_B2s",
+						"vmSize": "Standard_E2bds_v5",
 						"plan": {},
 						"imageReference": {
 							"publisher": "microsoftwindowsserver",
@@ -58,7 +58,24 @@
 							"version": "latest"
 						},
 						"osDiskSizeGB": 64,
-						"dataDisks": [],
+						"dataDisks": [
+              {
+                "name": "dataDisk-0",
+                "storageAccountType": "Premium_LRS",
+                "createOption": "Empty",
+                "caching": "ReadWrite",
+                "lun": 0,
+                "diskSizeGB": 100
+            },
+            {
+              "name": "dataDisk-1",
+              "storageAccountType": "Premium_LRS",
+              "createOption": "Empty",
+              "caching": "ReadOnly",
+              "lun": 1,
+              "diskSizeGB": 100
+          }
+            ],
 						"networkInterfaces": [
 							{
 								"privateIPAllocationMethod": "Static",
