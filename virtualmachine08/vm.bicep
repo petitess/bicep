@@ -19,7 +19,7 @@ param AzureMonitorAgent bool
 param DataWinId string
 param DataLinuxId string
 
-resource vm 'Microsoft.Compute/virtualMachines@2022-11-01' = {
+resource vm 'Microsoft.Compute/virtualMachines@2023-03-01' = {
   name: name
   location: location
   tags: tags
@@ -39,6 +39,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2022-11-01' = {
       computerName: name
       adminUsername: adminUsername
       adminPassword: adminPass
+  
     }
     storageProfile: {
       imageReference: imageReference
@@ -72,7 +73,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2022-11-01' = {
   }
 }
 
-resource disk 'Microsoft.Compute/disks@2022-07-02' = [for dataDisk in dataDisks: if (dataDisk.createOption == 'Empty') {
+resource disk 'Microsoft.Compute/disks@2023-01-02' = [for dataDisk in dataDisks: if (dataDisk.createOption == 'Empty') {
   name: '${name}-${dataDisk.name}'
   location: location
   tags: resourceGroup().tags
@@ -87,7 +88,7 @@ resource disk 'Microsoft.Compute/disks@2022-07-02' = [for dataDisk in dataDisks:
   }
 }]
 
-resource nic 'Microsoft.Network/networkInterfaces@2022-07-01' = [for (interface, i) in networkInterfaces: {
+resource nic 'Microsoft.Network/networkInterfaces@2023-04-01' = [for (interface, i) in networkInterfaces: {
   name: '${name}-nic-${i + 1}'
   location: location
   tags: resourceGroup().tags
@@ -112,7 +113,7 @@ resource nic 'Microsoft.Network/networkInterfaces@2022-07-01' = [for (interface,
   }
 }]
 
-resource pip 'Microsoft.Network/publicIPAddresses@2022-07-01' = [for (interface, i) in networkInterfaces: if (interface.publicIPAddress) {
+resource pip 'Microsoft.Network/publicIPAddresses@2023-04-01' = [for (interface, i) in networkInterfaces: if (interface.publicIPAddress) {
   name: '${name}-nic-${i + 1}-pip'
   location: location
   tags: tags
@@ -124,37 +125,16 @@ resource pip 'Microsoft.Network/publicIPAddresses@2022-07-01' = [for (interface,
   }
 }]
 
-resource amaWindows 'Microsoft.Compute/virtualMachines/extensions@2022-11-01' = if(contains(imageReference.publisher, 'windows') && AzureMonitorAgent) {
-  parent: vm 
-  name: 'AzureMonitorWindowsAgent'
-  location: location
-  properties: {
-    autoUpgradeMinorVersion: true
-    enableAutomaticUpgrade: true
-    publisher: 'Microsoft.Azure.Monitor'
-    type: 'AzureMonitorWindowsAgent'
-    typeHandlerVersion: '1.8'
-    settings: {
-      authentication: {
-        managedIdentity: {
-          'identifier-name': 'mi_res_id'
-          'identifier-value': vm.id
-        }
-      }
-    }
-  }
-}
-
-resource amaLinux 'Microsoft.Compute/virtualMachines/extensions@2022-11-01' = if(contains(imageReference.publisher, 'canonical') && AzureMonitorAgent) {
+resource AMA 'Microsoft.Compute/virtualMachines/extensions@2023-03-01' = if (AzureMonitorAgent) {
   parent: vm
-  name: 'AzureMonitorLinuxAgent'
+  name: contains(imageReference.publisher, 'windows') ? 'AzureMonitorWindowsAgent' : 'AzureMonitorLinuxAgent'
   location: location
   properties: {
-    publisher: 'Microsoft.Azure.Monitor'
-    type: 'AzureMonitorLinuxAgent'
-    typeHandlerVersion: '1.25'
     autoUpgradeMinorVersion: true
     enableAutomaticUpgrade: true
+    publisher: 'Microsoft.Azure.Monitor'
+    type: contains(imageReference.publisher, 'windows') ? 'AzureMonitorWindowsAgent' : 'AzureMonitorLinuxAgent'
+    typeHandlerVersion: contains(imageReference.publisher, 'windows') ? '1.8' : '1.27'
     settings: {
       authentication: {
         managedIdentity: {
@@ -166,7 +146,7 @@ resource amaLinux 'Microsoft.Compute/virtualMachines/extensions@2022-11-01' = if
   }
 }
 
-resource amaAssociation 'Microsoft.Insights/dataCollectionRuleAssociations@2021-09-01-preview' = if(AzureMonitorAgent) {
+resource amaAssociation 'Microsoft.Insights/dataCollectionRuleAssociations@2022-06-01' = if(AzureMonitorAgent) {
   name: name
   scope: vm
   properties: {

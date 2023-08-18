@@ -2,11 +2,11 @@ targetScope = 'resourceGroup'
 
 param env string
 param location string
-param workspacename string
+param workspaceName string
 
 var tags = resourceGroup().tags
 
-resource CollectionRule 'Microsoft.Insights/dataCollectionRules@2021-09-01-preview' = {
+resource CollectionRule 'Microsoft.Insights/dataCollectionRules@2022-06-01' = {
   name: 'data-windows-${env}-01'
   location: location
   tags: tags
@@ -29,8 +29,8 @@ resource CollectionRule 'Microsoft.Insights/dataCollectionRules@2021-09-01-previ
      destinations: {
       logAnalytics: [
         {
-          workspaceResourceId: resourceId('Microsoft.OperationalInsights/workspaces', workspacename)
-          name: workspacename
+          workspaceResourceId: resourceId('Microsoft.OperationalInsights/workspaces', workspaceName)
+          name: workspaceName
         }
       ]
      }
@@ -40,7 +40,7 @@ resource CollectionRule 'Microsoft.Insights/dataCollectionRules@2021-09-01-previ
           'Microsoft-Event'
          ]
          destinations: [
-          workspacename
+          workspaceName
          ]
          transformKql: 'source'
          outputStream: 'Microsoft-Event'
@@ -49,7 +49,7 @@ resource CollectionRule 'Microsoft.Insights/dataCollectionRules@2021-09-01-previ
   }
 }
 
-resource CollectionRuleLinux 'Microsoft.Insights/dataCollectionRules@2021-09-01-preview' = {
+resource CollectionRuleLinux 'Microsoft.Insights/dataCollectionRules@2022-06-01' = {
   name: 'data-linux-${env}-01'
   location: location
   tags: tags
@@ -94,8 +94,8 @@ resource CollectionRuleLinux 'Microsoft.Insights/dataCollectionRules@2021-09-01-
      destinations: {
       logAnalytics: [
         {
-          workspaceResourceId: resourceId('Microsoft.OperationalInsights/workspaces', workspacename)
-          name: workspacename
+          workspaceResourceId: resourceId('Microsoft.OperationalInsights/workspaces', workspaceName)
+          name: workspaceName
         }
       ]
      }
@@ -105,7 +105,7 @@ resource CollectionRuleLinux 'Microsoft.Insights/dataCollectionRules@2021-09-01-
            'Microsoft-Syslog'
          ]
          destinations: [
-          workspacename
+          workspaceName
          ]
          transformKql: 'source'
          outputStream: 'Microsoft-Syslog'

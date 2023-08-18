@@ -4,7 +4,6 @@ param param object
 
 var affix = toLower('${param.tags.Application}-${param.tags.Environment}')
 var env = toLower(param.tags.Environment)
-var deployBastion = false
 
 resource rginfra 'Microsoft.Resources/resourceGroups@2022-09-01' ={
   location: param.location
@@ -26,13 +25,15 @@ module vnet 'vnet.bicep' = {
   }
 }
 
-module bas 'bas.bicep' = if(deployBastion) {
+module bas 'bas.bicep' = if(false) {
   scope: rginfra
   name: 'module-${affix}-bas'
   params: {
     location: param.location
     name: 'bas-${vnet.outputs.name}'
-    vnetname: vnet.outputs.name
+    vnetId: vnet.outputs.id
+    subnet: vnet.outputs.snet.AzureBastionSubnet.id
+
   }
 }
 
@@ -47,7 +48,7 @@ resource rgVm 'Microsoft.Resources/resourceGroups@2022-09-01' = [for vm in param
 
 module vm1 'vm.bicep' = [for (vm, i) in param.vm: {
   scope: rgVm[i]
-  name: 'module-${vm.name}-vm'
+  name: 'module-${vm.name}'
   params: {
     adminPass: '12345678.abc'
     adminUsername: 'azadmin'
@@ -87,6 +88,6 @@ module datarules 'datarules.bicep' = {
   params: {
     location: param.location
     env: env
-    workspacename: log.outputs.name
+    workspaceName: log.outputs.name
   }
 }
