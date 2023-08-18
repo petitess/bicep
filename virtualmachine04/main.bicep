@@ -5,14 +5,14 @@ param param object
 var affix = toLower('${param.tags.Application}-${param.tags.Environment}')
 var location = param.location
 
-resource rginfra 'Microsoft.Resources/resourceGroups@2021-04-01' = {
+resource rgInfra 'Microsoft.Resources/resourceGroups@2022-09-01' = {
   location: location
   tags: param.tags
   name: 'rg-${affix}-01'
 }
 
 module vnet01 'vnet.bicep' = {
-  scope: rginfra
+  scope: rgInfra
   name: 'module-${affix}-vnet01'
   params: {
     addressPrefixes: param.vnet01.addressPrefixes
@@ -25,17 +25,18 @@ module vnet01 'vnet.bicep' = {
   }
 }
 
-module bas 'bas.bicep' = {
-  scope: rginfra
+module bas 'bas.bicep' = if(false) {
+  scope: rgInfra
   name: 'module-${affix}-bas'
   params: {
     location: param.location
     name: 'bas-${vnet01.outputs.name}'
-    subnet: '${vnet01.outputs.id}/subnets/AzureBastionSubnet'
+    subnet: vnet01.outputs.snet.AzureBastionSubnet.id
+    vnetId: vnet01.outputs.id
   }
 }
 
-resource rgVm 'Microsoft.Resources/resourceGroups@2021-04-01' = [for vm in param.vmvnet01: {
+resource rgVm 'Microsoft.Resources/resourceGroups@2022-09-01' = [for vm in param.vm: {
   name: toLower('rg-${vm.name}')
   location: param.location
   tags: {
@@ -44,11 +45,11 @@ resource rgVm 'Microsoft.Resources/resourceGroups@2021-04-01' = [for vm in param
   }
 }]
 
-module vm1 'vm.bicep' = [for (vm, i) in param.vmvnet01: {
+module vm 'vm.bicep' = [for (vm, i) in param.vm: {
   scope: rgVm[i]
-  name: 'module-${vm.name}-vm'
+  name: 'module-${vm.name}'
   params: {
-    adminPassword: '12345678.abc'
+    adminPass: '12345678.abc'
     adminUsername: 'azadmin'
     dataDisks: vm.dataDisks
     imageReference: vm.imageReference
@@ -59,8 +60,8 @@ module vm1 'vm.bicep' = [for (vm, i) in param.vmvnet01: {
     plan: vm.plan
     tags: union(rgVm[i].tags, vm.tags)
     vmSize: vm.vmSize
-    vnet: vnet01.outputs.id
-    ADDservices: vm.ADDservices
+    vnetName: vnet01.outputs.name
+    vnetRg: rgInfra.name
     LinuxOS: vm.LinuxOS
   }
 }]

@@ -4,16 +4,22 @@ param name string
 param location string
 param tags object = resourceGroup().tags
 param subnet string
+param vnetId string
+@allowed(['Developer', 'Basic', 'Standard'])
+param sku string = 'Basic'
 
-resource bas 'Microsoft.Network/bastionHosts@2022-01-01' = {
+resource bas 'Microsoft.Network/bastionHosts@2023-04-01' = {
   name: name
   location: location
   tags: tags
   sku: {
-    name: 'Basic'
+    name: sku
   }
   properties: {
-    ipConfigurations: [
+    virtualNetwork: sku == 'Developer' ? {
+      id: vnetId
+    } : null
+    ipConfigurations: sku != 'Developer' ? [
       {
         name: '${name}-ipConf'
         properties: {
@@ -26,11 +32,11 @@ resource bas 'Microsoft.Network/bastionHosts@2022-01-01' = {
           }
         }
       }
-    ]
+    ] : []
   }
 }
 
-resource pip 'Microsoft.Network/publicIPAddresses@2022-01-01' = {
+resource pip 'Microsoft.Network/publicIPAddresses@2023-04-01' = {
   name: 'pip-${name}'
   location: location
   tags: tags

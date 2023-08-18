@@ -8,16 +8,16 @@ param vmSize string
 //@secure()
 param adminUsername string
 //@secure()
-param adminPassword string
+param adminPass string
 param imageReference object
 param osDiskSizeGB int
 param dataDisks array
 param networkInterfaces array
-param vnet string 
-param ADDservices bool
+param vnetRg string 
+param vnetName string
 param LinuxOS bool
 
-resource vm 'Microsoft.Compute/virtualMachines@2022-03-01' = {
+resource vm 'Microsoft.Compute/virtualMachines@2023-03-01' = {
   name: name
   location: location
   tags: tags
@@ -33,7 +33,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2022-03-01' = {
     osProfile: {
       computerName: name
       adminUsername: adminUsername
-      adminPassword: adminPassword
+      adminPassword: adminPass
     }
     storageProfile: {
       imageReference: imageReference
@@ -48,7 +48,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2022-03-01' = {
         diskSizeGB: dataDisk.diskSizeGB
         managedDisk: {
           storageAccountType: dataDisk.storageAccountType
-          id: '${resourceGroup().id}/providers/Microsoft.Compute/disks/${name}-${dataDisk.name}'
+          id: resourceId('Microsoft.Compute/disks', '${name}-${dataDisk.name}')
         }
       }]
     }
@@ -68,7 +68,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2022-03-01' = {
   }
 }
 
-resource disk 'Microsoft.Compute/disks@2022-03-02' = [for dataDisk in dataDisks: if (dataDisk.createOption == 'Empty') {
+resource disk 'Microsoft.Compute/disks@2023-01-02' = [for dataDisk in dataDisks: if (dataDisk.createOption == 'Empty') {
   name: '${name}-${dataDisk.name}'
   location: location
   tags: resourceGroup().tags
@@ -83,7 +83,7 @@ resource disk 'Microsoft.Compute/disks@2022-03-02' = [for dataDisk in dataDisks:
   }
 }]
 
-resource nic 'Microsoft.Network/networkInterfaces@2022-01-01' = [for (interface, i) in networkInterfaces: {
+resource nic 'Microsoft.Network/networkInterfaces@2023-04-01' = [for (interface, i) in networkInterfaces: {
   name: '${name}-nic-${i + 1}'
   location: location
   tags: resourceGroup().tags
@@ -98,7 +98,7 @@ resource nic 'Microsoft.Network/networkInterfaces@2022-01-01' = [for (interface,
             id: pip[i].id
           } : null
           subnet: {
-            id: '${vnet}/subnets/${interface.subnet}'
+            id: resourceId(vnetRg, 'Microsoft.Network/virtualNetworks/subnets', vnetName, interface.subnet)
           }
         }
       }
@@ -108,7 +108,7 @@ resource nic 'Microsoft.Network/networkInterfaces@2022-01-01' = [for (interface,
   }
 }]
 
-resource pip 'Microsoft.Network/publicIPAddresses@2022-01-01' = [for (interface, i) in networkInterfaces: if (interface.publicIPAddress) {
+resource pip 'Microsoft.Network/publicIPAddresses@2023-04-01' = [for (interface, i) in networkInterfaces: if (interface.publicIPAddress) {
   name: 'pip-${name}-nic-${i + 1}'
   location: location
   tags: tags
@@ -120,7 +120,7 @@ resource pip 'Microsoft.Network/publicIPAddresses@2022-01-01' = [for (interface,
   }
 }]
 
-resource nginx 'Microsoft.Compute/virtualMachines/extensions@2022-03-01' = if(LinuxOS) {
+resource nginx 'Microsoft.Compute/virtualMachines/extensions@2023-03-01' = if(LinuxOS) {
   name: 'CustomScript'
   parent: vm
   location: location
@@ -130,7 +130,7 @@ resource nginx 'Microsoft.Compute/virtualMachines/extensions@2022-03-01' = if(Li
     typeHandlerVersion: '2.1'
     autoUpgradeMinorVersion: true
     protectedSettings: {
-      commandToExecute: 'apt-get install nginx -y && echo "Hello World from host" ${vm.name} "!" | sudo tee -a /var/www/html/index.html'
+      commandToExecute: 'sudo apt-get update -y; sudo apt-get install nginx -y; echo "Hello World from host" ${vm.name} "!" | sudo tee -a /var/www/html/index.html; sudo apt-get install git -y'
     }
   }
 }
