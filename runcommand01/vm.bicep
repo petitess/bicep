@@ -16,7 +16,7 @@ param networkInterfaces array
 param vnetname string
 param vnetrg string
 
-resource vm 'Microsoft.Compute/virtualMachines@2022-11-01' = {
+resource vm 'Microsoft.Compute/virtualMachines@2023-03-01' = {
   name: name
   location: location
   tags: tags
@@ -66,7 +66,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2022-11-01' = {
   }
 }
 
-resource disk 'Microsoft.Compute/disks@2022-07-02' = [for dataDisk in dataDisks: if (dataDisk.createOption == 'Empty') {
+resource disk 'Microsoft.Compute/disks@2023-01-02' = [for dataDisk in dataDisks: if (dataDisk.createOption == 'Empty') {
   name: '${name}-${dataDisk.name}'
   location: location
   tags: resourceGroup().tags
@@ -81,7 +81,7 @@ resource disk 'Microsoft.Compute/disks@2022-07-02' = [for dataDisk in dataDisks:
   }
 }]
 
-resource nic 'Microsoft.Network/networkInterfaces@2022-09-01' = [for (interface, i) in networkInterfaces: {
+resource nic 'Microsoft.Network/networkInterfaces@2023-04-01' = [for (interface, i) in networkInterfaces: {
   name: '${name}-nic-${i + 1}'
   location: location
   tags: resourceGroup().tags
@@ -106,7 +106,7 @@ resource nic 'Microsoft.Network/networkInterfaces@2022-09-01' = [for (interface,
   }
 }]
 
-resource pip 'Microsoft.Network/publicIPAddresses@2022-09-01' = [for (interface, i) in networkInterfaces: if (interface.publicIPAddress) {
+resource pip 'Microsoft.Network/publicIPAddresses@2023-04-01' = [for (interface, i) in networkInterfaces: if (interface.publicIPAddress) {
   name: 'pip-${name}-nic-${i + 1}'
   location: location
   tags: tags
@@ -118,7 +118,7 @@ resource pip 'Microsoft.Network/publicIPAddresses@2022-09-01' = [for (interface,
   }
 }]
 
-resource run 'Microsoft.Compute/virtualMachines/runCommands@2022-11-01' = {
+resource run 'Microsoft.Compute/virtualMachines/runCommands@2023-03-01' = {
   name: 'run'
   parent: vm
   location: location
