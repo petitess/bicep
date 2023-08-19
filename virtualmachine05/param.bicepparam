@@ -9,9 +9,9 @@ param param = {
   }
   avd: {
     description: 'Change to true when an image is prepared. Remove vmimage01 after creating an image'
-    sysprepReady: true
+    sysprepReady: false
     avdcount: 3
-    imageVersion: '0.0.2'
+    imageVersion: '0.0.1'
     osDiskSizeGB: 128
     vmSize: 'Standard_B2ms'
     subnetName: 'snet-app-test-01'
