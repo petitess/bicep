@@ -8,7 +8,7 @@ param vnet string
 @allowed(['Developer', 'Basic', 'Standard'])
 param sku string = 'Basic'
 
-resource bas 'Microsoft.Network/bastionHosts@2022-11-01' = {
+resource bas 'Microsoft.Network/bastionHosts@2023-04-01' = {
   name: name
   location: location
   tags: tags
@@ -36,7 +36,7 @@ resource bas 'Microsoft.Network/bastionHosts@2022-11-01' = {
   }
 }
 
-resource pip 'Microsoft.Network/publicIPAddresses@2022-11-01' = {
+resource pip 'Microsoft.Network/publicIPAddresses@2023-04-01' = {
   name: 'pip-${name}'
   location: location
   tags: tags

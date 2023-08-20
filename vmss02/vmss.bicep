@@ -19,7 +19,9 @@ param vnetrg string
 
 var git = 'sudo apt-get install git -y'
 var azurecli = 'curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash'
-var pwsh = 'apt-get install -y wget apt-transport-https software-properties-common; wget -q "https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb"; dpkg -i packages-microsoft-prod.deb; rm packages-microsoft-prod.deb; apt-get update; apt-get install -y powershell'
+var pwsh = 'apt-get install -y wget apt-transport-https software-properties-common; wget -q "https://packages.microsoft.com/config/ubuntu/23.04/packages-microsoft-prod.deb"; dpkg -i packages-microsoft-prod.deb; rm packages-microsoft-prod.deb; apt-get update; apt-get install -y powershell'
+var unzip = 'sudo apt-get install unzip'
+var zip = 'sudo apt-get install zip'
 
 resource ss 'Microsoft.Compute/virtualMachineScaleSets@2023-03-01' = {
   name: name
@@ -28,6 +30,7 @@ resource ss 'Microsoft.Compute/virtualMachineScaleSets@2023-03-01' = {
   sku: {
     name: vmSize
     tier: 'Standard'
+    capacity: 0
   }
   identity: {
     type: 'SystemAssigned'
@@ -102,7 +105,7 @@ resource tools 'Microsoft.Compute/virtualMachineScaleSets/extensions@2023-03-01'
     typeHandlerVersion: '2.1'
     autoUpgradeMinorVersion: true
     protectedSettings: {
-      commandToExecute: '${git};${azurecli};${pwsh}'
+      commandToExecute: '${git};${azurecli};${pwsh};${unzip};${zip}'
     }
   }
 }

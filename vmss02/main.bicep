@@ -4,7 +4,6 @@ param param object
 
 var affix = toLower('${param.tags.Application}-${param.tags.Environment}')
 var env = toLower(param.tags.Environment)
-var deployBastion = false
 
 resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
   location: param.location
@@ -23,7 +22,7 @@ module vnet 'vnet.bicep' = {
   }
 }
 
-module bastion 'bas.bicep' = if(deployBastion) {
+module bastion 'bas.bicep' = if(false) {
   scope: rg
   name: 'module-bastion'
   params: {
@@ -43,7 +42,7 @@ resource rgvmss 'Microsoft.Resources/resourceGroups@2022-09-01' = {
   }
 }
 
-module vmss 'vmss.bicep' = [for (vm, i) in param.vmss: {
+module vmss 'vmss.bicep' = [for vm in param.vmss: {
   scope: rgvmss
   name: 'module-${vm.name}'
   params: {

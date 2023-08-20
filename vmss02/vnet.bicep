@@ -5,7 +5,7 @@ param addressPrefixes array
 param dnsServers array = []
 param subnets array
 
-resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
+resource vnet 'Microsoft.Network/virtualNetworks@2023-04-01' = {
   name: 'vnet-${affix}-01'
   location: location
   tags: tags
@@ -31,7 +31,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
   }
 }
 
-resource nsg 'Microsoft.Network/networkSecurityGroups@2022-11-01' = [for subnet in subnets: if(contains(subnet, 'rules')) {
+resource nsg 'Microsoft.Network/networkSecurityGroups@2023-04-01' = [for subnet in subnets: if(contains(subnet, 'rules')) {
   name: 'nsg-${subnet.name}'
   location: location
   tags: tags
@@ -54,7 +54,7 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2022-11-01' = [for subnet 
   }
 }]
 
-resource rt 'Microsoft.Network/routeTables@2022-11-01' = [for subnet in subnets: if(contains(subnet, 'routes')) {
+resource rt 'Microsoft.Network/routeTables@2023-04-01' = [for subnet in subnets: if(contains(subnet, 'routes')) {
 name: 'rt-${subnet.name}'
 location: location
 tags: tags
