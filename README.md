@@ -50,6 +50,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | certificates01 | Certificates + lock 
 | citrix01 | Citrix NetScaler(ADC) with high-availability(HA) 
 | deploymentscript01 | Create Azure AD groups & Assign roles
+| diag01 | Diagnostic settings 
 | dns01 | Microsoft.Network/dnsZones 
 | dns02 | Microsoft.Network/dnsZones-array 
 | frontdoor01 | Virtual Machines (pip loop) as Backend pool
