@@ -82,6 +82,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | siterecovery01 | Azure Site Recovery 
 | storageaccount01 | Fileshare with backup
 | storageaccount02 | Fileshare with backup
+| subscription01 | Create subscriptions
 | template01 | VNET
 | template02 | 3 VNETs
 | template03 | A virtual machine with bastion
