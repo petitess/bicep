@@ -28,3 +28,9 @@ Get-AzTenantDeployment | Where-Object {$_.ProvisioningState -eq "Running"}
 Stop-AzTenantDeployment -Name "new-subscriptions"
 Stop-AzTenantDeployment -Name "tenant-deploy"
 #https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/create-subscriptions-deploy-resources
+
+#Permissions
+#Key Vault Admin (if you want to save secrets)
+#Owner at tenant scope
+#Application Admin
+#Billing account contributor (in Billing subscriptions)
