@@ -67,7 +67,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | logicapp01 | AD password expiration notification(Consumption) 
 | logicapp02 | Resource Graph Query - email
 | logicapp03 | Copy blobs 
-| maintenance01 | Update management center
+| maintenance01 | Dynamic scopes
 | peering01 | Virtual network peering 
 | policy01 | Not Allowed Resource Types - Rescource Group 
 | policy02 | Cloud Adoption Framework
