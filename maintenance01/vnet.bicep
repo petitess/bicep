@@ -1,16 +1,15 @@
 targetScope = 'resourceGroup'
 
-param name string
+param affix string
 param location string
 param tags object = resourceGroup().tags
 param addressPrefixes array
 param dnsServers array
 param subnets array
 param peerings array
-param natGateway bool
 
-resource vnet 'Microsoft.Network/virtualNetworks@2021-03-01' = {
-  name: name
+resource vnet 'Microsoft.Network/virtualNetworks@2023-05-01' = {
+  name: 'vnet-${affix}-01'
   location: location
   tags: tags
   properties: {
@@ -23,68 +22,51 @@ resource vnet 'Microsoft.Network/virtualNetworks@2021-03-01' = {
     subnets: [for (subnet, i) in subnets: {
       name: subnet.name
       properties: {
-        addressPrefix: subnet.properties.addressPrefix
-        networkSecurityGroup: subnet.properties.networkSecurityGroup ? {
+        addressPrefix: subnet.addressPrefix
+        networkSecurityGroup: contains(subnet, 'rules') ? {
           id: nsg[i].id
-        } : null
-        routeTable: subnet.properties.routeTable ? {
+        }: null
+        routeTable: contains(subnet, 'routes') ? {
           id: rt[i].id
-        } : null
-        natGateway: subnet.properties.natGateway ? {
-          id: ng.id
-        } : null
-        privateEndpointNetworkPolicies: subnet.properties.privateEndpointNetworkPolicies
+        }: null
       }
     }]
   }
 }
 
-resource nsg 'Microsoft.Network/networkSecurityGroups@2021-03-01' = [for subnet in subnets: if (subnet.properties.networkSecurityGroup) {
+resource nsg 'Microsoft.Network/networkSecurityGroups@2023-05-01' = [for subnet in subnets: if(contains(subnet, 'rules')) {
   name: 'nsg-${subnet.name}'
   location: location
   tags: tags
   properties: {
-    securityRules: subnet.securityRules
-  }
-}]
-
-resource rt 'Microsoft.Network/routeTables@2021-03-01' = [for subnet in subnets: if (subnet.properties.routeTable) {
-  name: 'rt-${subnet.name}'
-  location: location
-  tags: tags
-  properties: subnet.routeTable.properties
-}]
-
-resource ng 'Microsoft.Network/natGateways@2021-03-01' = if (natGateway) {
-  name: 'ng-${name}'
-  location: location
-  tags: tags
-  sku: {
-    name: 'Standard'
-  }
-  properties: {
-    idleTimeoutInMinutes: 4
-    publicIpAddresses: [
+    securityRules: concat(subnet.rules, [
       {
-        id: pip.id
+        name: 'nsgsr-deny-all-inbound'
+        properties: {
+          access: 'Deny'
+          sourceAddressPrefix: '*'
+          sourcePortRange: '*'
+          destinationAddressPrefix: '*'
+          destinationPortRange: '*'
+          protocol: '*'
+          priority: 4096
+          direction: 'Inbound'
+        }
       }
-    ]
+    ])
   }
-}
+}]
 
-resource pip 'Microsoft.Network/publicIPAddresses@2021-03-01' = if (natGateway) {
-  name: 'pip-ng-${name}'
-  location: location
-  tags: tags
-  sku: {
-    name: 'Standard'
-  }
-  properties: {
-    publicIPAllocationMethod: 'Static'
-  }
+resource rt 'Microsoft.Network/routeTables@2023-05-01' = [for subnet in subnets: if(contains(subnet, 'routes')) {
+name: 'rt-${subnet.name}'
+location: location
+tags: tags
+properties: {
+  routes: subnet.routes
 }
+}]
 
-resource peering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2021-03-01' = [for peering in peerings: {
+resource peering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2023-05-01' = [for peering in peerings: {
   parent: vnet
   name: peering.name
   properties: peering.properties
@@ -92,7 +74,4 @@ resource peering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2021-
 
 output id string = vnet.id
 output name string = vnet.name
-output GatewaySubnetId string = vnet.properties.subnets[0].id
-output AgwSubId string = vnet.properties.subnets[10].id
-output AgwSubName string = vnet.properties.subnets[10].name
-output coresubnetid string = vnet.properties.subnets[3].id
+output snet object = toObject(vnet.properties.subnets, subnet => subnet.name)

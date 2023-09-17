@@ -2,30 +2,35 @@ targetScope = 'resourceGroup'
 
 param name string
 param location string
+param detectionTags object
+param recurEvery string
 
 var tags = resourceGroup().tags
 
-resource maintenance 'Microsoft.Maintenance/maintenanceConfigurations@2021-09-01-preview' = {
+resource mc 'Microsoft.Maintenance/maintenanceConfigurations@2023-04-01' = {
   name: name
   location: location
   tags: tags
   properties: {
     maintenanceScope: 'InGuestPatch'
+    visibility: 'Custom'
     maintenanceWindow: {
-      duration: '02:00'
+      duration: '04:00'
       expirationDateTime: null
-      recurEvery: '1Month Last Sunday' //'1Day'
-      startDateTime: '2022-10-15 17:16'
+      recurEvery: false ? recurEvery : '1Day'
+      startDateTime: '2023-09-17 15:55'
       timeZone: 'W. Europe Standard Time'
     }
     extensionProperties: {
       InGuestPatchMode: 'User'
     }
     installPatches: {
+      rebootSetting: 'IfRequired'
       linuxParameters: {
         classificationsToInclude: [
           'Critical'
           'Security'
+          'Other'
         ]
         packageNameMasksToExclude: []
         packageNameMasksToInclude: []
@@ -34,17 +39,30 @@ resource maintenance 'Microsoft.Maintenance/maintenanceConfigurations@2021-09-01
         classificationsToInclude: [
           'Critical'
           'Security'
+          'UpdateRollup'
+          'FeaturePack'
+          'ServicePack'
+          'Definition'
+          'Tools'
+          'Updates'
         ]
         kbNumbersToExclude: [
           '1234567'
         ]
         kbNumbersToInclude: []
       }
-      rebootSetting: 'IfRequired'
     }
   }
 }
 
+module mcDynamic 'mcDynamic.bicep' = {
+  scope: subscription()
+  name: 'scope-${name}'
+  params: {
+    name: name
+    mcId: mc.id
+    detectionTags: detectionTags
+  }
+}
 
-output maintenanceid string = maintenance.id
-output start string = maintenance.properties.maintenanceWindow.startDateTime
+output id string = mc.id

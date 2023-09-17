@@ -8,7 +8,7 @@ param vmSize string
 //@secure()
 param adminUsername string
 //@secure()
-param adminPassword string
+param adminPass string
 param imageReference object
 param osDiskSizeGB int
 param dataDisks array
@@ -16,7 +16,7 @@ param networkInterfaces array
 param vnetname string
 param vnetrg string
 
-resource vm 'Microsoft.Compute/virtualMachines@2022-08-01' = {
+resource vm 'Microsoft.Compute/virtualMachines@2023-07-01' = {
   name: name
   location: location
   tags: tags
@@ -35,11 +35,14 @@ resource vm 'Microsoft.Compute/virtualMachines@2022-08-01' = {
     osProfile: {
       computerName: name
       adminUsername: adminUsername
-      adminPassword: adminPassword
+      adminPassword: adminPass
       windowsConfiguration: imageReference.publisher == 'canonical' ? null: {
         patchSettings: {
           patchMode: 'AutomaticByPlatform'
           assessmentMode: 'ImageDefault'
+          automaticByPlatformSettings: {
+            bypassPlatformSafetyChecksOnUserSchedule: true
+          }
         }
       }
     }
@@ -76,7 +79,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2022-08-01' = {
   }
 }
 
-resource disk 'Microsoft.Compute/disks@2022-07-02' = [for dataDisk in dataDisks: if (dataDisk.createOption == 'Empty') {
+resource disk 'Microsoft.Compute/disks@2023-04-02' = [for dataDisk in dataDisks: if (dataDisk.createOption == 'Empty') {
   name: '${name}-${dataDisk.name}'
   location: location
   tags: resourceGroup().tags
@@ -91,7 +94,7 @@ resource disk 'Microsoft.Compute/disks@2022-07-02' = [for dataDisk in dataDisks:
   }
 }]
 
-resource nic 'Microsoft.Network/networkInterfaces@2022-05-01' = [for (interface, i) in networkInterfaces: {
+resource nic 'Microsoft.Network/networkInterfaces@2023-05-01' = [for (interface, i) in networkInterfaces: {
   name: '${name}-nic-${i + 1}'
   location: location
   tags: resourceGroup().tags
@@ -116,7 +119,7 @@ resource nic 'Microsoft.Network/networkInterfaces@2022-05-01' = [for (interface,
   }
 }]
 
-resource pip 'Microsoft.Network/publicIPAddresses@2022-05-01' = [for (interface, i) in networkInterfaces: if (interface.publicIPAddress) {
+resource pip 'Microsoft.Network/publicIPAddresses@2023-05-01' = [for (interface, i) in networkInterfaces: if (interface.publicIPAddress) {
   name: 'pip-${name}-nic-${i + 1}'
   location: location
   tags: tags
