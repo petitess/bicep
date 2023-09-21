@@ -83,6 +83,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | storageaccount01 | Fileshare with backup
 | storageaccount02 | Fileshare with backup
 | subscription01 | Create subscriptions
+| tags01 | Tags - comparison operators 
 | template01 | VNET
 | template02 | 3 VNETs
 | template03 | A virtual machine with bastion
