@@ -18,6 +18,7 @@ resource vdatags 'Microsoft.Resources/tags@2023-07-01' = [for (tag, i) in range(
         Application: 'Citrix'
         UpdateManagement: 'NotSupported'
         AutoShutdown: i + 1 <= 9 ? 'GroupA' : i + 1 > 9 && i + 1 > 16 ? 'GroupC' : 'GroupB'
+        Reset: i + 1 <= 7 ? 'A' : i + 1 >= 7 && i + 1 <= 13 ? 'B' : i + 1 >= 13 && i + 1 < 19 ? 'C' : 'D'
       })
   }
 }]
