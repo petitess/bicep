@@ -41,6 +41,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | appserviceplan05 | PEP for slots 
 | appserviceplan06 | Install Azure App Service Managed Certificate 
 | appserviceplan07 | Install Azure App Service Certificate + Custom Domain
+| appserviceplan08 | App service + SQL + PEP + ASP.NET app deployment 
 | automationaccount01 | Schedule On-Demand Azure File Share Snapshots
 | automationaccount02 | Scheduled Runbooks 
 | availabilityset01 | Availability set VMs combined with Non-availability set VMs 
