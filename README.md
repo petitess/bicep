@@ -55,7 +55,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | dns01 | Microsoft.Network/dnsZones 
 | dns02 | Microsoft.Network/dnsZones-array 
 | frontdoor01 | Virtual Machines (pip loop) as Backend pool
-| frontdoor02 | Front Door WAF policy, block/allow countries
+| frontdoor02 | Front Door, Endpoints, WAF, Private Link Services
 | functionapp01 | Function App
 | functionapp02 | Schedule On-Demand Azure File Share Snapshots
 | keyvault01 | Create Secrets for VMs 
