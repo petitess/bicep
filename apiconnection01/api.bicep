@@ -19,6 +19,54 @@ resource azureblob01 'Microsoft.Web/connections@2016-06-01' = {
     }
 }
 
+resource managedId 'Microsoft.Web/connections@2016-06-01' = {
+  name: 'api-id${env}01'
+  location: location
+  properties: {
+    displayName: 'Managed identity for logic-runbook-${env}-01'
+    api: {
+      id: extensionResourceId(subscription().id, 'Microsoft.Web/locations/managedApis', location, 'azureautomation')
+    }
+    parameterValueSet: {
+      name: 'managedIdentityAuth'
+      values: {}
+    }
+  }
+}
+	
+resource apiConnectionKeyVault 'Microsoft.Web/connections@2016-06-01' = {
+  name: keyVaultApicName
+  location: location
+  properties: {
+    displayName: keyVaultApicName
+    api: {
+      id: keyVaultApiReferenceId
+    }
+    parameterValueType: 'Alternative'
+    alternativeParameterValues: {
+      'vaultName': keyVaultName
+    }
+  }
+}
+	
+resource apiConnectionServiceBus 'Microsoft.Web/connections@2016-06-01' = {
+  name: serviceBusApicName
+  location: location
+  properties: {
+    displayName: serviceBusApicName
+    api: {
+      id: serviceBusApiReferenceId
+    }
+    parameterValueSet: {
+      name: 'managedIdentityAuth'
+      values: {
+        namespaceEndpoint: {
+          'value': serviceBusNamespaceEndpoint
+        }
+      }
+    }
+  }
+}
 
 resource blobConnection 'Microsoft.Web/connections@2016-06-01' = {
   name: 'blobConnectionName'
