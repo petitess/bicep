@@ -28,7 +28,7 @@ resource managedId 'Microsoft.Web/connections@2016-06-01' = {
       id: extensionResourceId(subscription().id, 'Microsoft.Web/locations/managedApis', location, 'azureautomation')
     }
     parameterValueSet: {
-      name: 'managedIdentityAuth'
+      name: 'oauthMI'
       values: {}
     }
   }
