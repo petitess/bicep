@@ -2,17 +2,19 @@ targetScope = 'subscription'
 
 param param object
 
-var affix = toLower('${param.tags.Application}-${param.tags.Environment}')
+var affix = toLower('${param.value.tags.Application}-${param.value.tags.Environment}')
+var location = param.value.location
+var tags = param.value.tags
 
-resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
-  location: param.location
-  tags: param.tags
+resource rg 'Microsoft.Resources/resourceGroups@2023-07-01' = {
+  location: location
+  tags: tags
   name: 'rg-${affix}-01'
 }
 
-resource rgSt 'Microsoft.Resources/resourceGroups@2022-09-01' = {
-  location: param.location
-  tags: param.tags
+resource rgSt 'Microsoft.Resources/resourceGroups@2023-07-01' = {
+  location: location
+  tags: tags
   name: 'rg-storage-01'
 }
 
@@ -20,19 +22,19 @@ module vnet 'vnet.bicep' = {
   scope: rg
   name: 'module-vnet'
   params: {
-    addressPrefixes: param.vnet.addressPrefixes
+    addressPrefixes: param.value.vnet.addressPrefixes
     affix: affix
-    location: param.location
-    subnets: param.vnet.subnets
+    location: location
+    subnets: param.value.vnet.subnets
   }
 }
 
-module st 'st.bicep' = [for st in param.storageAccounts: {
+module st 'st.bicep' = [for st in param.value.storageAccounts: {
   name: 'module-${st.name}'
   scope: rgSt
   params: {
     name: st.name
-    location: param.location
+    location: location
     sku: st.sku
     containersCount: st.containersCount
     shares: st.shares
@@ -48,7 +50,10 @@ module rsv 'rsv.bicep' = {
   scope: rg
   name: 'module-rsv'
   params: {
-    location: param.location
+    location: location
     name: 'rsv-${affix}-01'
   }
 }
+
+output z object = param
+output x object = param.value

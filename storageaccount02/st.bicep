@@ -17,7 +17,7 @@ var groupIds = [
   'file'
 ]
 
-resource st 'Microsoft.Storage/storageAccounts@2022-09-01' = {
+resource st 'Microsoft.Storage/storageAccounts@2023-01-01' = {
   name: name
   location: location
   tags: tags
@@ -35,7 +35,7 @@ resource st 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   }
 }
 
-resource blob 'Microsoft.Storage/storageAccounts/blobServices@2022-09-01' = {
+resource blob 'Microsoft.Storage/storageAccounts/blobServices@2023-01-01' = {
   name: 'default'
   parent: st
   properties: {
@@ -43,25 +43,25 @@ resource blob 'Microsoft.Storage/storageAccounts/blobServices@2022-09-01' = {
   }
 }
 
-resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = [for (cont, i) in range(0, containersCount): {
+resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-01-01' = [for (cont, i) in range(0, containersCount): {
   name: 'container${100 + 100 * i}'
   parent: blob
   properties: {}
 }]
 
-resource file 'Microsoft.Storage/storageAccounts/fileServices@2022-09-01' = {
+resource file 'Microsoft.Storage/storageAccounts/fileServices@2023-01-01' = {
   name: 'default'
   parent: st
   properties: {}
 }
 
-resource share 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-09-01' = [for share in shares: {
+resource share 'Microsoft.Storage/storageAccounts/fileServices/shares@2023-01-01' = [for share in shares: {
   name: share.name
   parent: file
   properties: {}
 }]
 
-resource pep 'Microsoft.Network/privateEndpoints@2022-09-01' = [for pep in groupIds: if (publicNetworkAccess == 'Disabled') {
+resource pep 'Microsoft.Network/privateEndpoints@2023-05-01' = [for pep in groupIds: if (publicNetworkAccess == 'Disabled') {
   name: '${name}-pep-${pep}'
   location: location
   tags: tags

@@ -6,7 +6,7 @@ var scheduleRunTimes = [
   '23:00:00'
 ]
 
-resource rsv 'Microsoft.RecoveryServices/vaults@2023-02-01' = {
+resource rsv 'Microsoft.RecoveryServices/vaults@2023-06-01' = {
   name: name
   location: location
   tags: tags
@@ -19,7 +19,7 @@ resource rsv 'Microsoft.RecoveryServices/vaults@2023-02-01' = {
   }
 }
 
-resource policyFile 'Microsoft.RecoveryServices/vaults/backupPolicies@2023-02-01' = {
+resource policyFile 'Microsoft.RecoveryServices/vaults/backupPolicies@2023-04-01' = {
   name: 'policy-fileshare01'
   location: location
   tags: tags

@@ -7,7 +7,7 @@ param stName string
 param shares array
 param stId string
 
-resource protection 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers@2023-02-01' = {
+resource protection 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers@2023-04-01' = {
   name: '${rsvName}/Azure/storagecontainer;Storage;${stRgName};${stName}'
   location: location
   tags: tags
@@ -19,7 +19,7 @@ resource protection 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionC
   }
 }
 
-resource backup 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems@2023-02-01' = [for share in shares: if(share.backup) {
+resource backup 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems@2023-04-01' = [for share in shares: if(share.backup) {
   name: 'AzureFileShare;${share.name}'
   location: location
   tags: tags
