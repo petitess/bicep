@@ -10,7 +10,7 @@ var tags = {
   Environment: config.environment.name
 }
 
-resource rgdns01 'Microsoft.Resources/resourceGroups@2021-04-01' = {
+resource rgdns01 'Microsoft.Resources/resourceGroups@2023-07-01' = {
   name: 'rg-dns-${affix}-01'
   location: location
   tags: union(tags, {

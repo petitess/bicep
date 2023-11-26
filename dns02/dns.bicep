@@ -9,7 +9,7 @@ param SRVS array
 
 var tags = resourceGroup().tags
 
-resource dns 'Microsoft.Network/dnsZones@2018-05-01' = {
+resource dns 'Microsoft.Network/dnsZones@2023-07-01-preview' = {
   name: dnszonename
   location: 'global'
   tags: tags
@@ -18,7 +18,7 @@ resource dns 'Microsoft.Network/dnsZones@2018-05-01' = {
   }
 }
 
-resource dnsA 'Microsoft.Network/dnsZones/A@2018-05-01' = [for Arecord in Arecords:  {
+resource dnsA 'Microsoft.Network/dnsZones/A@2023-07-01-preview' = [for Arecord in Arecords:  {
   name: Arecord.name
   parent:dns
   properties: {
@@ -27,7 +27,7 @@ resource dnsA 'Microsoft.Network/dnsZones/A@2018-05-01' = [for Arecord in Arecor
   }
 }]
 
-resource dnsCN 'Microsoft.Network/dnsZones/CNAME@2018-05-01' = [for CNAME in CNAMES: {
+resource dnsCN 'Microsoft.Network/dnsZones/CNAME@2023-07-01-preview' = [for CNAME in CNAMES: {
   name: CNAME.name
   parent: dns
   properties: {
@@ -36,7 +36,7 @@ resource dnsCN 'Microsoft.Network/dnsZones/CNAME@2018-05-01' = [for CNAME in CNA
   }
 }]
 
-resource dnsTXT 'Microsoft.Network/dnsZones/TXT@2018-05-01' =[for TXT in TXTS: {
+resource dnsTXT 'Microsoft.Network/dnsZones/TXT@2023-07-01-preview' =[for TXT in TXTS: {
   name: TXT.name
   parent: dns
   properties: {
@@ -45,7 +45,7 @@ resource dnsTXT 'Microsoft.Network/dnsZones/TXT@2018-05-01' =[for TXT in TXTS: {
   }
 }]
 
-resource dnsMX 'Microsoft.Network/dnsZones/MX@2018-05-01' = [for MX in MXS: {
+resource dnsMX 'Microsoft.Network/dnsZones/MX@2023-07-01-preview' = [for MX in MXS: {
   name: MX.name
   parent: dns
   properties: {
@@ -54,7 +54,7 @@ resource dnsMX 'Microsoft.Network/dnsZones/MX@2018-05-01' = [for MX in MXS: {
   }
 }]
 
-resource dnsSRV 'Microsoft.Network/dnsZones/SRV@2018-05-01' = [for SRV in SRVS: {
+resource dnsSRV 'Microsoft.Network/dnsZones/SRV@2023-07-01-preview' = [for SRV in SRVS: {
   name: SRV.name
   parent: dns
   properties: {
