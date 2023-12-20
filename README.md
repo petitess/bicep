@@ -98,7 +98,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | virtualmachine03 | VM extension: IIS
 | virtualmachine04 | VM extension: Nginx on Linux
 | virtualmachine05 | Create a VM from an image
-| virtualmachine06 | Update Management for Windows and Linux
+| virtualmachine06 | Availability sets - filter() function
 | virtualmachine07 | Add Log Analytics to existing VMs
 | virtualmachine08 | A template to deploy Azure Monitor Agent
 | virtualnetworkgateway01 | Multiple connections using Key Vault
