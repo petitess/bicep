@@ -1,0 +1,94 @@
+{
+  "analyzers": {
+    "core": {
+      "enabled": true,
+      "verbose": false,
+      "rules": {
+        "adminusername-should-not-be-literal": {
+          "level": "info"
+        },
+        "artifacts-parameters": {
+          "level": "info"
+        },
+        "decompiler-cleanup": {
+          "level": "info"
+        },
+        "explicit-values-for-loc-params": {
+          "level": "info"
+        },
+        "max-outputs": {
+          "level": "info"
+        },
+        "max-params": {
+          "level": "info"
+        },
+        "max-resources": {
+          "level": "info"
+        },
+        "max-variables": {
+          "level": "info"
+        },
+        "no-hardcoded-env-urls": {
+          "level": "off"
+        },
+        "no-hardcoded-location": {
+          "level": "info"
+        },
+        "no-loc-expr-outside-params": {
+          "level": "info"
+        },
+        "no-unnecessary-dependson": {
+          "level": "info"
+        },
+        "no-unused-existing-resources": {
+          "level": "info"
+        },
+        "no-unused-params": {
+          "level": "info"
+        },
+        "no-unused-vars": {
+          "level": "info"
+        },
+        "outputs-should-not-contain-secrets": {
+          "level": "info"
+        },
+        "prefer-interpolation": {
+          "level": "info"
+        },
+        "prefer-unquoted-property-names": {
+          "level": "info"
+        },
+        "protect-commandtoexecute-secrets": {
+          "level": "info"
+        },
+        "secure-parameter-default": {
+          "level": "info"
+        },
+        "secure-params-in-nested-deploy": {
+          "level": "info"
+        },
+        "secure-secrets-in-params": {
+          "level": "info"
+        },
+        "simplify-interpolation": {
+          "level": "info"
+        },
+        "use-parent-property": {
+          "level": "info"
+        },
+        "use-recent-api-versions": {
+          "level": "warning"
+        },
+        "use-resource-id-functions": {
+          "level": "info"
+        },
+        "use-stable-resource-identifiers": {
+          "level": "info"
+        },
+        "use-stable-vm-image": {
+          "level": "info"
+        }
+      }
+    }
+  }
+}
