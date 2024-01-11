@@ -196,6 +196,23 @@ resource servicebus01 'Microsoft.Web/connections@2016-06-01' = {
     }
 }
 
+resource serviceBusApi 'Microsoft.Web/connections@2016-06-01' = {
+  name: 'servicebus'
+  location: location
+  properties: {
+    ////You have to log in manually to an account in the azure portal to connect
+    displayName: 'sb-email'
+    api: {
+      id: extensionResourceId(subscription().id, 'Microsoft.Web/locations/managedApis', location, 'servicebus')
+
+    }
+    customParameterValues: {}
+    nonSecretParameterValues: {}
+    parameterValues: {
+      connectionString: listKeys(resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', 'sb-sus-xxx-${env}-01', 'RootManageSharedAccessKey'), '2021-11-01').primaryConnectionString
+    }
+  }
+
 resource keyvault01 'Microsoft.Web/connections@2016-06-01' = {
   name: 'api-keyvault01'
   location: location
