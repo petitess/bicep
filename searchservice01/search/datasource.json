@@ -1,0 +1,20 @@
+{
+    "name": "standardindexview",
+    "description": null,
+    "type": "azuresql",
+    "subtype": null,
+    "credentials": {
+      "connectionString": "Data Source=tcp:{{ServerName}}.database.windows.net,1433;Initial Catalog={{DatabaseName}};User ID={{UserName}};Password={{Password}};Connect Timeout=30;Encrypt=True;Trust Server Certificate=False"
+    },
+    "container": {
+      "name": " standard.IndexerView ",
+      "query": ""
+    },
+    "dataChangeDetectionPolicy": {
+      "@odata.type": "#Microsoft.Azure.Search.HighWaterMarkChangeDetectionPolicy",
+      "highWaterMarkColumnName": "UpdatedDate"
+    },
+    "dataDeletionDetectionPolicy": null,
+    "encryptionKey": null,
+    "identity": null
+}

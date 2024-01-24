@@ -1,0 +1,45 @@
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - ci/cd.yml
+      - iac
+
+pool:
+  vmImage: ubuntu-20.04
+
+parameters:
+  - name: environments
+    type: object
+    default:
+      - dev
+
+stages:
+  - stage: build
+    displayName: Build
+    jobs:
+      - ${{ each environment in parameters.environments }}:
+          - job: validate_${{ environment }}
+            displayName: Validate (${{ environment }})
+            steps:
+              - task: AzureCLI@2
+                displayName: Validate deployment
+                inputs:
+                  azureSubscription: sp-standards-${{ environment }}-01
+                  scriptType: pscore
+                  scriptPath: iac/deploy.ps1
+                  arguments: ${{ environment }} validate
+      - ${{ each environment in parameters.environments }}:
+          - job: whatif_${{ environment }}
+            displayName: What-if (${{ environment }})
+            dependsOn: validate_${{ environment }}
+            steps:
+              - task: AzureCLI@2
+                displayName: What-if deployment
+                inputs:
+                  azureSubscription: sp-standards-${{ environment }}-01
+                  scriptType: pscore
+                  scriptPath: iac/deploy.ps1
+                  arguments: ${{ environment }} what-if

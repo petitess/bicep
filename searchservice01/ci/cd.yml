@@ -1,0 +1,33 @@
+trigger: none
+
+pool:
+  vmImage: ubuntu-22.04
+
+parameters:
+  - name: environments
+    type: object
+    default:
+      - dev
+      - prod
+
+stages:
+  - ${{ each environment in parameters.environments }}:
+      - stage: release_${{ environment }}
+        displayName: Release (${{ environment }})
+        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+        jobs:
+          - deployment: create_${{ environment }}
+            displayName: Create (${{ environment }})
+            environment: ${{ environment }}
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - checkout: self
+                    - task: AzureCLI@2
+                      displayName: Create deployment
+                      inputs:
+                        azureSubscription: sp-standards-${{ environment }}-01
+                        scriptType: pscore
+                        scriptPath: iac/deploy.ps1
+                        arguments: ${{ environment }} create

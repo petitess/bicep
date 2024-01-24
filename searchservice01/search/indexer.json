@@ -1,0 +1,20 @@
+{
+    "name": "standardindexer",
+    "description": null,
+    "dataSourceName": "standardindexview",
+    "skillsetName": null,
+    "targetIndexName": "standards",
+    "disabled": null,
+    "schedule": null,
+    "parameters": {
+      "batchSize": null,
+      "maxFailedItems": null,
+      "maxFailedItemsPerBatch": null,
+      "base64EncodeKeys": null,
+      "configuration": {}
+    },
+    "fieldMappings": [],
+    "outputFieldMappings": [],
+    "cache": null,
+    "encryptionKey": null
+  }
