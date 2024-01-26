@@ -1,0 +1,8 @@
+{
+    "subscription": {
+        "dev": "0dcc13b7-1a10-483e-95aa-fe7e71802e2e",
+        "stg": "x",
+        "prod": "x"
+    },
+    "location": "WestEurope"
+}
