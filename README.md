@@ -103,7 +103,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | virtualmachine06 | Availability sets - filter() function
 | virtualmachine07 | Add Log Analytics to existing VMs
 | virtualmachine08 | A template to deploy Azure Monitor Agent
-| virtualnetworkgateway01 | Multiple connections using Key Vault
+| virtualnetworkgateway01 | Multiple S2S-connections, Key Vault Secret
 | virtualnetworkgateway02 | Virtual network gateway: VNet-to-VNet connection
 | virtualnetworkgateway03 | Virtual network gateway: Azure AD authentication
 | virtualnetworkgateway04 | S2S VPN between subscriptions with BGP
