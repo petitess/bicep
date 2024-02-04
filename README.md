@@ -92,7 +92,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | template02 | 3 VNETs
 | template03 | A virtual machine with bastion
 | tenant01 | Azure landing zone
-| virtualdesktop01 | Azure Virtual Desktop - Host Pool, App Groups, Workspace
+| virtualdesktop01 | Host Pool, App Group, Workspace, FXLogix, Registry settings
 | virtualdesktop02 | Azure Virtual Desktop with Azure AD Domain Services
 | virtualdesktop03 | Azure Virtual Desktop 100%
 | virtualmachine01 | VM extension: AD Domain Services
