@@ -1,0 +1,8 @@
+{
+    "subscription": {
+        "dev": "x-1a10-483e-95aa-fe7e71802e2e",
+        "stg": "x-5993-4d46-9bc3-c71541e939cf",
+        "prod": "x-9c5a-4422-9f52-a03440374c67"
+    },
+    "location": "SwedenCentral"
+}
