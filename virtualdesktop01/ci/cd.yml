@@ -1,0 +1,41 @@
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - ci/cd.yml
+      - iac
+
+pool:
+  #vmImage: ubuntu-22.04
+  name: vmmgmtX
+
+parameters:
+  - name: environments
+    type: object
+    default:
+      - stg
+      - prod
+
+stages:
+  - ${{ each environment in parameters.environments }}:
+      - stage: release_${{ environment }}
+        displayName: Release (${{ environment }})
+        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+        jobs:
+          - deployment: create_${{ environment }}
+            displayName: Create (${{ environment }})
+            environment: ${{ environment }}
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - checkout: self
+                    - task: AzureCLI@2
+                      displayName: Create deployment
+                      inputs:
+                        azureSubscription: sp-avd-${{ environment }}-01
+                        scriptType: pscore
+                        scriptPath: iac/deploy.ps1
+                        arguments: ${{ environment }} create
