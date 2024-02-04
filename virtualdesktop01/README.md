@@ -1,4 +1,4 @@
-### Azure Virtual Desktop - Host Pool, App Groups, Workspace.
+## Azure Virtual Desktop - Host Pool, App Groups, Workspace.
 
 Registry settings for virtual machine using run command.
 
