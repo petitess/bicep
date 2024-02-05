@@ -51,4 +51,6 @@ reference(extensionResourceId('/subscriptions/${subscription().subscriptionId}/r
 reference(resourceId('Microsoft.Network/virtualNetworkGateways', vgwname), '2022-07-01').ipConfigurations[0].id
 reference(logicApp.id, logicApp.apiVersion, 'Full').identity.principalId
 reference(cosmosDbConnector.id, cosmosDbConnector.apiVersion, 'full').properties.connectionRuntimeUrl
+reference(resourceId(subscription().subscriptionId, rgasp.name,'Microsoft.Web/certificates','plan-shared-general-${env}-cert'),'2022-09-01').properties.thumbprint
+reference(resourceId(subscription().subscriptionId, rgasp.name,'Microsoft.Web/serverfarms','plan-shared-general-${env}'),'2022-09-01').serverFarmId
 x
