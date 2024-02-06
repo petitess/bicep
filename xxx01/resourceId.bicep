@@ -6,7 +6,7 @@ subscriptionResourceId('Microsoft.insights/eventTypes', 'management')
 resourceId('Microsoft.Compute/disks', '${name}-${dataDisk.name}')
 
 output a string = 'subscriptions/${subscription().subscriptionId}/providers/Microsoft.Web/locations/${location}/managedApis/azureblob'
-output b string = extensionResourceId(subscription().id, 'Microsoft.Web/locations/managedApis', location, 'azureblob')
+extensionResourceId(subscription().id, 'Microsoft.Web/locations/managedApis', location, 'azureblob')
 
 resourceId(sharedImageGalleryResourceGroup, 'Microsoft.Compute/galleries/images/versions', sharedImageGalleryName, sharedImageGalleryDefinitionname, sharedImageGalleryVersionName)
 '/subscriptions/${sharedImageGallerySubscription}/resourceGroups/${sharedImageGalleryResourceGroup}/providers/Microsoft.Compute/galleries/${sharedImageGalleryName}/images/${sharedImageGalleryDefinitionname}/versions/${sharedImageGalleryVersionName}'
@@ -15,16 +15,7 @@ resourceId('Microsoft.Network/networkInterfaces', '${vmPrefix}-${i + currentInst
 
 resourceId('Microsoft.Compute/availabilitySets', '${vmPrefix}-AV')
 
-output appprincipalId1 string = appitglueint.outputs.principalId
-output appprincipalId2 object = reference(resourceId(subscription().subscriptionId, rgitglue.name, 'Microsoft.Web/sites', 'app-itglueint-${env}-01'),'2022-03-01').identity.principalId
-
-output vaultUri1 string = kvintexisting.properties.vaultUri
-output vaultUri2 string = reference(resourceId(subscription().subscriptionId, rgitglue.name, 'Microsoft.KeyVault/vaults', 'kv-int-${env}-01'),'2022-07-01').vaultUri
-
-output kvu1 string = kv.properties.vaultUri
-output kvu2 string = reference(resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.KeyVault/vaults', keyvaultname),'2022-07-01').vaultUri
-
-param a object = resourceGroup(reference(resourceId('Microsoft.Resources/resourceGroups', 'rgname')).name)
+resourceGroup(reference(resourceId('Microsoft.Resources/resourceGroups', 'rgname')).name)
 
 subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleDefinitionId)
 
@@ -51,6 +42,9 @@ reference(extensionResourceId('/subscriptions/${subscription().subscriptionId}/r
 reference(resourceId('Microsoft.Network/virtualNetworkGateways', vgwname), '2022-07-01').ipConfigurations[0].id
 reference(logicApp.id, logicApp.apiVersion, 'Full').identity.principalId
 reference(cosmosDbConnector.id, cosmosDbConnector.apiVersion, 'full').properties.connectionRuntimeUrl
-reference(resourceId(subscription().subscriptionId, rgasp.name,'Microsoft.Web/certificates','plan-shared-general-${env}-cert'),'2022-09-01').properties.thumbprint
+reference(resourceId(subscription().subscriptionId, rgasp.name,'Microsoft.Web/certificates','plan-shared-general-${env}-cert'),'2022-09-01').thumbprint
 reference(resourceId(subscription().subscriptionId, rgasp.name,'Microsoft.Web/serverfarms','plan-shared-general-${env}'),'2022-09-01').serverFarmId
+reference(resourceId(subscription().subscriptionId, rgitglue.name, 'Microsoft.KeyVault/vaults', 'kv-int-${env}-01'),'2022-07-01').vaultUri
+reference(resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.KeyVault/vaults', keyvaultname),'2022-07-01').vaultUri
+reference(resourceId(subscription().subscriptionId, rgitglue.name, 'Microsoft.Web/sites', 'app-itglueint-${env}-01'),'2022-03-01').identity.principalId
 x
