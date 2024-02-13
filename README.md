@@ -50,7 +50,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | azurefirewall02 | AGW routed through AFW
 | certificates01 | Certificates + lock 
 | citrix01 | Citrix NetScaler(ADC) with high-availability(HA) 
-| deploymentscript01 | Create Azure AD groups & Assign roles
+| deploymentscript01 | Create EntraId groups & Add managed identity as member
 | diag01 | Diagnostic settings 
 | dns01 | Microsoft.Network/dnsZones 
 | dns02 | Microsoft.Network/dnsZones-array 
