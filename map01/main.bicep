@@ -49,14 +49,13 @@ var fruit = [
   'apelsin'
 ]
 var fruitObject = map(range(0, length(fruit)), i => {
-  id: i
-  fruit: fruit[i]
-})
+    id: i
+    fruit: fruit[i]
+  })
 var resourceGroupsObject = map(range(0, length(resourceGroups)), i => {
-  id: i
-  rg: resourceGroups[i].name
-})
-
+    id: i
+    rg: resourceGroups[i].name
+  })
 
 output pathRulesArrayA array = pathRulesArray
 output pathRulesArrayB array = map(pathRulesArray, rule => { name: rule.name, properties: rule.properties })
@@ -68,6 +67,6 @@ output resourceGroupsB array = map(range(0, length(resourceGroups)), i => {
     id: i
     rg: resourceGroups[i].name
   })
-  output resourceGroupsC array = map(fruit, a => {fruit: a})
+output resourceGroupsC array = map(fruit, a => { fruit: a })
 
-output mergeObjects array = map(union(resourceGroupsObject, fruitObject), a => {id: a.id, name: contains(a, 'rg') ? a.rg : a.fruit})
+output mergeObjects array = map(union(resourceGroupsObject, fruitObject), a => { id: a.id, name: contains(a, 'rg') ? a.rg : a.fruit })
