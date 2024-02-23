@@ -1,5 +1,3 @@
-targetScope = 'resourceGroup'
-
 param name string
 param location string
 param tags object = resourceGroup().tags
@@ -16,7 +14,7 @@ param networkInterfaces array
 param vnetName string
 param vnetRg string
 
-resource vm 'Microsoft.Compute/virtualMachines@2023-03-01' = {
+resource vm 'Microsoft.Compute/virtualMachines@2023-09-01' = {
   name: name
   location: location
   tags: tags
@@ -38,6 +36,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-03-01' = {
       imageReference: imageReference
       osDisk: {
         createOption: 'FromImage'
+        //writeAcceleratorEnabled: true
         diskSizeGB: osDiskSizeGB
       }
       dataDisks: [for dataDisk in dataDisks: {
@@ -45,6 +44,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-03-01' = {
         name: '${name}-${dataDisk.name}'
         caching: dataDisk.caching
         createOption: 'Attach'
+        //writeAcceleratorEnabled: true
         managedDisk: {
           storageAccountType: dataDisk.storageAccountType
           id: resourceId('Microsoft.Compute/disks', '${name}-${dataDisk.name}')
@@ -67,7 +67,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-03-01' = {
   }
 }
 
-resource disk 'Microsoft.Compute/disks@2023-01-02' = [for dataDisk in dataDisks: if (dataDisk.createOption == 'Empty') {
+resource disk 'Microsoft.Compute/disks@2023-10-02' = [for dataDisk in dataDisks: if (dataDisk.createOption == 'Empty') {
   name: '${name}-${dataDisk.name}'
   location: location
   tags: resourceGroup().tags
@@ -76,13 +76,14 @@ resource disk 'Microsoft.Compute/disks@2023-01-02' = [for dataDisk in dataDisks:
   }
   properties: {
     diskSizeGB: dataDisk.diskSizeGB
+    tier: contains(dataDisk, 'tier') ? dataDisk.tier :null
     creationData: {
       createOption: dataDisk.createOption
     }
   }
 }]
 
-resource nic 'Microsoft.Network/networkInterfaces@2023-04-01' = [for (interface, i) in networkInterfaces: {
+resource nic 'Microsoft.Network/networkInterfaces@2023-09-01' = [for (interface, i) in networkInterfaces: {
   name: '${name}-nic-${i + 1}'
   location: location
   tags: resourceGroup().tags
@@ -107,7 +108,7 @@ resource nic 'Microsoft.Network/networkInterfaces@2023-04-01' = [for (interface,
   }
 }]
 
-resource pip 'Microsoft.Network/publicIPAddresses@2023-04-01' = [for (interface, i) in networkInterfaces: if (interface.publicIPAddress) {
+resource pip 'Microsoft.Network/publicIPAddresses@2023-09-01' = [for (interface, i) in networkInterfaces: if (interface.publicIPAddress) {
   name: 'pip-${name}-nic-${i + 1}'
   location: location
   tags: tags

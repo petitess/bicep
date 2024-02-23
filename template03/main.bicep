@@ -1,60 +1,61 @@
 targetScope = 'subscription'
 
-param param object
+param env string
+param location string
+param tags object
+param vnet object
+param vms array
 
-var affix = toLower('${param.tags.Application}-${param.tags.Environment}')
-var env = toLower(param.tags.Environment)
-
-resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
-  location: param.location
-  tags: param.tags
-  name: 'rg-${affix}-01'
+resource rg 'Microsoft.Resources/resourceGroups@2023-07-01' = {
+  location: location
+  tags: tags
+  name: 'rg-vnet-${env}-01'
 }
 
-module vnet 'vnet.bicep' = {
+module vnetM 'vnet.bicep' = {
   scope: rg
-  name: 'module-vnet'
+  name: 'vnet'
   params: {
-    addressPrefixes: param.vnet.addressPrefixes
-    affix: affix
-    location: param.location
-    subnets: param.vnet.subnets
+    addressPrefixes: vnet.addressPrefixes
+    env: env
+    location: location
+    subnets: vnet.subnets
   }
 }
 
-module bastion 'bas.bicep' = if(false) {
+module bastion 'bas.bicep' = if (false) {
   scope: rg
-  name: 'module-bastion'
+  name: 'bastion'
   params: {
-    location: param.location
+    location: location
     name: 'bas-${env}-01'
     subnet: vnet.outputs.snet.AzureBastionSubnet.id
     vnetId: vnet.outputs.id
   }
 }
 
-resource rgVm 'Microsoft.Resources/resourceGroups@2022-09-01' = [for (vm, i) in param.vm: {
+resource rgVm 'Microsoft.Resources/resourceGroups@2023-07-01' = [for (vm, i) in vms: {
   name: 'rg-${vm.name}'
-  location: param.location
-  tags: param.tags
+  location: location
+  tags: tags
 }]
 
-module vm 'vm.bicep' = [for (vm, i) in param.vm: {
+module vm 'vm.bicep' = [for (vm, i) in vms: {
   scope: rgVm[i]
-  name: 'module-${vm.name}'
+  name: vm.name
   params: {
-    adminPassword: '12345678.abc'
+    adminPassword: '12345.abc'
     adminUsername: 'azadmin'
     dataDisks: vm.dataDisks
     imageReference: vm.imageReference
-    location: param.location
+    location: location
     name: vm.name
     networkInterfaces: vm.networkInterfaces
     osDiskSizeGB: vm.osDiskSizeGB
     plan: vm.plan
-    tags: union(param.tags, vm.tags)
+    tags: union(tags, vm.tags)
     vmSize: vm.vmSize
-    vnetName: vnet.outputs.name
+    vnetName: vnetM.outputs.name
     vnetRg: rg.name
   }
 }]
