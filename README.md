@@ -82,6 +82,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | privatelink06| Private Endpoint for File, Blob 
 | rbac01 | Multiple roles
 | rbac02 | Tenant Root Group assignment 
+| recoveryservicevault01 | Recovery Service Valut & Private endpoint
 | runcommand01 | powershell script
 | searchservice01 | Search service + Sql + Pep + Automated approval 
 | siterecovery01 | Azure Site Recovery 
