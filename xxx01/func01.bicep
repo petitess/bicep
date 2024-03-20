@@ -46,3 +46,10 @@ func asdf(name string) array => [
   'asdf'
   name
 ]
+
+var name = 'stplatformmonitorprod01'
+var add = 'NEW'
+
+@description('Inserts prefix before last two charcters')
+func insertPrefix(name string, prefix string) string =>
+  '${substring(name, 0, length(name) - 2)}${prefix}${substring(name, length(name) - 2, 2)}'
