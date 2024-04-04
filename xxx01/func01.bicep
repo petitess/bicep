@@ -53,3 +53,7 @@ var add = 'NEW'
 @description('Inserts prefix before last two charcters')
 func insertPrefix(name string, prefix string) string =>
   '${substring(name, 0, length(name) - 2)}${prefix}${substring(name, length(name) - 2, 2)}'
+
+@description('Generate guid value for password')
+func generatePass(x string, y string) string =>
+  replace('A${toUpper(substring(guid(x, y), 0, 15))}${substring(guid(x, y), 15, 21)}z', '-', '!')
