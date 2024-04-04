@@ -56,4 +56,4 @@ func insertPrefix(name string, prefix string) string =>
 
 @description('Generate guid value for password')
 func generatePass(x string, y string) string =>
-  replace('A${toUpper(substring(guid(x, y), 0, 15))}${substring(guid(x, y), 15, 21)}z', '-', '!')
+  replace('M${toUpper(substring(guid(x, y), 0, 15))}${substring(guid(x, y), 15, 21)}z', '-', '!')
