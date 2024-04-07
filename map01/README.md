@@ -72,6 +72,10 @@ output resourceGroupsC array = map(fruit, a => { fruit: a })
 
 output mergeObjects array = map(union(resourceGroupsObject, fruitObject), a => { id: a.id, name: contains(a, 'rg') ? a.rg : a.fruit })
 ```
+
+```bicep
+output managedPeps array = filter(union(st.outputs.peps, stDl.outputs.peps), x => x.properties.privateLinkServiceConnectionState.status == 'Pending')
+```
 #### output: resourceGroupsA
 ```json
 [
