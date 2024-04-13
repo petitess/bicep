@@ -4,7 +4,7 @@ param location string
 param env string
 param tags object
 
-var affix = toLower('${tags.Application}-${tags.Environment}')
+var affix = toLower('${tags.Application}-${env}')
 var vmPrincipalId = ''
 
 resource rg 'Microsoft.Resources/resourceGroups@2023-07-01' = {
