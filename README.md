@@ -68,7 +68,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | kubernetes02 | Azure Kubernetes services - Azure CNI
 | loadbalancer01 | Internal Azure Load Balancer with Rules
 | loadbalancer02 | External Load Balancer
-| logicapp01 | AD password expiration notification(Consumption) 
+| logicapp01 | AD password expiration email, storage table entra id support
 | logicapp02 | Resource Graph Query - email
 | logicapp03 | Copy blobs 
 | maintenance01 | Dynamic scopes
