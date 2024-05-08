@@ -78,3 +78,65 @@ resource AMA 'Microsoft.Compute/virtualMachines/extensions@2023-09-01' = if (ext
     }
   }
 }
+
+resource joinEntraIdIntune 'Microsoft.Compute/virtualMachines/extensions@2023-09-01' =
+  if (true) {
+    parent: vm
+    name: 'AADLoginForWindows'
+    location: location
+    tags: tags
+    properties: !contains(name, 'vmavddev')
+      ? {
+          autoUpgradeMinorVersion: true
+          publisher: 'Microsoft.Azure.ActiveDirectory'
+          type: 'AADLoginForWindows'
+          typeHandlerVersion: '2.2'
+          settings: {
+            mdmId: '0000000a-0000-0000-c000-000000000000'
+          }
+        }
+      : {
+          autoUpgradeMinorVersion: true
+          publisher: 'Microsoft.Azure.ActiveDirectory'
+          type: 'AADLoginForWindows'
+          typeHandlerVersion: '2.2'
+        }
+  }
+
+resource joinVdpool 'Microsoft.Compute/virtualMachines/extensions@2023-09-01' =
+  if (!contains(name, 'vmavddev01')) {
+    parent: vm
+    name: 'Microsoft.PowerShell.DSC'
+    location: location
+    tags: tags
+    properties: {
+      autoUpgradeMinorVersion: true
+      publisher: 'Microsoft.Powershell'
+      type: 'DSC'
+      typeHandlerVersion: '2.83'
+      settings: !contains(name, 'vmavddev')
+        ? {
+            modulesUrl: 'https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_1.0.02655.277.zip'
+            configurationFunction: 'Configuration.ps1\\AddSessionHost'
+            properties: {
+              hostPoolName: hostPoolName
+              registrationInfoToken: registrationInfoToken
+              aadJoin: true
+              UseAgentDownloadEndpoint: true
+              aadJoinPreview: false
+              mdmId: '0000000a-0000-0000-c000-000000000000'
+            }
+          }
+        : {
+            modulesUrl: 'https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_1.0.02655.277.zip'
+            configurationFunction: 'Configuration.ps1\\AddSessionHost'
+            properties: {
+              hostPoolName: hostPoolName
+              registrationInfoToken: registrationInfoToken
+              aadJoin: true
+              UseAgentDownloadEndpoint: true
+              aadJoinPreview: false
+            }
+          }
+    }
+  }
