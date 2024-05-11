@@ -56,7 +56,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | diag01 | Diagnostic settings 
 | dns01 | Microsoft.Network/dnsZones 
 | dns02 | Microsoft.Network/dnsZones-array 
-| frontdoor01 | Virtual Machines (pip loop) as Backend pool
+| frontdoor01 | Virtual machines, Github
 | frontdoor02 | Front Door, Endpoints, WAF, Private Link Services
 | functionapp01 | Function App
 | functionapp02 | Schedule On-Demand Azure File Share Snapshots
