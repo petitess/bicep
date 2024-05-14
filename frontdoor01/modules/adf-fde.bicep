@@ -60,7 +60,6 @@ resource orgin 'Microsoft.Cdn/profiles/originGroups/origins@2024-02-01' = [
       hostName: origin.appFqdn
       httpPort: 80
       httpsPort: 443
-      originHostHeader: origin.appFqdn
       priority: 1
       weight: 1000
       enabledState: 'Enabled'
