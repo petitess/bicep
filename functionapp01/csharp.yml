@@ -1,0 +1,112 @@
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+  name: vmmgmtprod01
+
+variables:
+  - name: project
+    value: "http-trigger-01"
+  - name: projectFolder
+    value: "functionapp01"
+  - name: funcName
+    value: "func-xxx-sys-dev-we-01"
+  - name: funcRg 
+    value: 'rg-func-xxx-sys-dev-we-01'
+  - name: connection
+    value: "sub-test-02"
+
+jobs:
+  - job: Build
+    steps:
+      # - script: ls
+      #   name: check_folders
+
+      - script: echo "${{ variables.projectFolder }}/${{ variables.project }}/${{ variables.project }}.csproj"
+        name: check_params
+
+      - task: UseDotNet@2
+        displayName: "Use DotNet 8"
+        inputs:
+          packageType: "sdk"
+          #version: '8.0.105'
+          installationPath: $(Agent.ToolsDirectory)/{{ variables.project }}
+
+      - task: DotNetCoreCLI@2
+        displayName: "Dotnet build Release"
+        inputs:
+          command: "build"
+          projects: "${{ variables.projectFolder }}/${{ variables.project }}/${{ variables.project }}.csproj"
+          arguments: "--configuration Release"
+
+      - task: DotNetCoreCLI@2
+        displayName: Restore dotnet tools
+        inputs:
+          command: custom
+          custom: tool
+          arguments: restore
+
+      - task: DotNetCoreCLI@2
+        displayName: "Dotnet publish"
+        inputs:
+          command: publish
+          publishWebProjects: false
+          arguments: "--configuration Release --output $(Build.ArtifactStagingDirectory)"
+          zipAfterPublish: true
+          projects: "${{ variables.projectFolder }}/${{ variables.project }}/${{ variables.project }}.csproj"
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish Artifacts"
+        inputs:
+          PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+          artifactName: "${{ variables.project }}"
+
+  - job: Release
+    dependsOn: Build
+    steps:
+      - task: DownloadBuildArtifacts@0
+        displayName: "Download Build Artifacts"
+        inputs:
+          buildType: "current"
+          downloadType: "single"
+          artifactName: "${{ variables.project }}"
+          downloadPath: "$(System.ArtifactsDirectory)"
+
+      - task: AzureCLI@2
+        displayName: Enable access
+        inputs:
+          azureSubscription: ${{ variables.connection }}
+          scriptType: pscore
+          scriptLocation: inlineScript
+          inlineScript: |
+            az functionapp update `
+            --name ${{ variables.funcName }} `
+            --resource-group ${{ variables.funcRg }} `
+            --subscription ${{ variables.connection }} `
+            --set publicNetworkAccess='Enabled'
+
+      # - script: ls $(System.ArtifactsDirectory)
+      #   name: check_folders
+
+      - task: AzureFunctionApp@2
+        inputs:
+          azureSubscription: ${{ variables.connection }}
+          appType: functionApp
+          appName: ${{ variables.funcName }}
+          resourceGroupName: ${{ variables.funcRg }}
+          package: $(System.ArtifactsDirectory)/${{ variables.project }}/${{ variables.project }}.zip
+          deploymentMethod: "zipDeploy"
+
+      - task: AzureCLI@2
+        displayName: Disable access
+        inputs:
+          azureSubscription: ${{ variables.connection }}
+          scriptType: pscore
+          scriptLocation: inlineScript
+          inlineScript: |
+            az functionapp update `
+            --name ${{ variables.funcName }} `
+            --resource-group ${{ variables.funcRg }} `
+            --subscription ${{ variables.connection }} `
+            --set publicNetworkAccess='Disabled'
