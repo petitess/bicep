@@ -58,7 +58,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | dns02 | Microsoft.Network/dnsZones-array 
 | frontdoor01 | Virtual machines, Github
 | frontdoor02 | Front Door, Endpoints, WAF, Private Link Services
-| functionapp01 | Function App
+| functionapp01 | Linux, Windows, Dotnet, DevOps, Pep, Yaml
 | functionapp02 | Schedule On-Demand Azure File Share Snapshots
 | functionapp03 | empty func powershell app + appi + yaml
 | keyvault01 | Create Secrets for VMs 
