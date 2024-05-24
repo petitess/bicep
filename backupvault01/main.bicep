@@ -7,7 +7,6 @@ param vnet object
 
 var prefix = toLower('${config.product}-${environment}-${config.location}')
 var prefixSt = toLower('${config.product}${environment}${config.location}')
-
 var subnet = toObject(
   reference(
     resourceId(subscription().subscriptionId, rg.name, 'Microsoft.Network/virtualNetworks', 'vnet-${prefix}-01'),
@@ -15,13 +14,18 @@ var subnet = toObject(
   ).subnets,
   subnet => subnet.name
 )
-
-output sub string = subnet['snet-pep'].id
 var myIp = '188.150.1.1'
 
 var domains = [
   'privatelink.blob.${az.environment().suffixes.storage}'
   'privatelink.file.${az.environment().suffixes.storage}'
+]
+
+var disks = [
+  {
+    name: 'disk'
+    backup: true
+  }
 ]
 
 resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
@@ -48,6 +52,14 @@ resource rgBVault 'Microsoft.Resources/resourceGroups@2024-03-01' = {
   })
 }
 
+resource rgDisk 'Microsoft.Resources/resourceGroups@2024-03-01' = {
+  name: 'rg-disk-${prefix}-01'
+  location: location
+  tags: union(config.tags, {
+    System: config.product
+  })
+}
+
 module vnetM 'modules/vnet.bicep' = {
   name: 'vnet'
   scope: rg
@@ -60,7 +72,7 @@ module vnetM 'modules/vnet.bicep' = {
   }
 }
 
-module pdnsz 'modules/pdnsz.bicep' = [
+module pdnszM 'modules/pdnsz.bicep' = [
   for (domain, i) in domains: {
     name: 'pdnsz_${split(domain, '.')[1]}'
     scope: rg
@@ -72,7 +84,7 @@ module pdnsz 'modules/pdnsz.bicep' = [
   }
 ]
 
-module st 'modules/st.bicep' = {
+module stM 'modules/st.bicep' = {
   scope: rgSt
   name: 'st'
   params: {
@@ -80,6 +92,9 @@ module st 'modules/st.bicep' = {
     location: location
     dnsRgName: rg.name
     snetId: subnet['snet-pep'].id
+    vaultName: 'bvault-${prefix}-01'
+    vaultRgName: rgBVault.name
+    blobBackupPolicyId: bvaultM.outputs.policy_vaulted_blob
     networkAcls: {
       resourceAccessRules: []
       bypass: 'AzureServices'
@@ -92,7 +107,18 @@ module st 'modules/st.bicep' = {
     }
     privateEndpoints: [
       'blob'
-      'file'
+    ]
+    containers: [
+      {
+        name: 'container01'
+        immutability: false
+        backup: false
+      }
+      {
+        name: 'container02'
+        immutability: false
+        backup: true
+      }
     ]
   }
 }
@@ -102,5 +128,42 @@ module bvaultM 'modules/bvault.bicep' = {
   name: 'bvault'
   params: {
     name: 'bvault-${prefix}-01'
+    redundancy: 'GeoRedundant'
+  }
+}
+
+module rbacBackupBlob 'modules/rbac.bicep' = {
+  scope: rgSt
+  name: 'rbac-backup-blob'
+  params: {
+    principalId: bvaultM.outputs.principalId
+    roles: [
+      'Storage Account Backup Contributor'
+    ]
+  }
+}
+
+module disksM 'modules/disk.bicep' = [
+  for (d, i) in disks: {
+    scope: rgDisk
+    name: 'disk_${i+1}'
+    params: {
+      name: '${d.name}-${prefix}-0${i+1}'
+      vaultName: 'bvault-${prefix}-01'
+      vaultRgName: rgBVault.name
+      backup: d.backup
+      policyId: bvaultM.outputs.policy_disk
+    }
+  }
+]
+
+module rbacBackupDisk 'modules/rbac.bicep' = {
+  scope: rgDisk
+  name: 'rbac-backup-disk'
+  params: {
+    principalId: bvaultM.outputs.principalId
+    roles: [
+      'Disk Backup Reader'
+    ]
   }
 }

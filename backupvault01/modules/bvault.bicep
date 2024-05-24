@@ -15,11 +15,11 @@ resource bvault 'Microsoft.DataProtection/backupVaults@2024-04-01' = {
   }
   properties: {
     featureSettings: {
-      crossRegionRestoreSettings: redundancy == 'GeoRedundant'
-        ? {
-            state: 'Enabled'
-          }
-        : null
+      // crossRegionRestoreSettings: redundancy == 'GeoRedundant'
+      //   ? {
+      //       state: 'Enabled'
+      //     }
+      //   : null
       crossSubscriptionRestoreSettings: {
         state: 'Enabled'
       }
@@ -49,7 +49,7 @@ resource bvault 'Microsoft.DataProtection/backupVaults@2024-04-01' = {
   }
 }
 
-resource operationalPolicy 'Microsoft.DataProtection/backupVaults/backupPolicies@2024-04-01' = {
+resource operationalPolicyBlob 'Microsoft.DataProtection/backupVaults/backupPolicies@2024-04-01' = if (false) {
   name: 'policy-operational-blob'
   parent: bvault
   properties: {
@@ -79,7 +79,7 @@ resource operationalPolicy 'Microsoft.DataProtection/backupVaults/backupPolicies
   }
 }
 
-resource vaultedPolicy 'Microsoft.DataProtection/backupVaults/backupPolicies@2024-04-01' = if (true) {
+resource vaultedPolicyBlob 'Microsoft.DataProtection/backupVaults/backupPolicies@2024-04-01' = if (false) {
   name: 'policy-vaulted-blob'
   parent: bvault
   properties: {
@@ -132,6 +132,67 @@ resource vaultedPolicy 'Microsoft.DataProtection/backupVaults/backupPolicies@202
               tagInfo: {
                 tagName: 'Default'
               }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+
+resource policyDisk 'Microsoft.DataProtection/backupVaults/backupPolicies@2024-04-01' = if (false) {
+  name: 'policy-disk'
+  parent: bvault
+  properties: {
+    datasourceTypes: [
+      'Microsoft.Compute/disks'
+    ]
+    objectType: 'BackupPolicy'
+    policyRules: [
+      {
+        isDefault: true
+        lifecycles: [
+          {
+            deleteAfter: {
+              duration: 'P7D'
+              objectType: 'AbsoluteDeleteOption'
+            }
+            sourceDataStore: {
+              dataStoreType: 'OperationalStore'
+              objectType: 'DataStoreInfoBase'
+            }
+            targetDataStoreCopySettings: []
+          }
+        ]
+        name: 'Default'
+        objectType: 'AzureRetentionRule'
+      }
+      {
+        backupParameters: {
+          backupType: 'Incremental'
+          objectType: 'AzureBackupParams'
+        }
+        dataStore: {
+          dataStoreType: 'OperationalStore'
+          objectType: 'DataStoreInfoBase'
+        }
+        name: 'BackupDaily'
+        objectType: 'AzureBackupRule'
+        trigger: {
+          objectType: 'ScheduleBasedTriggerContext'
+          schedule: {
+            repeatingTimeIntervals: [
+              'R/2024-05-24T21:00:00+01:00/P1D'
+            ]
+            timeZone: 'W. Europe Standard Time'
+          }
+          taggingCriteria: [
+            {
+              isDefault: true
+              tagInfo: {
+                tagName: 'Default'
+              }
+              taggingPriority: 99
             }
           ]
         }
@@ -215,3 +276,8 @@ resource diagnostics 'microsoft.insights/diagnosticSettings@2017-05-01-preview' 
     ]
   }
 }
+
+output principalId string = bvault.identity.principalId
+output policy_operational_blob string = operationalPolicyBlob.id
+output policy_vaulted_blob string = vaultedPolicyBlob.id
+output policy_disk string = policyDisk.id

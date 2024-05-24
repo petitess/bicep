@@ -2,10 +2,14 @@ param name string
 param location string
 param tags object = resourceGroup().tags
 param networkAcls object
-param privateEndpoints array
+param privateEndpoints ('blob' | 'file' | 'table' | 'queue' | 'web' | 'dfs')[]
 param snetId string
 param dnsRgName string
 param hierarchicalNamespace bool = false
+param containers ({ name: string, immutability: bool, backup: bool })[]
+param vaultName string
+param vaultRgName string
+param blobBackupPolicyId string
 
 resource st 'Microsoft.Storage/storageAccounts@2023-04-01' = {
   name: name
@@ -22,15 +26,51 @@ resource st 'Microsoft.Storage/storageAccounts@2023-04-01' = {
   }
 }
 
-resource file 'Microsoft.Storage/storageAccounts/fileServices@2023-04-01' = {
+resource blob 'Microsoft.Storage/storageAccounts/blobServices@2023-04-01' = {
   name: 'default'
   parent: st
-  properties: {}
+  properties: {
+    containerDeleteRetentionPolicy: {
+      enabled: false
+    }
+    deleteRetentionPolicy: {
+      enabled: false
+    }
+  }
 }
 
-resource share 'Microsoft.Storage/storageAccounts/fileServices/shares@2023-04-01' = {
-  name: 'func01'
-  parent: file
+resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-04-01' = [
+  for c in containers: {
+    name: c.name
+    parent: blob
+    properties: {}
+  }
+]
+
+resource immutabilityR 'Microsoft.Storage/storageAccounts/blobServices/containers/immutabilityPolicies@2023-04-01' = [
+  for (policy, i) in containers: if (policy.immutability) {
+    name: 'default'
+    parent: container[i]
+    properties: {
+      allowProtectedAppendWritesAll: false
+      allowProtectedAppendWrites: false
+      immutabilityPeriodSinceCreationInDays: 14
+    }
+  }
+]
+
+module backupInstance 'bvault-instance.bicep' = {
+  name: name
+  scope: resourceGroup(vaultRgName)
+  params: {
+    name: name
+    policyId: blobBackupPolicyId
+    resourceId: st.id
+    vaultName: vaultName
+    containersList: [for c in filter(containers, c => c.backup): c.name]
+    datasourceType: 'Microsoft.Storage/storageAccounts/blobServices'
+    resourceType: 'Microsoft.Storage/storageAccounts'
+  }
 }
 
 resource pep 'Microsoft.Network/privateEndpoints@2023-11-01' = [

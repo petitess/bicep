@@ -29,3 +29,15 @@ az deployment sub $Command `
     --parameters $ParameterFile `
     --no-prompt `
     --output json
+
+if ($false) {
+    $SubId = ""
+    $RgName = "rg-bvault-xxx-dev-sc-01"
+    $VaultName = "bvault-xxx-dev-sc-01"
+    $PolicyName = "policy-vaulted-disk"
+    $InstanceName = "vaulted-stfuncxxxdevsc01"
+
+    az dataprotection backup-vault show --resource-group $RgName --vault-name $VaultName --subscription $SubId
+    az dataprotection backup-policy show --name $PolicyName --resource-group $RgName --vault-name $VaultName --subscription $SubId
+    az dataprotection backup-instance show --backup-instance-name $InstanceName --resource-group $RgName --vault-name $VaultName --subscription $SubId
+}
