@@ -48,6 +48,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | availabilityset02 | Multiple availability sets 
 | azurefirewall01 | Azure Firewall Policy - DNAT, Network, Application rule 
 | azurefirewall02 | AGW routed through AFW
+| backupvault01 | Backup vault, storage account & disk
 | certificates01 | Certificates + lock 
 | citrix01 | Citrix NetScaler(ADC) with high-availability(HA) 
 | containerregistry01 | azure container registry - push/pull docker image
