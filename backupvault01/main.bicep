@@ -167,3 +167,14 @@ module rbacBackupDisk 'modules/rbac.bicep' = {
     ]
   }
 }
+
+module rbacBackupDiskRestore 'modules/rbac.bicep' = {
+  scope: rgDisk
+  name: 'rbac-backup-disk-restore'
+  params: {
+    principalId: bvaultM.outputs.principalId
+    roles: [
+      'Disk Restore Operator'
+    ]
+  }
+}
