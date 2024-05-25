@@ -7,7 +7,8 @@ param roles (
   | 'Reader'
   | 'Backup Contributor'
   | 'Storage Account Backup Contributor'
-  | 'Disk Backup Reader')[]
+  | 'Disk Backup Reader'
+  | 'Disk Restore Operator')[]
 
 var rolesList = {
   'Network Contributor': '4d97b98b-1d4f-4787-a291-c67834d212e7'
@@ -18,6 +19,7 @@ var rolesList = {
   'Backup Contributor': '5e467623-bb1f-42f4-a55d-6e525e11384b'
   'Storage Account Backup Contributor' : 'e5e2a7ff-d759-4cd2-bb51-3152d37e2eb1'
   'Disk Backup Reader': '3e5e47e6-65f7-47ef-90b5-e5dd4d455f24'
+  'Disk Restore Operator': 'b50d9833-a0cb-478e-945f-707fcc997c13'
 }
 
 resource roleDefinition 'Microsoft.Authorization/roleDefinitions@2022-05-01-preview' existing = [
