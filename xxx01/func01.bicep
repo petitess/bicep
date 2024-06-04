@@ -57,3 +57,8 @@ func insertPrefix(name string, prefix string) string =>
 @description('Generate guid value for password')
 func generatePass(x string, y string) string =>
   replace('M${toUpper(substring(guid(x, y), 0, 15))}${substring(guid(x, y), 15, 21)}z', '-', '!')
+
+@description('Make conditinal deployment depending on the day')
+param day string = utcNow('dddd')
+func conditionalDeployment(x object, day string) object => day == 'Monday' || day == 'Wednesday' || day == 'Friday' ? union(x.part1, x.part3) : union(x.part2, x.part3)
+output principalss object = conditionalDeployment(principals, day)
