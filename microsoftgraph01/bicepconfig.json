@@ -1,0 +1,10 @@
+{
+    "experimentalFeaturesEnabled": {
+        "extensibility": true
+    },
+    "implicitProviders": [
+        "microsoftGraph",
+        "az",
+        "sys"
+    ]
+}
