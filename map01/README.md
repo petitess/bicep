@@ -160,3 +160,38 @@ output managedPeps array = filter(union(st.outputs.peps, stDl.outputs.peps), x =
     }
 ]
 ```
+```bicep
+var array01 = [
+  {
+    name: 'baba'
+    nr: 1
+  }
+  {
+    name: 'mama'
+    nr: 2
+  }
+]
+
+var array01WithAddedObject = [
+  for z in array01: union(z, {
+    whose: 'Ann\'s ${z.name}'
+  })
+]
+
+output array01WithAddedObject array = array01WithAddedObject
+```
+#### output: array01WithAddedObject
+```json
+[
+    {
+        "name": "baba",
+        "nr": 1,
+        "whose": "Ann's baba"
+    },
+    {
+        "name": "mama",
+        "nr": 2,
+        "whose": "Ann's mama"
+    }
+]
+```
