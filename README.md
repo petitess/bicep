@@ -46,6 +46,8 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | automationaccount02 | Scheduled Runbooks 
 | availabilityset01 | Availability set VMs combined with Non-availability set VMs 
 | availabilityset02 | Multiple availability sets 
+| avm_functionapp01 | vnet, pep, storage, app service plan
+| avm_vnet01 | vnet, subnet, nsg, pdnsz, rbac
 | azurefirewall01 | Azure Firewall Policy - DNAT, Network, Application rule 
 | azurefirewall02 | AGW routed through AFW
 | backupvault01 | Backup vault, storage account & disk
