@@ -1,0 +1,31 @@
+trigger:
+- main
+
+variables:
+  dockerRegistryServiceConnection: 'sp-acrxxx'
+  imageRepository: 'c-sharp-web'
+  dockerfilePath: '$(Build.SourcesDirectory)/containerapp01/containerapp01/Dockerfile'
+  tag: '$(Build.BuildId)'
+
+stages:
+- stage: Build
+  displayName: Build and publish stage
+  jobs:
+  - job: Build
+    displayName: Build job
+    pool:
+      name: 'vmss-infra-devops-dev-we-01'
+    steps:
+    - task: DockerInstaller@0
+      # inputs:
+      #   dockerVersion: '17.09.0-ce'
+
+    - task: Docker@2
+      displayName: Build and publish image to Azure Container Registry
+      inputs:
+        command: buildAndPush
+        containerRegistry: $(dockerRegistryServiceConnection)
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        tags: |
+          $(tag)
