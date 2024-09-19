@@ -7,7 +7,7 @@ param acrRepo string
 param acrRepoVer string
 param acrAccessKey string
 
-resource name_resource 'Microsoft.App/containerApps@2024-03-01' = {
+resource ca 'Microsoft.App/containerApps@2024-03-01' = {
   name: name
   identity: {
     type: 'SystemAssigned'
@@ -49,6 +49,17 @@ resource name_resource 'Microsoft.App/containerApps@2024-03-01' = {
             cpu: json('0.5')
             memory: '1Gi'
           }
+          probes: [
+            {
+              type: 'Liveness'
+              httpGet: {
+                port: 443
+                path: '/'
+              }
+              initialDelaySeconds: 5
+              periodSeconds: 60
+            }
+          ]
         }
       ]
       scale: {
