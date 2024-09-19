@@ -10,7 +10,7 @@
 
 <img src="./serviceconnection.png"/>
 
-# Set up a pipline to push an image (docker-pipeline folder)
+# Set up a pipline to push an image
 - Use self-hosted agent
 - Build an application in c# (csharp folder)
 - Publish application to container registry
