@@ -29,4 +29,7 @@ $deployment = az deployment sub $Command `
     --parameters $ParameterFile `
     --no-prompt `
     --output json
-($deployment | ConvertFrom-Json).properties.provisioningState
+    
+$state = ($deployment | ConvertFrom-Json).properties.provisioningState
+$state
+if ($state -ne 'Succeeded') { throw }
