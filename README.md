@@ -81,7 +81,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | policy02 | Cloud Adoption Framework
 | privatelink01 | Load Balancer with Private Link connected to another vnet
 | privatelink02 | Private Endpoint - Fileshare - Peering - Vnet-to-Vnet
-| privatelink03 | Private Endpoint for both File and Blob
+| privatelink03 | Storage Account, All Private Endpoints, User Defined Types
 | privatelink04 | Private Endpoint for Azure SQL
 | privatelink05 | Log Analytics & Appilcation Insight PL to Azure Monitor
 | privatelink06| Private Endpoint for File, Blob 
