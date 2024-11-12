@@ -55,6 +55,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | certificates01 | Certificates + lock 
 | citrix01 | Citrix NetScaler(ADC) with high-availability(HA) 
 | containerregistry01 | azure container registry - push/pull docker image
+| datacollectionrule01 | Data collection rule, custom logs ingestion, REST API
 | datadactory01 | Data factory, Databricks, Synapse
 | deploymentscript01 | Create EntraId groups & Add managed identity as member
 | diag01 | Diagnostic settings 
