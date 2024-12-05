@@ -25,7 +25,6 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 
 | Name | Description | 
 |--|--|
-| aadds01 | Azure AD Domain Services 
 | alert01 | Service Health Alerts  
 | alert02 | Log Analytics query alerts 
 | alert03 | Log Analytics query alerts with suppression rule 
@@ -61,6 +60,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | diag01 | Diagnostic settings 
 | dns01 | Microsoft.Network/dnsZones 
 | dns02 | Microsoft.Network/dnsZones-array 
+| entrads01 | Entra Domain Services, cidrSubnet, function
 | frontdoor01 | Virtual machines, Github
 | frontdoor02 | Front Door, Endpoints, WAF, Private Link Services
 | functionapp01 | Linux, Windows, Dotnet, DevOps, Pep, Yaml
@@ -92,7 +92,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | runcommand01 | powershell script
 | searchservice01 | Search service + Sql + Pep + Automated approval 
 | siterecovery01 | Azure Site Recovery 
-| storageaccount01 | Fileshare with backup
+| storageaccount01 | Storage Account, All Private Endpoints, User Defined Types
 | storageaccount02 | Fileshare with backup
 | subscription01 | Create subscriptions
 | tags01 | Tags - comparison operators 
