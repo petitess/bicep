@@ -78,7 +78,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | logicapp03 | Copy blobs 
 | maintenance01 | Dynamic scopes
 | peering01 | Virtual network peering 
-| policy01 | Not Allowed Resource Types - Rescource Group 
+| policy01 | Custom policies
 | policy02 | Cloud Adoption Framework
 | privatelink01 | Load Balancer with Private Link connected to another vnet
 | privatelink02 | Private Endpoint - Fileshare - Peering - Vnet-to-Vnet
