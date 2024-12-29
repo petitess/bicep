@@ -63,7 +63,7 @@ param maintenanceConfigurations array
 param appCertificateRegistration string = '5ac1ac3c-9e22-439b-acfb-6694f6522409'
 @description('az ad sp show --id "abfa0a7c-a6b6-4736-8310-5855508787cd"')
 param appMicrosoftAzureAppService string = '2d0abffa-b360-4f2f-9478-951498a43bd8'
-param myIP string = '188.150.104.230'
+param myIP string = '188.150.1.1'
 
 var affix = toLower('${tags.Application}-${tags.Environment}')
 func name(prefix string, instance string) string => '${prefix}-${affix}-${instance}'
