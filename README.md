@@ -42,7 +42,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | appserviceplan07 | Install Azure App Service Certificate + Custom Domain
 | appserviceplan08 | App service + SQL + PEP + ASP.NET app deployment 
 | automationaccount01 | Schedule On-Demand Azure File Share Snapshots
-| automationaccount02 | Scheduled Runbooks 
+| automationaccount02 | Action group triggers runbook webhook
 | availabilityset01 | Availability set VMs combined with Non-availability set VMs 
 | availabilityset02 | Multiple availability sets 
 | avm_applicationgateway01 | agw, kv, log, pdnsz
