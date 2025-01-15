@@ -320,7 +320,7 @@ resource rbacR 'Microsoft.Authorization/roleAssignments@2022-04-01' = [
     name: guid(resourceGroup().id, r.principalId, r.role, string(i))
     properties: {
       principalId: r.principalId
-      roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleAssignments', rolesList[r.role])
+      roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', rolesList[r.role])
       principalType: 'ServicePrincipal'
     }
   }
