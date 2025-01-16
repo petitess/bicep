@@ -122,8 +122,8 @@ param funcApps = [
 
 param storageAccounts = [
   {
-    name: 'stfunctriggerdev02'
-    resourceGroup: 'rg-func-trigger-dev-02'
+    name: 'stfunctriggerdev01'
+    resourceGroup: 'rg-func-trigger-dev-01'
     skuName: 'Standard_LRS'
     isSftpEnabled: false
     publicAccess: 'Enabled'
