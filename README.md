@@ -65,7 +65,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | frontdoor02 | Front Door, Endpoints, WAF, Private Link Services
 | functionapp01 | Linux, Windows, Dotnet, DevOps, Pep, Yaml
 | functionapp02 | win, linux, auth, app reg, pep, cert, slots, cidr, function
-| functionapp03 | empty func powershell app + appi + yaml
+| functionapp03 | event grid triggers function and creates a blob
 | keyvault01 | Create Secrets for VMs 
 | keyvault02 | Create Secrets for VMs - multiple modules
 | keyvault03 | uniqueString() to generate password 
