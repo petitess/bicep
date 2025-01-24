@@ -99,7 +99,7 @@ resource func 'Microsoft.Web/sites@2024-04-01' = {
     httpsOnly: true
     reserved: kind == 'functionapp,linux' ? true : false
     publicNetworkAccess: 'Enabled'
-    virtualNetworkSubnetId: snetOutboundId
+    virtualNetworkSubnetId: snetOutboundId //can cause error first time
     vnetRouteAllEnabled: true
     siteConfig: {
       alwaysOn: isFlexConsumptionTier ? false : true
