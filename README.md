@@ -60,6 +60,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | diag01 | Diagnostic settings 
 | dns01 | Microsoft.Network/dnsZones 
 | dns02 | Microsoft.Network/dnsZones-array 
+| dnspr01 | DNS private resolver inbound endpoint
 | entrads01 | Entra Domain Services, cidrSubnet, function
 | frontdoor01 | Virtual machines, Github
 | frontdoor02 | Front Door, Endpoints, WAF, Private Link Services
