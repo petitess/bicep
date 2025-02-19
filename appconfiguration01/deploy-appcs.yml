@@ -1,0 +1,37 @@
+name: "Deploy Appcs"
+
+on:
+  workflow_dispatch: 
+  push:
+    paths: 
+      - '.github/workflows/deploy-appcs.yml'
+      - 'appcs/**'
+
+permissions: 
+  id-token: write
+  contents: write
+  actions: read
+
+jobs:
+  deploy_appcs:
+    runs-on: vm01
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.CLIENT_ID }}
+          tenant-id: ${{ vars.TENANT_ID }}
+          subscription-id: ${{ vars.SUB_ID }}
+
+      # - name: login med mi
+      #   shell: pwsh 
+      #   run: | 
+      #     az login --identity
+
+      - name: Deploy
+        shell: pwsh 
+        run: | 
+          ./appcs/deploy.ps1
