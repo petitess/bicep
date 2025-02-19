@@ -1,3 +1,4 @@
+///subscriptions/123abc/providers/Microsoft.Security/pricings?api-version=2024-01-01
 targetScope = 'subscription'
 
 var defenderPlans = [
