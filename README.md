@@ -29,7 +29,9 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | alert02 | Log Analytics query alerts 
 | alert03 | Log Analytics query alerts with suppression rule 
 | alert04 | VM resource health alerts
+| ampl01 | Resource management private link
 | apiconnection01 | API connection
+| appconfiguration01 | Pep & Resource management private link
 | applicationgateway01 | Azure Application Gateway Public IIS 
 | applicationgateway02 | Multi site listeners, https, cert, redirect, rewrites
 | applicationinsights01 | Application Insights with Availability Test
