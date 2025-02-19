@@ -1,0 +1,56 @@
+trigger:
+  branches:
+    include:
+      - main
+      - feature/a2
+  paths:
+    include:
+      - ci/cd-ampl.yml
+      - iac-ampl
+
+parameters:
+  - name: environments
+    type: object
+    default:
+      - prod
+
+schedules:
+  - cron: "45 05 * * *"
+    displayName: "automatiserad"
+    always: true
+    branches:
+      include:
+        - main
+
+stages:
+  - ${{ each environment in parameters.environments }}:
+      - stage: release_${{ environment }}
+        displayName: Release (${{ environment }})
+        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+        variables:
+          - name: pool
+            ? ${{ if eq(variables['Build.CronSchedule.DisplayName'], 'automatiserad') }}
+            : value: vmss-infra-devops-${{ environment }}-we-01
+            ${{ else }}:
+              value: vmmgmtX
+        pool:
+          name: ${{variables.pool}}
+        jobs:
+          - deployment: create_${{ environment }}
+            displayName: Create (${{ environment }})
+            ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
+              environment: schedule
+            ${{ else }}:
+              environment: ${{ environment }}
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - checkout: self
+                    - task: AzureCLI@2
+                      displayName: Create deployment
+                      inputs:
+                        azureSubscription: sp-governance-01
+                        scriptType: pscore
+                        scriptPath: iac-ampl/deploy.ps1
+                        arguments: ${{ environment }} create
