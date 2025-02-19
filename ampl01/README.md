@@ -1,0 +1,2 @@
+#### https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/create-private-link-access-commands?tabs=azure-cli
+<img style="width:1000px" src="https://learn.microsoft.com/en-us/azure/includes/media/resource-manager-create-rmpl/resource-management-private-link.svg"/>
