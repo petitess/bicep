@@ -1,0 +1,29 @@
+<policies>
+	<inbound>
+		<rate-limit-by-key calls="1000" renewal-period="60"
+			counter-key="@(context.Subscription?.Key ?? " anonymous")" />
+		<validate-jwt header-name="Authorization" failed-validation-httpcode="401"
+			failed-validation-error-message="Unauthorized. Access token is missing or invalid."
+			require-expiration-time="true" require-scheme="Bearer" require-signed-tokens="true"
+			output-token-variable-name="jwt">
+			<openid-config
+				url="https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration" />
+			<required-claims>
+				<claim name="roles" match="any">
+					{roles}
+				</claim>
+			</required-claims>
+		</validate-jwt>
+		<set-backend-service backend-id="{backendName}" />
+	</inbound>
+	<backend>
+		<base />
+	</backend>
+	<outbound>
+		<set-header name="x-powered-by" exists-action="delete" />
+		<set-header name="x-aspnet-version" exists-action="delete" />
+		<redirect-content-urls />
+	</outbound>
+	<on-error>
+	</on-error>
+</policies>

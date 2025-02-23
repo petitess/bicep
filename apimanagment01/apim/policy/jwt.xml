@@ -1,0 +1,55 @@
+<policies>
+    <inbound>
+        <base />
+        <validate-jwt header-name="Authorization" failed-validation-httpcode="401" failed-validation-error-message="Unauthorized. Access token is missing or invalid." require-expiration-time="true" require-scheme="Bearer" require-signed-tokens="true" output-token-variable-name="jwt">
+            <openid-config url="https://login.microsoftonline.com/${tenant_id}/v2.0/.well-known/openid-configuration" />
+            <audiences>
+                <audience>${client_id}</audience>
+            </audiences>
+            <required-claims>
+                <claim name="roles" match="any">
+                    <value>${name}</value>
+                </claim>
+            </required-claims>
+        </validate-jwt>
+        <set-header name="Entra-Client-ID" exists-action="override">
+            <value>@(context.Variables.GetValueOrDefault<Jwt>("jwt").Claims.GetValueOrDefault("azp"))</value>
+            </set-header>
+            <choose>                <!-- Temporary during migration -->
+                <when condition="@(!string.IsNullOrEmpty(context.Request.Headers.GetValueOrDefault("Ocp-Apim-Subscription-Key")))">
+                    <set-header name="Apim-Subscription-Key-Used" exists-action="override">
+                        <value>true</value>
+                    </set-header>
+                </when>
+                <otherwise>
+                    <set-header name="Apim-Subscription-Key-Used" exists-action="override">
+                        <value>false</value>
+                    </set-header>
+                </otherwise>
+            </choose>
+            <rate-limit-by-key calls="${rate_limit}" renewal-period="60" counter-key="@(context.Variables.GetValueOrDefault<Jwt>("jwt").Claims.GetValueOrDefault("azp"))" />
+            <set-backend-service backend-id="${name}" />
+            <choose>
+                <when condition="${msi_backend}">
+                    <authentication-managed-identity resource="${resource}" client-id="{{apim-client-id}}" />
+                </when>
+            </choose>
+            <choose>
+                <when condition="@(${versioned_backend} && string.IsNullOrEmpty(context.Api.Version))">                    <!-- Temporary during migration -->
+                    <rewrite-uri template="@("v1" + '/' + context.Request.Url.Path)" />
+                </when>
+                <when condition="${versioned_backend}">
+                    <rewrite-uri template="@(context.Api.Version + '/' + context.Request.Url.Path)" />
+                </when>
+            </choose>
+        </inbound>
+        <backend>
+            <base />
+        </backend>
+        <outbound>
+            <base />
+        </outbound>
+        <on-error>
+            <base />
+        </on-error>
+    </policies>

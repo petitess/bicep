@@ -1,0 +1,8 @@
+{
+    "subscription": {
+        "dev": "abc",
+        "stg": "abc",
+        "prod": "abc"
+    },
+    "location": "WestEurope"
+}

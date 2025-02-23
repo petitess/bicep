@@ -1,0 +1,20 @@
+<policies>
+    <inbound>
+        <base />
+        <!-- This is used for sas token authtication for backend service bus namespace. This is not a recommened solution" /> -->
+        <!-- Temporary solution until backend is moved to platform 3 and MSI can be used and KV secrets webhook-survey-post-project-Authorization + webhook-survey-post-servicedeskticket-Authorization can be removed in all 3 environments -->
+        <set-header name="${credential_header}" exists-action="override">
+            <value>{{${named_value}}}</value>
+        </set-header>
+        <rewrite-uri template="${rewrite_uri}" />
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>
