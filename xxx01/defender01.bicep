@@ -4,70 +4,144 @@ targetScope = 'subscription'
 var defenderPlans = [
   {
     name: 'VirtualMachines'
-    pricingTier: 'Standard'
+    properties: {
+      pricingTier: 'Standard'
+      subPlan: 'P2'
+      extensions: [
+        {
+          name: 'MdeDesignatedSubscription'
+          isEnabled: 'False'
+        }
+        {
+          name: 'AgentlessVmScanning'
+          isEnabled: 'True'
+        }
+        {
+          name: 'FileIntegrityMonitoring'
+          isEnabled: 'False'
+        }
+      ]
+    }
   }
   {
     name: 'SqlServers'
-    pricingTier: 'Standard'
+    properties: {
+      pricingTier: 'Standard'
+    }
   }
   {
     name: 'AppServices'
-    pricingTier: 'Standard'
+    properties: {
+      pricingTier: 'Standard'
+    }
   }
   {
     name: 'StorageAccounts'
-    pricingTier: 'Standard'
+    properties: {
+      pricingTier: 'Standard'
+      subPlan: 'PerTransaction'
+    }
   }
   {
     name: 'SqlServerVirtualMachines'
-    pricingTier: 'Standard'
-  }
-  {
-    name: 'KubernetesService'
-    pricingTier: 'Standard'
-  }
-  {
-    name: 'ContainerRegistry'
-    pricingTier: 'Standard'
+    properties: {
+      pricingTier: 'Standard'
+    }
   }
   {
     name: 'KeyVaults'
-    pricingTier: 'Standard'
-  }
-  {
-    name: 'Dns'
-    pricingTier: 'Standard'
+    properties: {
+      pricingTier: 'Standard'
+      subPlan: 'PerKeyVault'
+    }
   }
   {
     name: 'Arm'
-    pricingTier: 'Standard'
+    properties: {
+      pricingTier: 'Standard'
+      subPlan: 'PerSubscription'
+    }
   }
   {
     name: 'OpenSourceRelationalDatabases'
-    pricingTier: 'Standard'
-  }
-  {
-    name: 'CosmosDbs'
-    pricingTier: 'Standard'
+    properties: {
+      pricingTier: 'Free'
+    }
   }
   {
     name: 'Containers'
-    pricingTier: 'Standard'
+    properties: {
+      pricingTier: 'Standard'
+      extensions: [
+        {
+          name: 'ContainerRegistriesVulnerabilityAssessments'
+          isEnabled: 'True'
+        }
+        {
+          name: 'AgentlessDiscoveryForKubernetes'
+          isEnabled: 'True'
+        }
+        {
+          name: 'AgentlessVmScanning'
+          isEnabled: 'True'
+        }
+        {
+          name: 'ContainerSensor'
+          isEnabled: 'True'
+        }
+      ]
+    }
   }
   {
     name: 'CloudPosture'
-    pricingTier: 'Standard'
+    properties: {
+      pricingTier: 'Standard'
+      extensions: [
+        {
+          name: 'SensitiveDataDiscovery'
+          isEnabled: 'True'
+        }
+        {
+          name: 'ContainerRegistriesVulnerabilityAssessments'
+          isEnabled: 'True'
+        }
+        {
+          name: 'AgentlessDiscoveryForKubernetes'
+          isEnabled: 'True'
+        }
+        {
+          name: 'AgentlessVmScanning'
+          isEnabled: 'True'
+        }
+        {
+          name: 'EntraPermissionsManagement'
+          isEnabled: 'True'
+        }
+        {
+          name: 'ApiPosture'
+          isEnabled: 'True'
+        }
+      ]
+    }
+  }
+  {
+    name: 'CosmosDbs'
+    properties: {
+      pricingTier: 'Standard'
+    }
   }
   {
     name: 'Api'
-    pricingTier: 'Standard'
+    properties: {
+      pricingTier: 'Free'
+    }
   }
-
 ]
+
 @batchSize(1)
-resource defenderPlan 'Microsoft.Security/pricings@2023-01-01' = [for plan in defenderPlans: {
-  name: plan.name
-  properties: {
-    pricingTier: plan.pricingTier
+resource defenderPlan 'Microsoft.Security/pricings@2024-01-01' = [
+  for plan in defenderPlans: {
+    name: plan.name
+    properties: plan.properties
   }
-}]
+]
