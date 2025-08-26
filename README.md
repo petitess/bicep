@@ -25,6 +25,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 
 | Name | Description | 
 |--|--|
+| ai01 | OpenAI, Video Indexer, Translators, Pep
 | alert01 | Service Health Alerts  
 | alert02 | Log Analytics query alerts 
 | alert03 | Log Analytics query alerts with suppression rule 
