@@ -1,8 +1,0 @@
-{
-  "subscription": {
-    "dev": "XYZ",
-    "stg": "xyz",
-    "prod": "xyz"
-  },
-  "location": "SwedenCentral"
-}
