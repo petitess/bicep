@@ -198,6 +198,7 @@ module appM 'app.bicep' = {
       minTlsVersion: '1.2'
       scmMinTlsVersion: '1.2'
       healthCheckPath: '/health/index.html'
+      vnetRouteAllEnabled: true
     }
     siteConfig: {
       alwaysOn: true
@@ -250,7 +251,9 @@ module appM 'app.bicep' = {
       configWeb: {
         minTlsVersion: '1.2'
         healthCheckPath: '/health/index.html'
+        vnetRouteAllEnabled: true
       }
     }
   }
 }
+
