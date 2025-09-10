@@ -932,7 +932,7 @@ resource pepR 'Microsoft.Network/privateEndpoints@2024-07-01' = [
 ]
 
 resource dns 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-05-01' = [
-  for (pep, i) in items(privateEndpoints): if (!empty(SLOT) && pep.key == 'sites' || pep.key == 'sites-stage') {
+  for (pep, i) in items(privateEndpoints): if (pep.key == 'sites' || !empty(SLOT) && pep.key == 'sites-stage') {
     name: 'default'
     parent: pepR[i]
     properties: {
@@ -971,3 +971,4 @@ output customDomainVerificationId string = app.properties.customDomainVerificati
 
 @description('The outbound IP addresses of the app.')
 output outboundIpAddresses string = app.properties.outboundIpAddresses
+
