@@ -193,6 +193,8 @@ module appM 'app.bicep' = {
       SLOT_NAME: toUpper(env)
       WEBSITE_LOAD_CERTIFICATES: '*'
       WEBJOBS_IDLE_TIMEOUT: '3600'
+      WEBSITE_AUTH_AAD_ALLOWED_TENANTS: tenant().tenantId
+      //MICROSOFT_PROVIDER_AUTHENTICATION_SECRET: '@Microsoft.KeyVault(VaultName=kv-abc-infra-${env}-02;SecretName=AppMemberClientSecret)'
     }
     configWeb: {
       minTlsVersion: '1.2'
@@ -228,6 +230,52 @@ module appM 'app.bicep' = {
       sendKeyValue: relayM.outputs.keyValue1
       serviceBusSuffix: '.servicebus.windows.net'
     }
+    configAuthsettingsV2: {
+      globalValidation: {
+        excludedPaths: []
+        redirectToProvider: 'azureactivedirectory'
+        requireAuthentication: true
+        unauthenticatedClientAction: 'RedirectToLoginPage'
+      }
+      platform: {
+        enabled: true
+      }
+      login: {
+        tokenStore: {
+          enabled: true
+        }
+      }
+      httpSettings: {
+        forwardProxy: {
+          convention: 'NoProxy'
+          customHostHeaderName: ''
+          customProtoHeaderName: ''
+        }
+        requireHttps: true
+        routes: {
+          apiPrefix: '/.auth'
+        }
+      }
+      identityProviders: {
+        azureActiveDirectory: {
+          enabled: true
+          isAutoProvisioned: true
+          login: {
+            disableWWWAuthenticate: false
+          }
+          registration: {
+            clientId: '123-4fe3-4707-b981-123'
+            clientSecretSettingName: 'MICROSOFT_PROVIDER_AUTHENTICATION_SECRET'
+            openIdIssuer: 'https://sts.windows.net/${tenant().tenantId}/v2.0'
+          }
+          validation: {
+            allowedAudiences: [
+              'api://123-4fe3-4707-b981-123'
+            ]
+          }
+        }
+      }
+    }
     SLOT: {
       name: 'stage'
       tags: tags
@@ -256,4 +304,3 @@ module appM 'app.bicep' = {
     }
   }
 }
-
