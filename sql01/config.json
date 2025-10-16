@@ -1,0 +1,8 @@
+{
+  "subscription": {
+    "dev": "123-b2a6-13596afbfabb",
+    "stg": "xyz",
+    "prod": "xyz"
+  },
+  "location": "SwedenCentral"
+}
