@@ -97,6 +97,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | runcommand01 | powershell script
 | searchservice01 | Search service + Sql + Pep + Automated approval 
 | siterecovery01 | Azure Site Recovery 
+| sql01 | Sql, Database, Job Agent, Elastic Pool
 | storageaccount01 | Storage Account, All Private Endpoints, User Defined Types
 | storageaccount02 | Fileshare with backup
 | subscription01 | Create subscriptions
