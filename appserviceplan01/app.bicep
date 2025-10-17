@@ -446,15 +446,15 @@ type config_web_type = {
     {
       action: string
       description: string
-      headers: object
+      headers: object?
       ipAddress: string
       name: string
       priority: int
-      subnetMask: string
-      subnetTrafficTag: int
-      tag: string
-      vnetSubnetResourceId: string
-      vnetTrafficTag: int
+      subnetMask: string?
+      subnetTrafficTag: int?
+      tag: string?
+      vnetSubnetResourceId: string?
+      vnetTrafficTag: int?
     }
   ]?
   ipSecurityRestrictionsDefaultAction: string?
@@ -978,3 +978,4 @@ output customDomainVerificationId string = app.properties.customDomainVerificati
 
 @description('The outbound IP addresses of the app.')
 output outboundIpAddresses string = app.properties.outboundIpAddresses
+
