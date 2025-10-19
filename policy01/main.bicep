@@ -200,3 +200,9 @@ module APIM3 'policies/apim-audit-jwt-verification.bicep' = {
 module ST4 'policies/st-require-defender.bicep' = {
   name: 'ST4'
 }
+
+@description('Dont allow any source')
+module ST4 'policies/afw-unallow-any-source.bicep' = {
+  name: 'AFWP1'
+}
+
