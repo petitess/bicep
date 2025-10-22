@@ -20,9 +20,9 @@ param DataWinId string
 param DataLinuxId string
 param availabilitySetName string
 param dataEndpointId string
-param dataVmInsightsId string
+param dataChangeTracking string
 
-resource vm 'Microsoft.Compute/virtualMachines@2024-07-01' = {
+resource vm 'Microsoft.Compute/virtualMachines@2025-04-01' = {
   name: name
   location: location
   tags: tags
@@ -97,7 +97,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2024-07-01' = {
   }
 }
 
-resource disk 'Microsoft.Compute/disks@2024-03-02' = [
+resource disk 'Microsoft.Compute/disks@2025-01-02' = [
   for dataDisk in dataDisks: if (dataDisk.createOption == 'Empty') {
     name: '${name}-${dataDisk.name}'
     location: location
@@ -114,7 +114,7 @@ resource disk 'Microsoft.Compute/disks@2024-03-02' = [
   }
 ]
 
-resource nic 'Microsoft.Network/networkInterfaces@2024-05-01' = [
+resource nic 'Microsoft.Network/networkInterfaces@2024-10-01' = [
   for (interface, i) in networkInterfaces: {
     name: '${name}-nic-${i + 1}'
     location: location
@@ -146,7 +146,7 @@ resource nic 'Microsoft.Network/networkInterfaces@2024-05-01' = [
   }
 ]
 
-resource pip 'Microsoft.Network/publicIPAddresses@2024-05-01' = [
+resource pip 'Microsoft.Network/publicIPAddresses@2024-10-01' = [
   for (interface, i) in networkInterfaces: if (interface.publicIPAddress) {
     name: 'pip-${name}-nic-${i + 1}'
     location: location
@@ -160,7 +160,7 @@ resource pip 'Microsoft.Network/publicIPAddresses@2024-05-01' = [
   }
 ]
 
-resource AMA 'Microsoft.Compute/virtualMachines/extensions@2024-07-01' = if (AzureMonitorAgentWin || AzureMonitorAgentLinux) {
+resource AMA 'Microsoft.Compute/virtualMachines/extensions@2025-04-01' = if (AzureMonitorAgentWin || AzureMonitorAgentLinux) {
   parent: vm
   name: AzureMonitorAgentWin ? 'AzureMonitorWindowsAgent' : 'AzureMonitorLinuxAgent'
   location: location
@@ -200,26 +200,24 @@ resource amaAssociation 'Microsoft.Insights/dataCollectionRuleAssociations@2023-
 }
 
 resource amaVmInsightsAssociation 'Microsoft.Insights/dataCollectionRuleAssociations@2023-03-11' = if (AzureMonitorAgentWin || AzureMonitorAgentLinux) {
-  name: '${name}-vminsights'
+  name: '${name}-changetracking'
   scope: vm
   properties: {
     description: 'Association of data collection rule. Deleting this association will break the data collection for VMs.'
-    dataCollectionRuleId: dataVmInsightsId
+    dataCollectionRuleId: dataChangeTracking
   }
 }
 
-resource DependencyAgentExtension 'Microsoft.Compute/virtualMachines/extensions@2024-07-01' = if (AzureMonitorAgentWin) {
+resource ChangeTrackingExtension 'Microsoft.Compute/virtualMachines/extensions@2025-04-01' = if (AzureMonitorAgentWin) {
   parent: vm
-  name: 'DependencyAgentWindows'
+  name: 'ChangeTracking-Windows'
   location: location
   properties: {
-    publisher: 'Microsoft.Azure.Monitoring.DependencyAgent'
-    type: 'DependencyAgentWindows'
-    typeHandlerVersion: '9.10'
+    publisher: 'Microsoft.Azure.ChangeTrackingAndInventory'
+    type: 'ChangeTracking-Windows'
+    typeHandlerVersion: '2.0'
     autoUpgradeMinorVersion: true
-    settings: {
-      enableAMA: 'true'
-    }
+    enableAutomaticUpgrade: true
   }
 }
 

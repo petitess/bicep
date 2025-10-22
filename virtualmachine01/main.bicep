@@ -128,7 +128,7 @@ module vm 'modules/vm.bicep' = [
       DataWinId: data.outputs.DataWinId
       availabilitySetName: vm.availabilitySetName
       dataEndpointId: data.outputs.dataEndpointId
-      dataVmInsightsId: data.outputs.DataVMInsightsId
+      dataChangeTracking: data.outputs.DataChangeTrackingId
     }
   }
 ]

@@ -120,6 +120,18 @@
         },
         "what-if-short-circuiting":{
           "level": "info"
+        },
+        "no-explicit-any":{
+          "level": "warning"
+        },
+        "no-unused-imports":{
+          "level": "warning"
+        },
+        "stacks-extensibility-compat":{
+          "level": "info"
+        },
+        "use-recent-az-powershell-version":{
+          "level": "warning"
         }
       }
     }
