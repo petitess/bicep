@@ -96,6 +96,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | recoveryservicevault01 | Recovery Service Valut & Private endpoint
 | runcommand01 | powershell script
 | searchservice01 | Search service + Sql + Pep + Automated approval 
+| servicebus01 | topics, subscriptions, queues, pep
 | siterecovery01 | Azure Site Recovery 
 | sql01 | Sql, Database, Job Agent, Elastic Pool
 | storageaccount01 | Storage Account, All Private Endpoints, User Defined Types
