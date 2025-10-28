@@ -3,3 +3,8 @@ var subnet = toObject(reference(
   '2023-09-01'
 ).subnets, subnet => subnet.name)
 output sub string = subnet['snet-pep'].id
+
+var kvOutputs = toObject(kvM, entry => entry.outputs.kvName, entry => ({
+  kvId: entry.outputs.kvId
+  kvUrl: entry.outputs.kvUrl
+}))
