@@ -90,7 +90,6 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | privatelink03 | Storage Account, All Private Endpoints, User Defined Types
 | privatelink04 | Private Endpoint for Azure SQL
 | privatelink05 | Log Analytics & Appilcation Insight PL to Azure Monitor
-| privatelink06| Private Endpoint for File, Blob 
 | rbac01 | Multiple roles
 | rbac02 | Tenant Root Group assignment 
 | recoveryservicevault01 | Recovery Service Valut & Private endpoint
