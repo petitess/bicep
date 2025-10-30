@@ -38,8 +38,24 @@ var defenderPlans = [
   {
     name: 'StorageAccounts'
     properties: {
+      resourcesCoverageStatus: 'FullyCovered'
+      extensions: [
+        {
+          name: 'OnUploadMalwareScanning'
+          isEnabled: 'True'
+          additionalExtensionProperties: {
+            CapGBPerMonthPerStorageAccount: '10000'
+            BlobScanResultsOptions: 'BlobIndexTags'
+            AutomatedResponse: 'None'
+          }
+        }
+        {
+          name: 'SensitiveDataDiscovery'
+          isEnabled: 'True'
+        }
+      ]
+      subPlan: 'DefenderForStorageV2'
       pricingTier: 'Standard'
-      subPlan: 'PerTransaction'
     }
   }
   {
