@@ -30,15 +30,27 @@ param disks {
     encryption: bool
   }[]
 }[]
+param keys { name: string, encryption: 'KeyRSA3072' | 'KeyRSA4096' }[] = [
+  {
+    name: 'key1'
+    encryption: 'KeyRSA3072'
+  }
+  {
+    name: 'key2'
+    encryption: 'KeyRSA4096'
+  }
+]
 
 var kvOutputs = toObject(
   kvM,
   entry => entry.outputs.kvName,
   entry =>
     ({
+      kvName: entry.outputs.kvName
       kvId: entry.outputs.kvId
       kvUrl: entry.outputs.kvUrl
-      keyUrl: entry.outputs.keyUrl
+      key3Url: entry.outputs.key3Url
+      key4Url: entry.outputs.key4Url
     })
 )
 var unique = take(uniqueString(subscription().subscriptionId), 3)
@@ -122,12 +134,21 @@ module desM 'des.bicep' = {
   params: {
     name: 'desdev01'
     location: location
-    keyUrl: kvOutputs.kvdesdev01.keyUrl
+    keyUrl: kvOutputs.kvdesdev01.key3Url
     keyVaultId: kvOutputs.kvdesdev01.kvId
     rbac: [
       'Key Vault Crypto Service Encryption'
     ]
   }
 }
+
+module key 'key.bicep' = [
+  for k in keys: {
+    scope: rg
+    params: {
+      key: reference(resourceId(subscription().subscriptionId, rgDes.name, 'Microsoft.KeyVault/vaults/keys', 'kvdes${env}01', k.encryption), '2025-05-01', 'Full').properties.keyUriWithVersion
+    }
+  }
+]
 
 output kv1 string = string(kvOutputs.kvdesdev01.kvId)

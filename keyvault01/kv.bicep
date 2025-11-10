@@ -52,12 +52,21 @@ resource kv 'Microsoft.KeyVault/vaults@2025-05-01' = {
   }
 }
 
-resource key 'Microsoft.KeyVault/vaults/keys@2025-05-01' = {
+resource key3072 'Microsoft.KeyVault/vaults/keys@2025-05-01' = {
   name: 'KeyRSA3072'
   parent: kv
   properties: {
     kty: 'RSA'
     keySize: 3072
+  }
+}
+
+resource key4096 'Microsoft.KeyVault/vaults/keys@2025-05-01' = {
+  name: 'KeyRSA4096'
+  parent: kv
+  properties: {
+    kty: 'RSA'
+    keySize: 4096
   }
 }
 
@@ -140,4 +149,5 @@ resource diag 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = if (w
 output kvId string = kv.id
 output kvName string = kv.name
 output kvUrl string = kv.properties.vaultUri
-output keyUrl string = key.properties.keyUriWithVersion
+output key3Url string = key3072.properties.keyUriWithVersion
+output key4Url string = key4096.properties.keyUriWithVersion
