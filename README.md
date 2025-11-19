@@ -109,7 +109,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | virtualdesktop01 | Host Pool, App Group, Workspace, FXLogix, Registry settings
 | virtualdesktop02 | Azure Virtual Desktop with Azure AD Domain Services
 | virtualdesktop03 | Azure Virtual Desktop 100%
-| virtualmachine01 | Dcr, dce, vm insights, map, availability sets
+| virtualmachine01 | Dcr, Change Tracking, Availability Sets, OpenTelemetry
 | virtualmachine02 | VM extension: AD Domain Services + Join Domain
 | virtualmachine03 | VM extension: IIS
 | virtualmachine04 | VM extension: Nginx on Linux
