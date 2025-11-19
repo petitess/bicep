@@ -20,7 +20,7 @@ var events = [
   'Application'
 ]
 
-resource log 'Microsoft.OperationalInsights/workspaces@2025-02-01' = {
+resource log 'Microsoft.OperationalInsights/workspaces@2025-07-01' = {
   name: name
   location: location
   tags: tags
@@ -50,7 +50,7 @@ resource solution 'Microsoft.OperationsManagement/solutions@2015-11-01-preview' 
   }
 }]
 
-resource dataSources 'Microsoft.OperationalInsights/workspaces/dataSources@2025-02-01' = [for event in events: {
+resource dataSources 'Microsoft.OperationalInsights/workspaces/dataSources@2025-07-01' = [for event in events: {
   parent: log
   name: event
   kind: 'WindowsEvent'

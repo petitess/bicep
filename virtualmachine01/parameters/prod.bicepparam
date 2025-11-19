@@ -170,8 +170,8 @@ param vnet = {
 
 param vms = [
   {
-    name: 'vmmgmtprod01'
-    rgName: 'rg-vmmgmtprod01'
+    name: 'vmmgmt01'
+    rgName: 'rg-vmmgmt01'
     availabilitySetName: ''
     tags: {
       Application: 'Management'
@@ -211,8 +211,8 @@ param vms = [
     AzureMonitorAgentWin: true
   }
   {
-    name: 'vmsqlprod01'
-    rgName: 'rg-vmsqlprod01'
+    name: 'vmsql01'
+    rgName: 'rg-vmsql01'
     availabilitySetName: ''
     tags: {
       Application: 'Management'

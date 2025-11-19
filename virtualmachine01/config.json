@@ -1,7 +1,7 @@
 {
     "subscription": {
-        "dev": "123-431f-b2a6-13596afbfabb",
-        "prod": "123-431f-b2a6-13596afbfabb"
+        "dev": "abc",
+        "prod": "abc"
     },
     "location": "SwedenCentral"
 }

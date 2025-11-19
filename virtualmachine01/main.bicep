@@ -24,6 +24,9 @@ var allowedSubnets = {
     avd: '10.100.57.0/24'
   }
 }
+var domains = [
+  //  'privatelink.${location}.prometheus.monitor.azure.com'
+]
 
 resource rgSpoke 'Microsoft.Resources/resourceGroups@2024-11-01' = {
   name: 'rg-${prefixSpoke}-01'
@@ -32,6 +35,18 @@ resource rgSpoke 'Microsoft.Resources/resourceGroups@2024-11-01' = {
     System: 'VNET'
   })
 }
+
+module pdnszM 'modules/pdnsz.bicep' = [
+  for (domain, i) in domains: {
+    name: 'pdnsz-${split(domain, '.')[1]}'
+    scope: rgSpoke
+    params: {
+      name: domain
+      vnetName: vnetM.outputs.name
+      vnetId: vnetM.outputs.id
+    }
+  }
+]
 
 resource rgMonitor 'Microsoft.Resources/resourceGroups@2024-11-01' = {
   name: 'rg-${prefixMonitor}-01'
@@ -63,6 +78,14 @@ module data 'modules/data.bicep' = {
       'log-${prefixMonitor}-01'
     )
     workspaceName: 'log-${prefixMonitor}-01'
+    dnsRg: rgSpoke.name
+    snetId: resourceId(
+        subscription().subscriptionId,
+        rgSpoke.name,
+        'Microsoft.Network/virtualNetworks/subnets',
+        vnetM.outputs.name,
+        'snet-pep'
+      )
   }
 }
 
@@ -129,6 +152,7 @@ module vm 'modules/vm.bicep' = [
       availabilitySetName: vm.availabilitySetName
       dataEndpointId: data.outputs.dataEndpointId
       dataChangeTracking: data.outputs.DataChangeTrackingId
+      dataOpenTelemetry: data.outputs.DataRuleOpenTelemetryId
     }
   }
 ]

@@ -6,7 +6,7 @@ param dnsServers array = []
 param subnets array = []
 param allowedSubnets object
 
-resource vnet 'Microsoft.Network/virtualNetworks@2024-05-01' = {
+resource vnet 'Microsoft.Network/virtualNetworks@2025-01-01' = {
   name: 'vnet-${prefix}-01'
   location: location
   tags: tags
@@ -45,7 +45,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2024-05-01' = {
   }
 }
 
-resource nsg 'Microsoft.Network/networkSecurityGroups@2024-05-01' = [
+resource nsg 'Microsoft.Network/networkSecurityGroups@2025-01-01' = [
   for subnet in subnets: if (contains(subnet, 'rules')) {
     name: 'nsg-${prefix}-${subnet.name}'
     location: location
@@ -402,7 +402,7 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2024-05-01' = [
   }
 ]
 
-resource nw 'Microsoft.Network/networkWatchers@2024-05-01' = if (false) {
+resource nw 'Microsoft.Network/networkWatchers@2025-01-01' = if (false) {
   name: 'nw-${prefix}-01'
   location: location
   tags: tags

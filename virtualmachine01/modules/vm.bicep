@@ -21,6 +21,7 @@ param DataLinuxId string
 param availabilitySetName string
 param dataEndpointId string
 param dataChangeTracking string
+param dataOpenTelemetry string
 
 resource vm 'Microsoft.Compute/virtualMachines@2025-04-01' = {
   name: name
@@ -114,7 +115,7 @@ resource disk 'Microsoft.Compute/disks@2025-01-02' = [
   }
 ]
 
-resource nic 'Microsoft.Network/networkInterfaces@2024-10-01' = [
+resource nic 'Microsoft.Network/networkInterfaces@2025-01-01' = [
   for (interface, i) in networkInterfaces: {
     name: '${name}-nic-${i + 1}'
     location: location
@@ -146,7 +147,7 @@ resource nic 'Microsoft.Network/networkInterfaces@2024-10-01' = [
   }
 ]
 
-resource pip 'Microsoft.Network/publicIPAddresses@2024-10-01' = [
+resource pip 'Microsoft.Network/publicIPAddresses@2025-01-01' = [
   for (interface, i) in networkInterfaces: if (interface.publicIPAddress) {
     name: 'pip-${name}-nic-${i + 1}'
     location: location
@@ -181,7 +182,7 @@ resource AMA 'Microsoft.Compute/virtualMachines/extensions@2025-04-01' = if (Azu
   }
 }
 
-resource amaAssociationEndpoint 'Microsoft.Insights/dataCollectionRuleAssociations@2023-03-11' = if (AzureMonitorAgentWin || AzureMonitorAgentLinux) {
+resource amaAssociationEndpoint 'Microsoft.Insights/dataCollectionRuleAssociations@2024-03-11' = if (AzureMonitorAgentWin || AzureMonitorAgentLinux) {
   name: 'configurationAccessEndpoint'
   scope: vm
   properties: {
@@ -190,7 +191,7 @@ resource amaAssociationEndpoint 'Microsoft.Insights/dataCollectionRuleAssociatio
   }
 }
 
-resource amaAssociation 'Microsoft.Insights/dataCollectionRuleAssociations@2023-03-11' = if (AzureMonitorAgentWin || AzureMonitorAgentLinux) {
+resource amaAssociation 'Microsoft.Insights/dataCollectionRuleAssociations@2024-03-11' = if (AzureMonitorAgentWin || AzureMonitorAgentLinux) {
   name: name
   scope: vm
   properties: {
@@ -199,12 +200,21 @@ resource amaAssociation 'Microsoft.Insights/dataCollectionRuleAssociations@2023-
   }
 }
 
-resource amaVmInsightsAssociation 'Microsoft.Insights/dataCollectionRuleAssociations@2023-03-11' = if (AzureMonitorAgentWin || AzureMonitorAgentLinux) {
+resource amaVmInsightsAssociation 'Microsoft.Insights/dataCollectionRuleAssociations@2024-03-11' = if (AzureMonitorAgentWin || AzureMonitorAgentLinux) {
   name: '${name}-changetracking'
   scope: vm
   properties: {
     description: 'Association of data collection rule. Deleting this association will break the data collection for VMs.'
     dataCollectionRuleId: dataChangeTracking
+  }
+}
+
+resource amaOpenTelemetry 'Microsoft.Insights/dataCollectionRuleAssociations@2024-03-11' = if (AzureMonitorAgentWin || AzureMonitorAgentLinux) {
+  name: '${name}-open-telemetry'
+  scope: vm
+  properties: {
+    description: 'Association of data collection rule. Deleting this association will break the data collection for VMs.'
+    dataCollectionRuleId: dataOpenTelemetry
   }
 }
 
@@ -220,7 +230,7 @@ resource ChangeTrackingExtension 'Microsoft.Compute/virtualMachines/extensions@2
     enableAutomaticUpgrade: true
   }
 }
-
+//Retires September 15, 2028
 // resource encryptionExtensionWindows 'Microsoft.Compute/virtualMachines/extensions@2024-07-01' = if (AzureMonitorAgentWin) {
 //   parent: vm
 //   name: 'AzureDiskEncryption'

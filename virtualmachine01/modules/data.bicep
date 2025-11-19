@@ -2,11 +2,13 @@ param prefix string
 param location string
 param workspaceName string
 param workspaceResourceId string
+param snetId string
+param dnsRg string
 
 var tags = resourceGroup().tags
 
-resource dataEndpoint 'Microsoft.Insights/dataCollectionEndpoints@2023-03-11' = {
-  name: 'data-endpoint-${prefix}-01'
+resource dataEndpoint 'Microsoft.Insights/dataCollectionEndpoints@2024-03-11' = {
+  name: 'dce-${prefix}-01'
   location: location
   tags: tags
   properties: {
@@ -16,8 +18,8 @@ resource dataEndpoint 'Microsoft.Insights/dataCollectionEndpoints@2023-03-11' = 
   }
 }
 
-resource DataRuleWin 'Microsoft.Insights/dataCollectionRules@2023-03-11' = {
-  name: 'data-win-${prefix}-01'
+resource DataRuleWin 'Microsoft.Insights/dataCollectionRules@2024-03-11' = {
+  name: 'dcr-win-${prefix}-01'
   location: location
   tags: tags
   kind: 'Windows'
@@ -60,8 +62,8 @@ resource DataRuleWin 'Microsoft.Insights/dataCollectionRules@2023-03-11' = {
   }
 }
 
-resource DataRuleLinux 'Microsoft.Insights/dataCollectionRules@2023-03-11' = {
-  name: 'data-linux-${prefix}-01'
+resource DataRuleLinux 'Microsoft.Insights/dataCollectionRules@2024-03-11' = {
+  name: 'dcr-linux-${prefix}-01'
   location: location
   tags: tags
   kind: 'Linux'
@@ -125,8 +127,8 @@ resource DataRuleLinux 'Microsoft.Insights/dataCollectionRules@2023-03-11' = {
   }
 }
 
-resource DataRuleChangeTracking 'Microsoft.Insights/dataCollectionRules@2023-03-11' = {
-  name: 'data-change-tracking-${prefix}-01'
+resource DataRuleChangeTracking 'Microsoft.Insights/dataCollectionRules@2024-03-11' = {
+  name: 'dcr-change-tracking-${prefix}-01'
   location: location
   properties: {
     description: 'Data collection rule for ct'
@@ -386,7 +388,136 @@ resource DataRuleChangeTracking 'Microsoft.Insights/dataCollectionRules@2023-03-
   }
 }
 
+resource amw 'Microsoft.Monitor/accounts@2025-05-03-preview' = {
+  name: 'amw-${prefix}-01'
+  location: location
+  properties: {
+    publicNetworkAccess: 'Enabled'
+  }
+}
+
+resource pepamw 'Microsoft.Network/privateEndpoints@2025-01-01' = {
+  name: 'pep-${amw.name}'
+  location: location
+  tags: tags
+  properties: {
+    customNetworkInterfaceName: 'nic-${amw.name}'
+    privateLinkServiceConnections: [
+      {
+        name: 'connection'
+        properties: {
+          privateLinkServiceId: amw.id
+          groupIds: [
+            'prometheusMetrics'
+          ]
+        }
+      }
+    ]
+    // ipConfigurations: [
+    //   {
+    //     name: 'config'
+    //     properties: {
+    //       groupId: 'prometheusMetrics'
+    //       memberName: 'queryApi'
+    //       privateIPAddress: '10.100.11.36'
+    //     }
+    //   }
+    // ]
+    subnet: {
+      id: snetId
+    }
+  }
+}
+
+resource dnsamw 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2025-01-01' = {
+  name: 'default'
+  parent: pepamw
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: 'privatelink-azure-com'
+        properties: {
+          privateDnsZoneId: resourceId(
+            dnsRg,
+            'Microsoft.Network/privateDnsZones',
+            'privatelink.swedencentral.prometheus.monitor.azure.com'
+          )
+        }
+      }
+    ]
+  }
+}
+//https://learn.microsoft.com/en-us/azure/azure-monitor/vm/vminsights-opentelemetry
+//https://learn.microsoft.com/en-us/azure/azure-monitor/metrics/metrics-explorer
+resource DataRuleOpenTelemetry 'Microsoft.Insights/dataCollectionRules@2024-03-11' = {
+  name: 'dcr-open-telemetry-${prefix}-01'
+  location: location
+  properties: {
+    description: 'Default DCR created for Monitoring Account'
+    dataCollectionEndpointId: dataEndpoint.id
+    dataSources: {
+      // prometheusForwarder: [
+      //   {
+      //     streams: [
+      //       'Microsoft-PrometheusMetrics'
+      //     ]
+      //     name: 'PrometheusDataSource'
+      //   }
+      // ]
+      performanceCountersOTel: [
+        {
+          streams: [
+            'Microsoft-OtelPerfMetrics'
+          ]
+          samplingFrequencyInSeconds: 60
+          counterSpecifiers: [
+            'system.filesystem.usage'
+            'system.disk.io'
+            'system.disk.operation_time'
+            'system.disk.operations'
+            'system.memory.usage'
+            'system.network.io'
+            'system.cpu.time'
+            'system.uptime'
+            'system.network.dropped'
+            'system.network.errors'
+          ]
+          name: 'OtelDataSource'
+        }
+      ]
+    }
+    destinations: {
+      monitoringAccounts: [
+        {
+          accountResourceId: amw.id
+          name: amw.name
+        }
+      ]
+    }
+    dataFlows: [
+      // {
+      //   streams: [
+      //     'Microsoft-PrometheusMetrics'
+      //   ]
+      //   destinations: [
+      //     amw.name
+      //   ]
+      // }
+      {
+        streams: [
+          // 'Microsoft-OtelMetrics'
+          'Microsoft-OtelPerfMetrics'
+        ]
+        destinations: [
+          amw.name
+        ]
+      }
+    ]
+  }
+}
+
 output DataWinId string = DataRuleWin.id
 output DataLinuxId string = DataRuleLinux.id
 output DataChangeTrackingId string = DataRuleChangeTracking.id
 output dataEndpointId string = dataEndpoint.id
+output DataRuleOpenTelemetryId string = DataRuleOpenTelemetry.id
