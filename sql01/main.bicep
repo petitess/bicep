@@ -25,6 +25,7 @@ param sqls {
   jobAgents: {
     name: string
     dbName: string
+    alert: bool
     identity: bool
     sku: {
       name: 'JA100' | 'JA200' | 'JA400' | 'JA800'

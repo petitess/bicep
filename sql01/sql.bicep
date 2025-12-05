@@ -24,6 +24,7 @@ param databases {
 param jobAgents {
   name: string
   dbName: string
+  alert: bool
   identity: bool
   sku: {
     name: 'JA100' | 'JA200' | 'JA400' | 'JA800'
@@ -220,6 +221,46 @@ resource sdf 'Microsoft.Sql/servers/jobAgents/privateEndpoints@2024-11-01-previe
     parent: jaR[i]
     properties: {
       targetServerAzureResourceId: sql.id
+    }
+  }
+]
+
+resource alert 'Microsoft.Insights/metricAlerts@2024-03-01-preview' = [
+  for (a, i) in jobAgents: if (a.alert) {
+    name: toLower('${a.name}-failed')
+    location: 'global'
+    tags: tags
+    properties: {
+      severity: 2
+      enabled: true
+      scopes: [
+        ja[i].id
+      ]
+      evaluationFrequency: 'PT1H'
+      windowSize: 'PT1H'
+      criteria: {
+        allOf: [
+          {
+            threshold: json('0')
+            name: 'Metric1'
+            metricNamespace: 'Microsoft.Sql/servers/jobAgents'
+            metricName: 'elastic_jobs_failed'
+            operator: 'GreaterThan'
+            timeAggregation: 'Count'
+            skipMetricValidation: false
+            criterionType: 'StaticThresholdCriterion'
+          }
+        ]
+        'odata.type': 'Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria'
+      }
+      autoMitigate: false
+      targetResourceType: 'Microsoft.Sql/servers/jobAgents'
+      targetResourceRegion: 'westeurope'
+      actions: [
+        {
+          actionGroupId: actionGroupId
+        }
+      ]
     }
   }
 ]

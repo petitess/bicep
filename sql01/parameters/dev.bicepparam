@@ -44,6 +44,7 @@ param sqls = [
       {
         name: 'sqlja-elastic-job'
         dbName: 'sqldb-elastic-job'
+        alert: false
         identity: false
         sku: {
           name: 'JA100'
