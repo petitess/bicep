@@ -57,6 +57,8 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | backupvault01 | Backup vault, storage account & disk
 | certificates01 | Certificates + lock 
 | citrix01 | Citrix NetScaler(ADC) with high-availability(HA) 
+containerapps01 | Container registry, container apps & csharp
+| containerapps02 | Ollama with Open WebUI
 | containerregistry01 | azure container registry - push/pull docker image
 | datacollectionrule01 | Data collection rule, custom logs ingestion, REST API
 | datadactory01 | Data factory, Databricks, Synapse
