@@ -955,6 +955,34 @@ resource dns 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-05-01
   }
 ]
 
+module dnsPublic 'app_dns.bicep' = if (!empty(customDomain)) {
+  scope: resourceGroup(subscription().subscriptionId, 'rg-dns-01')
+  name: 'asuid.${split(customDomain, '.')[0]}'
+  params: {
+    domainName: '${split(customDomain, '.')[1]}.${split(customDomain, '.')[2]}'
+    Aname: split(customDomain, '.')[0]
+    AValue: '1.1.1.1' //AGW
+    TXTname: 'asuid.${split(customDomain, '.')[0]}'
+    TXTValue: contains(name, '-prod')
+      ? '868489962B239BC569FDCDA11324670D731D5ABA8336202D0853CB6798B47C1a'
+      : '1a675255a3e66e7583d8f4c5e5b90f1a5f1fc4561afb41afcd4e03f9168eca71'
+  }
+}
+
+module dnsPublicSlot 'app_dns.bicep' = if (!empty(SLOT) && !empty(SLOT.?customDomain)) {
+  scope: resourceGroup(subscription().subscriptionId, 'rg-infrastructure-prod-dns')
+  name: 'asuid.${split(SLOT.?customDomain, '.')[0]}'
+  params: {
+    domainName: '${split(SLOT.?customDomain, '.')[1]}.${split(SLOT.?customDomain, '.')[2]}'
+    Aname: split(SLOT.?customDomain, '.')[0]
+    AValue: '1.1.1.1' //AGW
+    TXTname: 'asuid.${split(SLOT.?customDomain, '.')[0]}'
+    TXTValue: contains(name, '-prod')
+      ? '868489962B239BC569FDCDA11324670D731D5ABA8336202D0853CB6798B47C1a'
+      : '1a675255a3e66e7583d8f4c5e5b90f1a5f1fc4561afb41afcd4e03f9168eca71'
+  }
+}
+
 @description('The name of the site.')
 output name string = app.name
 
