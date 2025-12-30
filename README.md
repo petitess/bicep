@@ -84,6 +84,7 @@ containerapps01 | Container registry, container apps & csharp
 | logicapp02 | Resource Graph Query - email
 | logicapp03 | Copy blobs 
 | maintenance01 | Dynamic scopes
+| microsoftgraph01 | sp, app, oidc, oauth2, app role, group
 | peering01 | Virtual network peering 
 | policy01 | Custom policies
 | policy02 | Cloud Adoption Framework
