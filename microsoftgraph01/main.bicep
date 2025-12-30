@@ -1,6 +1,7 @@
 targetScope = 'subscription'
 
-provider microsoftGraph
+// https://mcr.microsoft.com/artifact/mar/bicep/extensions/microsoftgraph/v1.0/tags
+extension 'br:mcr.microsoft.com/bicep/extensions/microsoftgraph/v1.0:0.2.0-preview'
 
 param env string
 param config object
@@ -8,15 +9,14 @@ param config object
 var wellKnown = {
   MicrosoftGraph: {
     appId: '00000003-0000-0000-c000-000000000000'
-    objectId: '756b4d06-16a7-4d8f-baa2-c29f29d7c0ff'
   }
 }
 var roles = {
-  'User.Read.All': guid('User.Read.All')
+  'User.Read.All': 'df021288-bdef-4463-88db-98f22de89214'
 }
 
 var users = {
-  admin: '94446061-65d1-4fb3-bcb9-7ba91c64e58d'
+  admin: deployer().objectId
 }
 
 var gitHubOrg = 'petitess'
@@ -26,6 +26,12 @@ var subjects = {
   pull_request: 'repo:${gitHubOrg}/${gitHubRepo}:pull_request'
   dev: 'repo:${gitHubOrg}/${gitHubRepo}:environment:${env}'
 }
+
+resource microsoftGraph 'Microsoft.Graph/servicePrincipals@v1.0' existing = {
+  appId: wellKnown.MicrosoftGraph.appId
+}
+
+output id string = microsoftGraph.id
 
 resource resourceGroup 'Microsoft.Resources/resourceGroups@2024-03-01' = {
   name: 'rg-prod-${env}-bicep-01'
@@ -43,6 +49,11 @@ resource entraGroupContributor 'Microsoft.Graph/groups@v1.0' = {
 resource appReg 'Microsoft.Graph/applications@v1.0' = {
   displayName: 'app-bicep-${env}-01'
   uniqueName: 'app-bicep-${env}-01'
+  owners: {
+    relationships: [
+      deployer().objectId
+    ]
+  }
   requiredResourceAccess: [
     {
       resourceAppId: wellKnown.MicrosoftGraph.appId
@@ -95,10 +106,26 @@ resource fed 'Microsoft.Graph/applications/federatedIdentityCredentials@v1.0' = 
 
 resource sp 'Microsoft.Graph/servicePrincipals@v1.0' = {
   appId: appReg.appId
+
+  owners: {
+    relationships: [
+      deployer().objectId
+    ]
+  }
 }
 
 resource role 'Microsoft.Graph/appRoleAssignedTo@v1.0' = {
   principalId: users.admin
   resourceId: sp.id
   appRoleId: roles['User.Read.All']
+}
+
+output spId string = sp.id
+
+resource oauth2 'Microsoft.Graph/oauth2PermissionGrants@v1.0' = {
+  clientId: sp.id
+  consentType: 'AllPrincipals'
+  principalId: null
+  resourceId: microsoftGraph.id
+  scope: 'DataProtection.Read.All'
 }
