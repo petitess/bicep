@@ -1,3 +1,5 @@
+<img src="./SB.png"/>
+
 ## API Call To Service Bus
 ```powershell
 $token = az account get-access-token --resource https://servicebus.azure.net/ --query accessToken -o tsv
@@ -104,4 +106,5 @@ $Signature = $HMAC.ComputeHash([Text.Encoding]::ASCII.GetBytes($SignatureString)
 $Signature = [Convert]::ToBase64String($Signature)
 $SASToken = "SharedAccessSignature sr=" + [System.Web.HttpUtility]::UrlEncode($Namespace) + "&sig=" + [System.Web.HttpUtility]::UrlEncode($Signature) + "&se=" + $Expires + "&skn=" + $AccessPolicyName
 $SASToken
+
 ```
