@@ -2,44 +2,90 @@ param location string
 param name string
 param sku 'Basic' | 'Standard' | 'Premium'
 param tags object = resourceGroup().tags
-param subscriptions_topics { *: string }?
+param topics {
+  name: string
+  properties: resourceInput<'Microsoft.ServiceBus/namespaces/topics@2025-05-01-preview'>.properties
+  subscriptions: {
+    name: string
+    properties: resourceInput<'Microsoft.ServiceBus/namespaces/topics/subscriptions@2025-05-01-preview'>.properties
+    rules: resourceInput<'Microsoft.ServiceBus/namespaces/topics/subscriptions/rules@2025-05-01-preview'>.properties[]
+  }[]
+}[]
 param dnsRg string
 param ipAddress string
 param snetPepId string
-param queues string[] 
+param logId string
+param queues string[]
 param allowIPs string[]
 param rbac {
   role: ('Azure Service Bus Data Owner' | 'Contributor')
   principalId: string
   principalType: ('Device' | 'ForeignGroup' | 'Group' | 'ServicePrincipal' | 'User')?
 }[] = []
-var subscriptions = map(items(subscriptions_topics), f => f.value)
 
 var rolesList = {
   'Azure Service Bus Data Owner': '090c5cfd-751d-490a-894a-3ce6f1109419'
   Contributor: 'b24988ac-6180-42a0-ab88-20f7382dd24c'
 }
+var subscriptionsObject object = toObject(topics, entry => entry.name, entry => {
+  subscriptions: toObject(entry.subscriptions, subEntry => subEntry.name, subEntry => {
+    properties: subEntry.properties
+    name: subEntry.name
+    topic: entry.name
+    rules: subEntry.rules ?? []
+  })
+})
+var topicArray array = [
+  for i in items(subscriptionsObject): reduce(
+    items(i.value.subscriptions),
+    {},
+    (acc, curr) =>
+      union(acc, {
+        '${i.key}/${curr.key}': {
+          properties: curr.value.properties
+          name: curr.value.name
+          topic: i.key
+          rules: curr.value.rules
+        }
+      })
+  )
+]
+var subscriptionsArray array = items(reduce(topicArray, {}, (acc, curr) => union(acc, curr)))
+var rulesObject object = toObject(subscriptionsArray, entry => entry.key, entry => entry.value.rules)
+var topicRulesArray array = [
+  for (r, i) in items(rulesObject): reduce(
+    r.value,
+    {},
+    (acc, curr) =>
+      union(acc, {
+        '${r.key}/${curr.filterType}_${i}': curr
+      })
+  )
+]
+var rulesArray array = items(reduce(topicRulesArray, {}, (acc, curr) => union(acc, curr)))
+
 resource sb 'Microsoft.ServiceBus/namespaces@2025-05-01-preview' = {
   name: name
   tags: tags
   location: location
+  properties: {
+    publicNetworkAccess: 'Enabled'
+  }
   sku: {
     name: sku
   }
 }
 
 resource sbt 'Microsoft.ServiceBus/namespaces/topics@2025-05-01-preview' = [
-  for t in union(subscriptions, subscriptions): {
-    name: t
+  for t in topics: {
+    name: t.name
     parent: sb
-    properties: {
-      defaultMessageTimeToLive: 'P30D'
-    }
+    properties: { ...t.properties }
   }
 ]
 
 resource sbta 'Microsoft.ServiceBus/namespaces/topics/authorizationRules@2025-05-01-preview' = [
-  for (t, i) in union(subscriptions, subscriptions): {
+  for (t, i) in topics: {
     name: 'access'
     parent: sbt[i]
     properties: {
@@ -53,11 +99,22 @@ resource sbta 'Microsoft.ServiceBus/namespaces/topics/authorizationRules@2025-05
 ]
 
 resource sbtSubs 'Microsoft.ServiceBus/namespaces/topics/subscriptions@2025-05-01-preview' = [
-  for t in items(subscriptions_topics): if (t.key != '') {
-    name: '${sb.name}/${t.value}/${t.key}'
+  for (t, i) in subscriptionsArray: {
+    name: '${sb.name}/${t.key}'
     dependsOn: [
       sbt
     ]
+    properties: t.value.properties
+  }
+]
+
+resource sbtSubsRules 'Microsoft.ServiceBus/namespaces/topics/subscriptions/rules@2025-05-01-preview' = [
+  for (t, i) in rulesArray: {
+    name: '${sb.name}/${t.key}'
+    dependsOn: [
+      sbtSubs
+    ]
+    properties: t.value
   }
 ]
 
@@ -87,13 +144,15 @@ resource network 'Microsoft.ServiceBus/namespaces/networkRuleSets@2025-05-01-pre
   name: 'default'
   parent: sb
   properties: {
-    defaultAction: 'Deny'
+    defaultAction: 'Allow'
     publicNetworkAccess: 'Enabled'
     trustedServiceAccessEnabled: true
-    ipRules: [for ip in allowIPs: {
-      action: 'Allow'
-      ipMask: ip
-    }]
+    ipRules: [
+      for ip in allowIPs: {
+        action: 'Allow'
+        ipMask: ip
+      }
+    ]
   }
 }
 
@@ -157,3 +216,45 @@ resource pdnszg 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-10
     ]
   }
 }
+
+resource diag 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'diag-${sb.name}'
+  scope: sb
+  properties: {
+    workspaceId: logId
+    logs: [
+      {
+        category: 'OperationalLogs'
+        enabled: true
+      }
+      {
+        category: 'DiagnosticErrorLogs'
+        enabled: true
+      }
+      {
+        category: 'VNetAndIPFilteringLogs'
+        enabled: true
+      }
+      {
+        category: 'RuntimeAuditLogs'
+        enabled: true
+      }
+      {
+        category: 'ApplicationMetricsLogs'
+        enabled: true
+      }
+      {
+        category: 'DataDRLogs'
+        enabled: true
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+      }
+    ]
+  }
+}
+
+output sbSasas string = listKeys(sbta[0].id, '2025-05-01-preview').primaryConnectionString

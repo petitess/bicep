@@ -14,33 +14,194 @@ var subnets = {
   'snet-mgmt': cidrSubnet(addressPrefixes[0], 26, 3)
   'snet-app': cidrSubnet(addressPrefixes[0], 26, 4)
   'snet-pep': cidrSubnet(addressPrefixes[0], 26, 5)
+  'snet-app-flex': cidrSubnet(addressPrefixes[0], 26, 6)
 }
 
 param serviceBus = [
   {
     resourcegroup: 'rg-integration-dev-01'
-    name: 'sb-integration-dev-01'
+    name: 'sb-system-dev-01'
     sku: 'Standard'
     ipAddress: '10.10.1.70'
     queues: [
-      'my_queue'
+      'sbq_system'
     ]
     allowIPs: [
       myIP
     ]
-    subscriptions_topics: {
-      'cm1-to-crm-sub': 'sbt-cm1-updates-dev-sc-01'
-      'cm1-to-fim-sub': 'sbt-cm1-updates-dev-sc-01'
-      'cm1-to-sink-sub': 'sbt-cm1-updates-dev-sc-01'
-      'maxa-to-crm-sub': 'sbt-maxa-events-dev-sc-01'
-      'maxa-to-sink-sub': 'sbt-maxa-events-dev-sc-01'
-    }
-    rbac: [
-      // {
-      //   principalId: '81f92e5e-9db5-4eea-85eb-ec8e0a8d601d'
-      //   role: 'Azure Service Bus Data Owner'
-      // }
+    topics: [
+      {
+        name: 'sbt-system'
+        properties: {
+          userMetadata: 'metadata for sbt-system topic'
+        }
+        subscriptions: [
+          {
+            name: 'system-to-crm-sub'
+            properties: {
+              userMetadata: 'metadata for system-to-crm-sub subscription'
+            }
+            rules: [
+              {
+                filterType: 'CorrelationFilter'
+                correlationFilter: {
+                  properties: {
+                    weekday: 'lördag'
+                  }
+                }
+              }
+              {
+                filterType: 'SqlFilter'
+                sqlFilter: {
+                  sqlExpression: '[property-name] = \'value\''
+                }
+              }
+            ]
+          }
+          {
+            name: 'system-to-fim-sub'
+            properties: {
+              userMetadata: 'metadata for system-to-fim-sub subscription'
+            }
+            rules: [
+              {
+                filterType: 'CorrelationFilter'
+                correlationFilter: {
+                  properties: {
+                    weekday: 'fredag'
+                  }
+                }
+              }
+            ]
+          }
+          {
+            name: 'system-to-sink-sub'
+            properties: {
+              userMetadata: 'metadata for system-to-sink-sub subscription'
+            }
+            rules: [
+              {
+                filterType: 'CorrelationFilter'
+                correlationFilter: {
+                  properties: {
+                    weekday: 'torsdag'
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+      {
+        name: 'sbt-logic'
+        properties: {
+          userMetadata: 'metadata for sbt-logic topic'
+        }
+        subscriptions: [
+          {
+            name: 'logic-to-crm-sub'
+            properties: {
+              userMetadata: 'metadata for logic-to-crm-sub subscription'
+            }
+            rules: [
+              {
+                filterType: 'CorrelationFilter'
+                correlationFilter: {
+                  properties: {
+                    month: 'mars'
+                  }
+                }
+              }
+            ]
+          }
+          {
+            name: 'logic-to-fim-sub'
+            properties: {
+              userMetadata: 'metadata for logic-to-fim-sub subscription'
+            }
+            rules: [
+              {
+                filterType: 'CorrelationFilter'
+                correlationFilter: {
+                  properties: {
+                    weekday: 'tisdag'
+                  }
+                }
+              }
+            ]
+          }
+          {
+            name: 'logic-to-sink-sub'
+            properties: {
+              userMetadata: 'metadata for logic-to-sink-sub subscription'
+            }
+            rules: [
+              {
+                filterType: 'CorrelationFilter'
+                correlationFilter: {
+                  properties: {
+                    weekday: 'onsdag'
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
     ]
+  }
+]
+
+param storageAccounts = [
+  {
+    name: 'stfuncsbtopicdev01'
+    resourceGroup: 'rg-func-sb-topic-dev-01'
+    skuName: 'Standard_LRS'
+    isSftpEnabled: false
+    publicAccess: 'Enabled'
+    allowedIPs: [
+      myIP
+    ]
+    privateEndpoints: {
+      blob: cidrSubnet(subnets['snet-pep'], 32, 6)
+      file: cidrSubnet(subnets['snet-pep'], 32, 7)
+    }
+    shares: []
+    containers: [
+      'func01'
+    ]
+  }
+]
+
+param funcApps = [
+  {
+    name: 'func-sb-topic-dev-01'
+    resourceGroup: 'rg-func-sb-topic-dev-01'
+    kind: 'functionapp,linux'
+    isFlexConsumptionTier: true
+    storageName: 'stfuncsbtopicdev01'
+    storageContainerName: 'func01'
+    runtimeName: 'python'
+    runtimeVersion: '3.14'
+    privateEndpoints: {
+      sites: cidrSubnet(subnets['snet-pep'], 32, 5)
+      'sites-stage': cidrSubnet(subnets['snet-pep'], 32, 9)
+    }
+    appSettings: [
+      {
+        name: 'SERVICEBUS_CONNECTION'
+        value: 'Endpoint=sb://sb-system-dev-01.servicebus.windows.net/;SharedAccessKeyName=access;SharedAccessKey=blabla=;EntityPath=sbt-logic'
+      }
+      {
+        name: 'SUBSCRIPTION_NAME'
+        value: 'logic-to-crm-sub'
+      }
+      {
+        name: 'TOPIC_NAME'
+        value: 'sbt-logic'
+      }
+    ]
+    authEnabled: false
   }
 ]
 
@@ -112,6 +273,11 @@ param vnet = {
     {
       name: 'snet-pep'
       addressPrefix: subnets['snet-pep']
+    }
+    {
+      name: 'snet-app-flex'
+      addressPrefix: subnets['snet-app-flex']
+      delegation: 'Microsoft.App/environments'
     }
   ]
 }
