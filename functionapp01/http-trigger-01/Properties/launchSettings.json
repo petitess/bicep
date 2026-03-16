@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "http_trigger_01": {
-      "commandName": "Project",
-      "commandLineArgs": "--port 7142",
-      "launchBrowser": false
-    }
-  }
-}
