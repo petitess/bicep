@@ -414,3 +414,5 @@ resource rbacR 'Microsoft.Authorization/roleAssignments@2022-04-01' = [
     }
   }
 ]
+
+output principalId string = func.identity.principalId

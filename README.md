@@ -70,7 +70,7 @@ containerapps01 | Container registry, container apps & csharp
 | entrads01 | Entra Domain Services, cidrSubnet, function
 | frontdoor01 | Virtual machines, Github
 | frontdoor02 | Front Door, Endpoints, WAF, Private Link Services
-| functionapp01 | Linux, Windows, Dotnet, DevOps, Pep, Yaml
+| functionapp01 | foundry, categorize & send to container, pep
 | functionapp02 | win, linux, auth, app reg, pep, cert, slots, cidr, function
 | functionapp03 | event grid triggers function and creates a blob
 | keyvault01 | Disk Encryption Set, Key with version

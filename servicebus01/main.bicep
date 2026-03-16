@@ -239,7 +239,7 @@ resource rgFunc 'Microsoft.Resources/resourceGroups@2025-04-01' = [
   }
 ]
 
-module funcLinux 'func.bicep' = [
+module funcM 'func.bicep' = [
   for (f, i) in funcApps: {
     scope: resourceGroup(f.resourceGroup)
     name: f.name
@@ -275,6 +275,20 @@ module funcLinux 'func.bicep' = [
       appiConnectionString: monitor.outputs.ConnectionString
       runtimeName: f.?runtimeName ?? 'dotnet-isolated'
       runtimeVersion: f.?runtimeVersion ?? '8.0'
+    }
+  }
+]
+
+resource rbacMonitor 'Microsoft.Authorization/roleAssignments@2022-04-01' = [
+  for (f, i) in funcApps: {
+    name: guid(f.name)
+    properties: {
+      principalId: funcM[i].outputs.principalId
+      roleDefinitionId: subscriptionResourceId(
+        'Microsoft.Authorization/roleAssignments',
+        '3913510d-42f4-4e42-8a64-420c390055eb'
+      )
+      principalType: 'ServicePrincipal'
     }
   }
 ]
