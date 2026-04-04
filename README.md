@@ -37,6 +37,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | applicationgateway01 | Azure Application Gateway Public IIS 
 | applicationgateway02 | Multi site listeners, https, cert, redirect, rewrites
 | applicationinsights01 | Application Insights with Availability Test
+| appserviceenvironment01 | container registry, docker, func, app, pep
 | appserviceplan01 | App Service, Pep, Slot, Custom Domain, Diag, Relay
 | appserviceplan02 | Google Tag Manager with Availability test 
 | appserviceplan03 | ITglue integration
