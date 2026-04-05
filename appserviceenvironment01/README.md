@@ -1,5 +1,9 @@
+```mermaid
+flowchart LR
+    A[".NET(docker)"] --> B["Azure Container REgistry"]
+    B["Azure Container Registry"] --> C["Azure Web App\n(container)"]
+```
 #### start docker
-
 ```bash
 az acr login --name acrczrdev01 --username acrczrdev01
 ```
@@ -17,9 +21,4 @@ docker push acrczrdev01.azurecr.io/appblazor:1.0.1
 ```
 ```bash
 az acr repository list --name acrczrdev01 --output table
-```
-```mermaid
-flowchart LR
-    A[".NET(docker)"] --> B["Azure Container REgistry"]
-    B["Azure Container Registry"] --> C["Azure Web App\n(container)"]
 ```
