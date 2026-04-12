@@ -1,0 +1,7 @@
+{
+  "subscription": {
+    "dev": "xyz",
+    "prod": "xyz"
+  },
+  "location": "SwedenCentral"
+}

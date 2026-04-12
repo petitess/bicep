@@ -1,0 +1,19 @@
+<policies>
+    <inbound>
+        <base />
+        <set-header name="${credential_header}" exists-action="override">
+            <value>{{${named_value}}}</value>
+        </set-header>
+        <set-backend-service backend-id="${backend}" />
+        <rewrite-uri template="${rewrite_uri}" />
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>

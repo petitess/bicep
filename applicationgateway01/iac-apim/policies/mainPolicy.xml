@@ -1,0 +1,28 @@
+<policies>
+	<inbound>
+		<!-- <check-header name="ABCD-ID"
+			failed-check-httpcode="401" failed-check-error-message="Unauthorized" ignore-case="true">
+			<value>12345</value>
+		</check-header> -->
+		<cors allow-credentials="true" terminate-unmatched-request="false">
+			<allowed-origins>
+				<origin>https://portal-api.abcd.se</origin>
+			</allowed-origins>
+			<allowed-methods preflight-result-max-age="300">
+				<method>*</method>
+			</allowed-methods>
+			<allowed-headers>
+				<header>*</header>
+			</allowed-headers>
+			<expose-headers>
+				<header>*</header>
+			</expose-headers>
+		</cors>
+	</inbound>
+	<backend>
+		<forward-request />
+	</backend>
+	<outbound>
+	</outbound>
+	<on-error />
+</policies>

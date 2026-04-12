@@ -1,0 +1,40 @@
+<!--
+    - Policies are applied in the order they appear.
+    - Position <base/> inside a section to inherit policies from the outer scope.
+    - Comments within policies are not preserved.
+-->
+<!-- Add policies as children to the <inbound>, <outbound>, <backend>, and <on-error> elements -->
+<policies>
+    <!-- Throttle, authorize, validate, cache, or transform the requests -->
+    <inbound>
+        <base />
+        <rate-limit-by-key calls="1000" renewal-period="60"
+            counter-key="@(context.Subscription?.Key ?? " anonymous")" />
+        <check-header name="Authorization" failed-check-httpcode="401"
+            failed-check-error-message="Invalid Authorization" ignore-case="true" />
+        <cache-lookup vary-by-developer="false" vary-by-developer-groups="false"
+            allow-private-response-caching="true" must-revalidate="false"
+            downstream-caching-type="public" caching-type="external">
+            <vary-by-header>Accept</vary-by-header>
+            <vary-by-header>Accept-Charset</vary-by-header>
+            <vary-by-header>Accept-Language</vary-by-header>
+            <vary-by-query-parameter>title</vary-by-query-parameter>
+        </cache-lookup>
+    </inbound>
+    <!-- Control if and how the requests are forwarded to services  -->
+    <backend>
+        <base />
+    </backend>
+    <!-- Customize the responses -->
+    <outbound>
+        <base />
+        <set-header name="x-powered-by" exists-action="delete" />
+        <set-header name="x-aspnet-version" exists-action="delete" />
+        <!-- Change cache to 600 s -->
+        <cache-store duration="600" />
+    </outbound>
+    <!-- Handle exceptions and customize error responses  -->
+    <on-error>
+        <base />
+    </on-error>
+</policies>
