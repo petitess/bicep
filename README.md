@@ -34,7 +34,7 @@ New-AzSubscriptionDeployment -TemplateFile main.bicep -TemplateParameterFile par
 | apiconnection01 | API connection
 | apimanagment01 | apim & frontdoor
 | appconfiguration01 | Pep & Resource management private link
-| applicationgateway01 | Azure Application Gateway Public IIS 
+| applicationgateway01 | apim, portal, v2, policy, pep
 | applicationgateway02 | Multi site listeners, https, cert, redirect, rewrites
 | applicationinsights01 | Application Insights with Availability Test
 | appserviceenvironment01 | container registry, docker, func, app, pep
