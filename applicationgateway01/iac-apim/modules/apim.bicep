@@ -333,7 +333,7 @@ resource pdnszCustom 'Microsoft.Network/privateDnsZones@2024-06-01' = if (hostna
       ttl: 3600
       aRecords: [
         {
-          ipv4Address: ipAddress
+          ipv4Address: endsWith(skuName, 'V2') ? ipAddress : apim.properties.privateIPAddresses[0]
         }
       ]
     }
