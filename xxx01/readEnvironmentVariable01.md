@@ -32,6 +32,7 @@ param myvar = readEnvironmentVariable('MY_VAR', 'empty')
 param summertime = readEnvironmentVariable('SUMMERTIME', 'empty')
 param myarray = readEnvironmentVariable('MY_ARRAY', 'empty')
 ```
+deploy.ps1
 ```pwsh
 #!/usr/bin/env pwsh
 
