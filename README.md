@@ -74,7 +74,7 @@ containerapps01 | Container registry, container apps & csharp
 | functionapp01 | foundry, categorize & send to container, pep
 | functionapp02 | win, linux, auth, app reg, pep, cert, slots, cidr, function
 | functionapp03 | event grid triggers function and creates a blob
-| keyvault01 | Disk Encryption Set, Key with version
+| keyvault01 | disk encryption set, osdisk, change tracking alert
 | keyvault02 | Create Secrets for VMs - multiple modules
 | keyvault03 | uniqueString() to generate password 
 | kubernetes01 | Azure Kubernetes services 
