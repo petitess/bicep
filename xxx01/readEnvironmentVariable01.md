@@ -49,7 +49,6 @@ $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
 
 $env:MY_DATE = Get-Date -Format 'yyyy-MM-dd_HH-mm-ss'
-$env:MY_VAR = "I-LIKE-ICECREAM"
 $env:SUMMERTIME = [TimeZoneInfo]::Local.IsDaylightSavingTime((Get-Date))
 $env:MY_ARRAY = @('a', 'b', 'c') -join ','
 Write-Output $env:MY_DATE
@@ -86,7 +85,9 @@ pool:
   # name: vmmgmtprod01
 
 variables:
-  azureSubscription: 'sp-sub-lab-01'
+  - name: azureSubscription
+    value: 'sp-sub-labb-01'
+  - group: system
 
 parameters:
   - name: environment
@@ -116,6 +117,8 @@ stages:
                 Set-TimeZone -Id 'Central European Standard Time'
           - task: AzureCLI@2
             displayName: ${{ parameters.environment }}
+            env:
+              MY_VAR: $(MY_DEVOPS_VAR)
             inputs:
               azureSubscription: $(azureSubscription)
               scriptType: pscore
