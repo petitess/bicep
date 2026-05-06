@@ -31,6 +31,8 @@ param date = readEnvironmentVariable('MY_DATE', 'empty')
 param myvar = readEnvironmentVariable('MY_VAR', 'empty')
 param summertime = readEnvironmentVariable('SUMMERTIME', 'empty')
 param myarray = readEnvironmentVariable('MY_ARRAY', 'empty')
+var autoshutdown = toLower(readEnvironmentVariable('AUTO_SHUTDOWN', 'false'))
+var condition = bool(autoshutdown) ? 'GroupA' : 'GroupA_Disabled'
 ```
 deploy.ps1
 ```pwsh
@@ -55,6 +57,7 @@ Write-Output $env:MY_DATE
 Write-Output $env:MY_VAR
 Write-Output $env:SUMMERTIME
 Write-Output $env:MY_ARRAY
+Write-Output $env:AUTO_SHUTDOWN
 
 $ConfigFile = Join-Path '..' 'config' "$Environment.config.json"
 $Config = Get-Content $ConfigFile | ConvertFrom-Json
@@ -119,6 +122,7 @@ stages:
             displayName: ${{ parameters.environment }}
             env:
               MY_VAR: $(MY_DEVOPS_VAR)
+              AUTO_SHUTDOWN: $(AUTO_SHUTDOWN)
             inputs:
               azureSubscription: $(azureSubscription)
               scriptType: pscore
