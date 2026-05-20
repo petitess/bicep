@@ -11,7 +11,7 @@ param sqls {
   adminGroupObjectId: string
   azureADOnlyAuthentication: bool
   privateIp: string?
-  publicNetworkAccess: 'Disabled' | 'Enabled' | 'SecuredByPerimeter' 
+  publicNetworkAccess: 'Disabled' | 'Enabled' | 'SecuredByPerimeter'
   allowedIPs: { *: string }?
   identity: 'None' | 'SystemAssigned' | 'SystemAssigned,UserAssigned' | 'UserAssigned'
   databases: {
@@ -25,8 +25,8 @@ param sqls {
   jobAgents: {
     name: string
     dbName: string
-    alert: bool
     identity: bool
+    alert: bool
     sku: {
       name: 'JA100' | 'JA200' | 'JA400' | 'JA800'
       capacity: int
@@ -37,6 +37,34 @@ param sqls {
     sku: {
       name: 'GP_Gen5' | 'HS_Gen5' | 'BC_Gen5' | 'BasicPool' | 'StandardPool' | 'PremiumPool'
     }
+  }[]?
+  jobRbac: {
+    jobAgentName: string
+    jobName: string
+    principalId: string
+    principalType: string?
+    roleDefinitionId: string?
+  }[]?
+  jobs: {
+    name: string
+    description: string?
+    type: 'Recurring' | 'Once'
+    interval: string?
+    startTime: string?
+    endTime: string?
+    enabled: true
+    jobAgentName: string
+    steps: {
+      name: string
+      type: 'TSql'
+      source: 'Inline' | 'FilePath'
+      value: string
+      targetGroup: string
+    }[]
+  }[]?
+  targetGroups: {
+    jobAgentName: string
+    name: string
   }[]?
 }[]
 
@@ -115,7 +143,9 @@ module sqlM 'sql.bicep' = [
       jobAgents: sql.?jobAgents
       privateIp: sql.?privateIp
       elasticPools: sql.?elasticPools
+      jobRbac: sql.?jobRbac
+      jobs: sql.?jobs
+      targetGroups: sql.?targetGroups
     }
   }
 ]
-

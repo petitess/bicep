@@ -24,8 +24,8 @@ param databases {
 param jobAgents {
   name: string
   dbName: string
-  alert: bool
   identity: bool
+  alert: bool
   sku: {
     name: 'JA100' | 'JA200' | 'JA400' | 'JA800'
     capacity: int
@@ -39,6 +39,65 @@ param elasticPools {
 }[] = []
 param privateIp string = ''
 param pdnszId string
+param jobRbac {
+  jobAgentName: string
+  jobName: string
+  principalId: string
+  principalType: string?
+  roleDefinitionId: string?
+}[] = []
+param targetGroups {
+  jobAgentName: string
+  name: string
+}[] = []
+param jobs {
+  name: string
+  description: string?
+  type: 'Recurring' | 'Once'
+  interval: string?
+  startTime: string?
+  endTime: string?
+  enabled: true
+  jobAgentName: string
+  steps: {
+    name: string
+    type: 'TSql'
+    source: 'Inline' | 'FilePath'
+    value: string
+    targetGroup: string
+  }[]
+}[] = []
+
+@description('steps transformed to an array of objects')
+var stepsObject object = toObject(jobs, entry => entry.name, entry => {
+  subscriptions: toObject(entry.steps, subEntry => subEntry.name, subEntry => {
+    name: subEntry.name
+    type: subEntry.type
+    source: subEntry.source
+    steps: entry.steps
+    value: subEntry.value
+    jobAgentName: entry.jobAgentName
+    targetGroup: subEntry.targetGroup
+  })
+})
+var jobsArray array = [
+  for i in items(stepsObject): reduce(
+    items(i.value.subscriptions),
+    {},
+    (acc, curr) =>
+      union(acc, {
+        '${i.key}/${curr.key}': {
+          name: curr.value.name
+          type: curr.value.type
+          source: curr.value.source
+          value: curr.value.value
+          jobAgentName: curr.value.jobAgentName
+          targetGroup: curr.value.targetGroup
+        }
+      })
+  )
+]
+var stepsArray array = items(reduce(jobsArray, {}, (acc, curr) => union(acc, curr)))
 
 var identityJobAgents array = map(jobAgents, ja => ja.identity)
 output yyy bool = contains(identityJobAgents, true)
@@ -51,7 +110,7 @@ resource id 'Microsoft.ManagedIdentity/userAssignedIdentities@2025-01-31-preview
   location: location
 }
 
-resource sql 'Microsoft.Sql/servers@2024-11-01-preview' = {
+resource sql 'Microsoft.Sql/servers@2025-01-01' = {
   name: name
   location: location
   tags: tags
@@ -97,7 +156,7 @@ resource sql 'Microsoft.Sql/servers@2024-11-01-preview' = {
   }
 }
 
-resource fw 'Microsoft.Sql/servers/firewallRules@2024-11-01-preview' = [
+resource fw 'Microsoft.Sql/servers/firewallRules@2025-01-01' = [
   for a in items(allowedIPs == null ? {} : allowedIPs): {
     name: a.key
     parent: sql
@@ -108,7 +167,7 @@ resource fw 'Microsoft.Sql/servers/firewallRules@2024-11-01-preview' = [
   }
 ]
 
-resource pep 'Microsoft.Network/privateEndpoints@2024-10-01' = {
+resource pep 'Microsoft.Network/privateEndpoints@2025-05-01' = {
   name: 'pep-${name}'
   location: location
   tags: tags
@@ -143,7 +202,7 @@ resource pep 'Microsoft.Network/privateEndpoints@2024-10-01' = {
   }
 }
 
-resource dns 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-10-01' = {
+resource dns 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2025-05-01' = {
   name: 'default'
   parent: pep
   properties: {
@@ -158,7 +217,7 @@ resource dns 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-10-01
   }
 }
 
-resource db 'Microsoft.Sql/servers/databases@2024-05-01-preview' = [
+resource db 'Microsoft.Sql/servers/databases@2025-01-01' = [
   for d in databases: {
     parent: sql
     name: d.name
@@ -176,7 +235,7 @@ resource db 'Microsoft.Sql/servers/databases@2024-05-01-preview' = [
   }
 ]
 
-resource jaR 'Microsoft.Sql/servers/jobAgents@2024-11-01-preview' = [
+resource jaR 'Microsoft.Sql/servers/jobAgents@2025-01-01' = [
   for (ja, i) in jobAgents: {
     parent: sql
     dependsOn: [
@@ -199,6 +258,60 @@ resource jaR 'Microsoft.Sql/servers/jobAgents@2024-11-01-preview' = [
   }
 ]
 
+resource targetGroup 'Microsoft.Sql/servers/jobAgents/targetGroups@2025-01-01' = [
+  for (ja, i) in jobAgents: {
+    parent: jaR[i]
+    name: 'tg-default'
+    properties: {
+      members: []
+    }
+  }
+]
+
+resource targetGroupsR 'Microsoft.Sql/servers/jobAgents/targetGroups@2025-01-01' = [
+  for (t, i) in targetGroups: {
+    name: '${name}/${t.jobAgentName}/${t.name}'
+    properties: {
+      members: []
+    }
+  }
+]
+
+resource jobsR 'Microsoft.Sql/servers/jobAgents/jobs@2025-01-01' = [
+  for (j, i) in jobs: {
+    name: '${name}/${j.jobAgentName}/${j.name}'
+    properties: {
+      description: j.?description
+      schedule: {
+        type: j.type
+        interval: j.?interval ?? 'PT24H'
+        startTime: j.?startTime ?? '0001-01-01T00:00:00Z'
+        endTime: j.?endTime ?? '9999-12-31T11:59:59Z'
+        enabled: j.enabled
+      }
+    }
+  }
+]
+
+resource steps 'Microsoft.Sql/servers/jobAgents/jobs/steps@2025-01-01' = [
+  for (s, i) in stepsArray: {
+    name: '${name}/${s.value.jobAgentName}/${s.key}'
+    properties: {
+      targetGroup: resourceId(
+        'Microsoft.Sql/servers/jobAgents/targetGroups',
+        sql.name,
+        s.value.jobAgentName,
+        s.value.targetGroup
+      )
+      action: {
+        type: s.value.type
+        source: s.value.source
+        value: s.value.value
+      }
+    }
+  }
+]
+
 resource e 'Microsoft.Sql/servers/elasticPools@2024-11-01-preview' = [
   for p in elasticPools: {
     name: p.name
@@ -215,8 +328,8 @@ resource e 'Microsoft.Sql/servers/elasticPools@2024-11-01-preview' = [
   }
 ]
 //Must approve manually
-resource sdf 'Microsoft.Sql/servers/jobAgents/privateEndpoints@2024-11-01-preview' = [
-  for (ja, i) in jobAgents: if(false) {
+resource pepR 'Microsoft.Sql/servers/jobAgents/privateEndpoints@2025-01-01' = [
+  for (ja, i) in jobAgents: if (false) {
     name: 'pep-${ja.name}'
     parent: jaR[i]
     properties: {
@@ -225,6 +338,57 @@ resource sdf 'Microsoft.Sql/servers/jobAgents/privateEndpoints@2024-11-01-previe
   }
 ]
 
+resource rbacAgentReader 'Microsoft.Authorization/roleAssignments@2022-04-01' = [
+  for (r, i) in jobRbac: {
+    name: guid(sql.id, r.jobAgentName, r.jobName, r.principalId, 'reader', jaR[0].id)
+    // scope: jaR[i]
+    properties: {
+      roleDefinitionId: subscriptionResourceId(
+        'Microsoft.Authorization/roleDefinitions',
+        'acdd72a7-3385-48ef-bd42-f606fba81ae7'
+      )
+      principalId: r.principalId
+      principalType: r.?principalType ?? 'ServicePrincipal'
+    }
+  }
+]
+
+resource customRoleExecuteJob 'Microsoft.Authorization/roleDefinitions@2022-04-01' = {
+  name: guid(sql.id, 'CustomRole', 'JobAgentExecutor')
+  properties: {
+    roleName: 'Job Agent Executor'
+    assignableScopes: [
+      resourceGroup().id
+    ]
+    description: 'Can monitor and execute jobs on the assigned jobs.'
+    type: 'CustomRole'
+    permissions: [
+      {
+        actions: [
+          'Microsoft.Sql/servers/jobAgents/read'
+          'Microsoft.Sql/servers/jobAgents/jobs/*'
+        ]
+        notActions: []
+        dataActions: []
+        notDataActions: []
+      }
+    ]
+  }
+}
+
+resource rbacJob 'Microsoft.Authorization/roleAssignments@2022-04-01' = [
+  for (r, i) in jobRbac: {
+    name: guid(sql.id, r.jobAgentName, r.jobName, r.principalId, customRoleExecuteJob.id)
+    scope: jobsR[i]
+    properties: {
+      roleDefinitionId: customRoleExecuteJob.id
+      principalId: r.principalId
+      principalType: r.?principalType ?? 'ServicePrincipal'
+    }
+  }
+]
+
+#disable-next-line use-recent-api-versions
 resource alert 'Microsoft.Insights/metricAlerts@2024-03-01-preview' = [
   for (a, i) in jobAgents: if (a.alert) {
     name: toLower('${a.name}-failed')
@@ -234,7 +398,7 @@ resource alert 'Microsoft.Insights/metricAlerts@2024-03-01-preview' = [
       severity: 2
       enabled: true
       scopes: [
-        ja[i].id
+        jaR[i].id
       ]
       evaluationFrequency: 'PT1H'
       windowSize: 'PT1H'
@@ -256,11 +420,7 @@ resource alert 'Microsoft.Insights/metricAlerts@2024-03-01-preview' = [
       autoMitigate: false
       targetResourceType: 'Microsoft.Sql/servers/jobAgents'
       targetResourceRegion: 'westeurope'
-      actions: [
-        {
-          actionGroupId: actionGroupId
-        }
-      ]
+      actions: []
     }
   }
 ]

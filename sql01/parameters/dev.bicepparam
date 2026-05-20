@@ -25,8 +25,8 @@ param sqls = [
     azureADOnlyAuthentication: true
     publicNetworkAccess: 'Enabled'
     allowedIPs: {
-      OFFICE_IP: '1.1.1.1' 
-      HOME_IP: '1.1.2.2' 
+      OFFICE_IP: '188.150.118.51'
+      HOME_IP: '1.1.2.2'
     }
     identity: 'None'
     privateIp: '10.10.1.68'
@@ -44,8 +44,8 @@ param sqls = [
       {
         name: 'sqlja-elastic-job'
         dbName: 'sqldb-elastic-job'
+        identity: true
         alert: false
-        identity: false
         sku: {
           name: 'JA100'
           capacity: 100
@@ -58,6 +58,61 @@ param sqls = [
         sku: {
           name: 'PremiumPool'
         }
+      }
+    ]
+    jobRbac: [
+      {
+        jobAgentName: 'sqlja-elastic-job'
+        jobName: 'JobSelection'
+        principalId: 'e6525bc3-ae2a-4b3f-ae6f-9f28a1367628'
+        principalType: 'User'
+      }
+    ]
+    targetGroups: [
+      {
+        name: 'tg-system'
+        jobAgentName: 'sqlja-elastic-job'
+      }
+    ]
+    jobs: [
+      {
+        name: 'JobSelection'
+        enabled: true
+        type: 'Recurring'
+        interval: 'PT24H'
+        jobAgentName: 'sqlja-elastic-job'
+        steps: [
+          {
+            name: 'Step1'
+            type: 'TSql'
+            source: 'Inline'
+            value: 'SELECT TOP 10 * FROM sys.tables'
+            targetGroup: 'tg-default'
+          }
+          {
+            name: 'Step2'
+            type: 'TSql'
+            source: 'Inline'
+            value: 'SELECT TOP 10 * FROM sys.tables'
+            targetGroup: 'tg-system'
+          }
+        ]
+      }
+      {
+        name: 'JobSelectionNoRbac'
+        enabled: true
+        type: 'Recurring'
+        interval: 'PT24H'
+        jobAgentName: 'sqlja-elastic-job'
+        steps: [
+          {
+            name: 'Step1'
+            type: 'TSql'
+            source: 'Inline'
+            value: 'SELECT TOP 10 * FROM sys.tables'
+            targetGroup: 'tg-default'
+          }
+        ]
       }
     ]
   }
