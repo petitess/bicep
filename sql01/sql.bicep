@@ -339,9 +339,11 @@ resource pepR 'Microsoft.Sql/servers/jobAgents/privateEndpoints@2025-01-01' = [
 ]
 
 resource rbacAgentReader 'Microsoft.Authorization/roleAssignments@2022-04-01' = [
-  for (r, i) in jobRbac: {
-    name: guid(sql.id, r.jobAgentName, r.jobName, r.principalId, 'reader', jaR[0].id)
-    // scope: jaR[i]
+  for (r, i) in union(
+    map(jobRbac, r => { principalId: r.principalId, jobAgentName: r.jobAgentName, principalType: r.?principalType }),
+    map(jobRbac, r => { principalId: r.principalId, jobAgentName: r.jobAgentName, principalType: r.?principalType })
+  ): {
+    name: guid(sql.id, r.jobAgentName, r.principalId, 'reader')
     properties: {
       roleDefinitionId: subscriptionResourceId(
         'Microsoft.Authorization/roleDefinitions',
