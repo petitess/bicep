@@ -101,7 +101,7 @@ containerapps01 | Container registry, container apps & csharp
 | searchservice01 | Search service + Sql + Pep + Automated approval 
 | servicebus01 | topics, subscriptions, queues, pep
 | siterecovery01 | Azure Site Recovery 
-| sql01 | Sql, Database, Job Agent, Elastic Pool
+| sql01 | Database, Job Agent, Jobs, Elastic Pool, Custom Rbac
 | storageaccount01 | Storage Account, All Private Endpoints, User Defined Types
 | storageaccount02 | Fileshare with backup
 | subscription01 | Create subscriptions
