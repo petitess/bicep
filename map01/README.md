@@ -2,6 +2,25 @@
 targetScope = 'subscription'
 
 param param object
+param jobRbac array = [
+  {
+    jobAgentName: 'sqlja-ElasticJobsProd'
+    jobName: 'Copy_Jobs_To_JobsTest'
+    principalId: '1234a90-e152-4da5-a226-3c5b2159929b'
+    principalType: 'Group'
+  }
+  {
+    jobAgentName: 'sqlja-ElasticJobsProd'
+    jobName: 'Selection_Job'
+    principalId: '1234a90-e152-4da5-a226-3c5b2159929b'
+    principalType: 'Group'
+  }
+]
+
+var jobRbacNoDuplicates = union(
+  map(jobRbac, r => { principalId: r.principalId, jobAgentName: r.jobAgentName, principalType: r.?principalType }),
+  map(jobRbac, r => { principalId: r.principalId, jobAgentName: r.jobAgentName, principalType: r.?principalType })
+)
 
 var pathRulesArray = [for (rule, i) in param.pathRules: {
   name: 'path-${rule.name}'
