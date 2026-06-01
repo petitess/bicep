@@ -6,7 +6,7 @@ param allowIps array
 param publicNetworkAccess 'Allow' | 'Deny' = 'Allow'
 param dnsRg string
 param ipAddress string
-param enablePurgeProtection bool = false
+param enablePurgeProtection bool?
 param snetEndpoint string
 param softDeleteRetentionInDays int = 7
 param rbac {
@@ -38,7 +38,7 @@ resource kv 'Microsoft.KeyVault/vaults@2025-05-01' = {
     enabledForDiskEncryption: false
     enabledForTemplateDeployment: true
     enableRbacAuthorization: true
-    enablePurgeProtection: enablePurgeProtection
+    enablePurgeProtection: enablePurgeProtection ?? null
     publicNetworkAccess: 'Enabled'
     networkAcls: {
       defaultAction: publicNetworkAccess

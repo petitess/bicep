@@ -10,7 +10,7 @@ param keyVaults {
   publicNetworkAccess: 'Allow' | 'Deny'
   allowIps: string[]
   ipAddress: string
-  enablePurgeProtection: bool
+  enablePurgeProtection: bool?
 }[]
 param keys { name: string, encryption: 'KeyRSA3072' | 'KeyRSA4096' }[] = [
   {
@@ -128,7 +128,7 @@ module kvM 'kv.bicep' = [
       publicNetworkAccess: kv.publicNetworkAccess
       dnsRg: rg.name
       ipAddress: kv.ipAddress
-      enablePurgeProtection: kv.enablePurgeProtection
+      enablePurgeProtection: kv.?enablePurgeProtection
       snetEndpoint: resourceId(
         subscription().subscriptionId,
         rg.name,
