@@ -17,8 +17,10 @@ param databases {
   collation: string
   maxSizeBytes: int?
   zoneRedundant: bool
+  @description('Name of an elastic pool. Sku should be: ElasticPool')
+  elasticPoolName: string?
   sku: {
-    name: 'GP_Gen5_2' | 'BC_Gen5_2' | 'Basic' | 'Standard' | 'Premium'
+    name: 'GP_Gen5_2' | 'BC_Gen5_2' | 'Basic' | 'Standard' | 'Premium' | 'ElasticPool'
   }
 }[] = []
 param jobAgents {
@@ -231,6 +233,9 @@ resource db 'Microsoft.Sql/servers/databases@2025-01-01' = [
       isLedgerOn: false
       availabilityZone: 'NoPreference'
       licenseType: 'LicenseIncluded'
+      elasticPoolId: d.?elasticPoolName == null
+        ? null
+        : resourceId('Microsoft.Sql/servers/elasticPools', sql.name, d.?elasticPoolName)
     }
   }
 ]

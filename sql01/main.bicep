@@ -18,8 +18,10 @@ param sqls {
     name: string
     collation: 'Finnish_Swedish_CI_AS'
     zoneRedundant: bool
+    @description('Name of an elastic pool. Sku should be: ElasticPool')
+    elasticPoolName: string?
     sku: {
-      name: 'GP_Gen5_2' | 'BC_Gen5_2' | 'Basic' | 'Standard' | 'Premium'
+      name: 'GP_Gen5_2' | 'BC_Gen5_2' | 'Basic' | 'Standard' | 'Premium' | 'ElasticPool'
     }
   }[]?
   jobAgents: {

@@ -39,6 +39,15 @@ param sqls = [
           name: 'BC_Gen5_2'
         }
       }
+      {
+        name: 'sqldb-elastic-pool'
+        collation: 'Finnish_Swedish_CI_AS'
+        zoneRedundant: false
+        elasticPoolName: 'sqlep-job-01'
+        sku: {
+          name: 'ElasticPool'
+        }
+      }
     ]
     jobAgents: [
       {
