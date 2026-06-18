@@ -47,4 +47,27 @@ reference(resourceId(subscription().subscriptionId, rgasp.name,'Microsoft.Web/se
 reference(resourceId(subscription().subscriptionId, rgitglue.name, 'Microsoft.KeyVault/vaults', 'kv-int-${env}-01'),'2022-07-01').vaultUri
 reference(resourceId(subscription().subscriptionId, resourceGroup().name, 'Microsoft.KeyVault/vaults', keyvaultname),'2022-07-01').vaultUri
 reference(resourceId(subscription().subscriptionId, rgitglue.name, 'Microsoft.Web/sites', 'app-itglueint-${env}-01'),'2022-03-01').identity.principalId
-x
+
+resource sqlGroups 'Microsoft.Graph/groups@v1.0' = [
+  for (sql, i) in sqls: {
+    displayName: 'grp-az-sql-app-${sql.name}-${affix.environmentLocation}-01-admin'
+    mailEnabled: false
+    mailNickname: 'grp-az-sql-app-${sql.name}-${affix.environmentLocation}-01-admin'
+    securityEnabled: true
+    uniqueName: 'grp-az-sql-app-${sql.name}-${affix.environmentLocation}-01-admin'
+    members: {
+      relationships: [
+        for (obj, i) in filter(
+          union(functionApps, apps),
+          x => x.?sqlGroup == 'grp-az-sql-app-${sql.name}-${affix.environmentLocation}-01-admin'
+        ): reference(
+          resourceId(subscription().subscriptionId, obj.rgName, 'Microsoft.Web/sites', obj.name),
+          '2026-03-15',
+          'Full'
+        ).identity.principalId
+      ]
+    }
+  }
+]
+
+
