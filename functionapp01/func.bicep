@@ -364,7 +364,7 @@ resource pepR 'Microsoft.Network/privateEndpoints@2025-05-01' = [
 ]
 
 resource dns 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2025-05-01' = [
-  for (pep, i) in items(privateEndpoints): if (!empty(slot) && pep.key == 'sites' || pep.key == 'sites-stage' && !isFlexConsumptionTier) {
+  for (pep, i) in items(privateEndpoints): if (pep.key == 'sites' || pep.key == 'sites-stage' && !isFlexConsumptionTier) {
     name: 'default'
     parent: pepR[i]
     properties: {
