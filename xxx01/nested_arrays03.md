@@ -93,7 +93,7 @@ resource pimGroupsR 'Microsoft.Graph/groups@v1.0' = [
     }
   }
 ]
-
+@nullIfNotFound()
 resource pimGroupsE 'Microsoft.Graph/groups@v1.0' existing = [
   for (pim, i) in pimGroupsRbacArray: {
     uniqueName: pim.value.grpNameX
@@ -102,12 +102,12 @@ resource pimGroupsE 'Microsoft.Graph/groups@v1.0' existing = [
 
 module pimGroupsRbacM 'modules/rbac.bicep' = [
   for (pim, i) in pimGroupsRbacArray: {
-    name: 'pim-rbac-${pim.key}'
+    name: take(pim.key, 64)
     scope: resourceGroup(pim.value.rgNameX)
     params: {
       roleAssignments: [
         for r in pim.value.rolesX: {
-          principalId: pimGroupsE[i].id
+          principalId: pimGroupsE[i].?id
           role: r
           principalType: 'Group'
         }
@@ -256,7 +256,7 @@ output pimGroupsRbacArray array = pimGroupsRbacArray
 ## rbac.bicep
 ```bicep 
 param roleAssignments {
-  principalId: string
+  principalId: string?
   role: (
     | 'Contributor'
     | 'Owner'
@@ -291,10 +291,10 @@ var rolesList = {
 }
 
 resource rbac 'Microsoft.Authorization/roleAssignments@2022-04-01' = [
-  for (r, i) in roleAssignments: {
-    name: guid(subscription().id, r.principalId, rolesList[r.role], resourceGroup().id)
+  for (r, i) in roleAssignments: if (r.?principalId != null) {
+    name: guid(subscription().id, r.?principalId, rolesList[r.role], resourceGroup().id)
     properties: {
-      principalId: r.principalId
+      principalId: r.?principalId
       principalType: r.?principalType ?? 'ServicePrincipal'
       description: r.?description
       roleDefinitionId: rolesList[r.role]
