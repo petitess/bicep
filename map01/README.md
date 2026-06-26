@@ -214,3 +214,77 @@ output array01WithAddedObject array = array01WithAddedObject
     }
 ]
 ```
+#### template
+main.bicep
+```bicep
+param pimGroups array = [
+  {
+    name: 'grp-dev-abc-user-PIM-DEV'
+  }
+  {
+    name: 'grp-dev-def-user-PIM-DEV'
+    rbac: [
+      {
+        rgName: 'rg-system-dev-01'
+        roles: [
+          'Reader'
+          'KeyVaultAdministrator'
+        ]
+      }
+      {
+        rgName: 'rg-integration-dev-01'
+        roles: [
+          'Contributor'
+          'AzureServiceBusDataOwner'
+        ]
+      }
+    ]
+  }
+]
+var pimGroupsObj object = toObject(filter(pimGroups, x => x.?rbac != null), entry => entry.name, entry => {
+  objectX: toObject(entry.?rbac ?? [], subEntry => '${entry.name}-${subEntry.rgName}', subEntry => {
+    rgNameX: subEntry.rgName
+    grpNameX: entry.name
+    rolesX: subEntry.roles ?? []
+  })
+})
+var pimGroupsArray = [for i in items(pimGroupsObj): i.?value.objectX]
+var pimGroupsRbacObj = reduce(pimGroupsArray, {}, (obj1, obj2, index) => union(obj1, obj2))
+var pimGroupsRbacArray array = [
+  for (x, i) in items(pimGroupsRbacObj): {
+    key: x.key
+    value: x.value
+    index: i
+  }
+]
+output pimGroupsRbacArray array = pimGroupsRbacArray
+```
+#### output: pimGroupsRbacArray
+```json
+[
+    {
+        "key": "grp-dev-def-user-PIM-DEV-rg-integration-dev-01",
+        "value": {
+            "rgNameX": "rg-integration-dev-01",
+            "grpNameX": "grp-dev-def-user-PIM-DEV",
+            "rolesX": [
+                "Contributor",
+                "AzureServiceBusDataOwner"
+            ]
+        },
+        "index": 0
+    },
+    {
+        "key": "grp-dev-def-user-PIM-DEV-rg-system-dev-01",
+        "value": {
+            "rgNameX": "rg-system-dev-01",
+            "grpNameX": "grp-dev-def-user-PIM-DEV",
+            "rolesX": [
+                "Reader",
+                "KeyVaultAdministrator"
+            ]
+        },
+        "index": 1
+    }
+]
+```
