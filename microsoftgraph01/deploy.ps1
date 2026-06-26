@@ -33,7 +33,7 @@ az deployment sub $Command `
 if ($false) {
 
     az logout
-    az login --tenant ''
+    az login --service-principal -u $env:client_id -p $env:client_secret --tenant $env:tenant_id
     az ad app show --id ''
     az ad sp show --id ''
 

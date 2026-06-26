@@ -1,4 +1,6 @@
 {
-    "experimentalFeaturesEnabled": {},
+    "experimentalFeaturesEnabled": {
+        "waitAndRetry": true
+    },
     "implicitProviders": []
 }
