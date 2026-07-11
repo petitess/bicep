@@ -1,18 +1,18 @@
 ### Add managed identity or service principal to a database
 #### Add service connection in devops for managed identity or service principal to run pipeline
-```sql
+```tsql
 CREATE USER [id-abc-dev-01] FROM EXTERNAL PROVIDER WITH OBJECT_ID='12345678-01ae-42fa-8152-db456a5aa43b';
 CREATE USER [sp-sub-labb-01] FROM EXTERNAL PROVIDER WITH OBJECT_ID='12345678-4852-42b6-80ce-722eb3251706';
 SELECT * FROM sysusers
 ```
 ### Add roles for an identity
-```sql
+```tsql
 ALTER ROLE db_datareader ADD MEMBER [id-abc-dev-01];
 ALTER ROLE db_datawriter ADD MEMBER [id-abc-dev-01];
 ALTER ROLE db_datareader DROP MEMBER [id-abc-dev-01];
 ```
 ### Check assigned roles for an identity
-```sql
+```tsql
 SELECT
     dp.name AS UserName,
     rp.name AS RoleName
@@ -24,7 +24,7 @@ JOIN sys.database_principals dp
 WHERE dp.name = 'id-abc-dev-01';
 ```
 ### Create a table
-```sql
+```tsql
 CREATE TABLE [dbo].Computer(
 	ComputerId INT IDENTITY(1,1) PRIMARY KEY,
 	Motherboard NVARCHAR(50),
