@@ -169,7 +169,7 @@ resource fw 'Microsoft.Sql/servers/firewallRules@2025-01-01' = [
   }
 ]
 
-resource pep 'Microsoft.Network/privateEndpoints@2025-05-01' = {
+resource pep 'Microsoft.Network/privateEndpoints@2025-07-01' = {
   name: 'pep-${name}'
   location: location
   tags: tags
@@ -204,7 +204,7 @@ resource pep 'Microsoft.Network/privateEndpoints@2025-05-01' = {
   }
 }
 
-resource dns 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2025-05-01' = {
+resource dns 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2025-07-01' = {
   name: 'default'
   parent: pep
   properties: {
@@ -225,6 +225,7 @@ resource db 'Microsoft.Sql/servers/databases@2025-01-01' = [
     name: d.name
     location: location
     sku: d.sku
+    dependsOn: [e]
     properties: {
       collation: d.collation
       zoneRedundant: false
@@ -317,7 +318,7 @@ resource steps 'Microsoft.Sql/servers/jobAgents/jobs/steps@2025-01-01' = [
   }
 ]
 
-resource e 'Microsoft.Sql/servers/elasticPools@2024-11-01-preview' = [
+resource e 'Microsoft.Sql/servers/elasticPools@2025-01-01' = [
   for p in elasticPools: {
     name: p.name
     parent: sql
@@ -332,6 +333,7 @@ resource e 'Microsoft.Sql/servers/elasticPools@2024-11-01-preview' = [
     }
   }
 ]
+
 //Must approve manually
 resource pepR 'Microsoft.Sql/servers/jobAgents/privateEndpoints@2025-01-01' = [
   for (ja, i) in jobAgents: if (false) {
@@ -349,6 +351,7 @@ resource rbacAgentReader 'Microsoft.Authorization/roleAssignments@2022-04-01' = 
     map(jobRbac, r => { principalId: r.principalId, jobAgentName: r.jobAgentName, principalType: r.?principalType })
   ): {
     name: guid(sql.id, r.jobAgentName, r.principalId, 'reader')
+    // scope: jaR[i]
     properties: {
       roleDefinitionId: subscriptionResourceId(
         'Microsoft.Authorization/roleDefinitions',
@@ -396,7 +399,7 @@ resource rbacJob 'Microsoft.Authorization/roleAssignments@2022-04-01' = [
 ]
 
 #disable-next-line use-recent-api-versions
-resource alert 'Microsoft.Insights/metricAlerts@2024-03-01-preview' = [
+resource alert 'Microsoft.Insights/metricAlerts@2026-01-01' = [
   for (a, i) in jobAgents: if (a.alert) {
     name: toLower('${a.name}-failed')
     location: 'global'

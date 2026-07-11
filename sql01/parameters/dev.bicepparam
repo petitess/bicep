@@ -17,19 +17,24 @@ var subnets = {
   'snet-pep': cidrSubnet(addressPrefixes[0], 26, 5)
 }
 
+param managedIdentities = [
+  {
+    name: 'id-abc-dev-01'
+    rgName: 'rg-sql-system-dev-01'
+  }
+]
+
 param sqls = [
   {
-    name: 'sql-system-infra-${env}-01'
-    adminGroupName: 'grp-rbac-mg-root-Owner'
-    adminGroupObjectId: '9b31210f-74d6-4f97-8b1d-ae1196e17ab8'
+    name: 'sql-system-${env}-01'
     azureADOnlyAuthentication: true
     publicNetworkAccess: 'Enabled'
     allowedIPs: {
-      OFFICE_IP: '188.150.118.51'
-      HOME_IP: '1.1.2.2'
+      OFFICE_IP: '1.1.1.1'
+      HOME_IP: myIP
     }
     identity: 'None'
-    privateIp: '10.10.1.68'
+    privateIp: '10.10.1.70'
     databases: [
       {
         name: 'sqldb-elastic-job'
