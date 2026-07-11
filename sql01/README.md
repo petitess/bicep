@@ -1,3 +1,19 @@
+```mermaid
+flowchart LR
+    A((SQL SERVER))
+	B@{ shape: cyl, label: "DB1" }
+	C@{ shape: cyl, label: "DB2" }
+	D["MANAGED IDENTITY
+	(devops connection)"]
+	E["SERVICE PRINCIPAL
+	(devops connection)"]
+	F[ENTRA ID GROUP]
+	A --> B
+    A --> C
+	A--sql admin-->F
+	B <--db_datawriter--> D
+	C <--db_datawriter--> E
+```
 ### Add managed identity or service principal to a database
 #### Add service connection in devops for managed identity or service principal to run pipeline
 ```tsql
